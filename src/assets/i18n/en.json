@@ -1,0 +1,138 @@
+{
+  "nav": {
+    "collection": "Collection",
+    "search": "Search",
+    "wishlist": "Wishlist",
+    "profile": "Profile"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "empty": "No items found",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "remove": "Remove",
+    "add": "Add",
+    "back": "Back",
+    "copyPath": "Copy path",
+    "pathCopied": "Path copied to clipboard",
+    "copyFailed": "Failed to copy path"
+  },
+  "collection": {
+    "title": "My Collection",
+    "searchPlaceholder": "Search by title...",
+    "filterType": "Type",
+    "filterGenre": "Genre",
+    "filterWatched": "Watched",
+    "allTypes": "All Types",
+    "allGenres": "All Genres",
+    "film": "Film",
+    "tvShow": "TV Show",
+    "watched": "Watched",
+    "unwatched": "Unwatched",
+    "allStatuses": "All",
+    "empty": {
+      "title": "Your collection is empty",
+      "description": "Start building your collection by searching for media on TMDB.",
+      "cta": "Search TMDB"
+    },
+    "stats": {
+      "total": "Total",
+      "films": "Films",
+      "tvShows": "TV Shows",
+      "watched": "Watched",
+      "unwatched": "Unwatched"
+    }
+  },
+  "media": {
+    "overview": "Overview",
+    "releaseDate": "Release Date",
+    "runtime": "Runtime",
+    "genres": "Genres",
+    "rating": "Rating",
+    "language": "Language",
+    "files": "Files",
+    "seasons": "Seasons",
+    "episodes": "Episodes",
+    "noFiles": "No files available",
+    "noSeasons": "No seasons available",
+    "markWatched": "Mark as watched",
+    "markUnwatched": "Mark as unwatched",
+    "watchedOn": "Watched on",
+    "minutes": "min"
+  },
+  "season": {
+    "episodeCount": "{{count}} episodes",
+    "watchedCount": "{{watched}}/{{total}} watched",
+    "markAllWatched": "Mark season watched",
+    "markAllUnwatched": "Mark season unwatched"
+  },
+  "episode": {
+    "season": "S{{season}}",
+    "episode": "E{{episode}}"
+  },
+  "tmdb": {
+    "title": "Search TMDB",
+    "searchTitle": "Search TMDB",
+    "searchPlaceholder": "Search for a film or TV show...",
+    "import": "Import to Collection",
+    "importing": "Importing...",
+    "imported": "Already in your collection",
+    "importStarted": "Import started",
+    "importSuccess": "Media added to collection",
+    "importDuplicate": "This media is already in your collection",
+    "noResults": "No results found",
+    "searchError": "Search failed",
+    "addToWishlist": "Add to Wishlist",
+    "addedToWishlist": "Added to wishlist",
+    "wishlistDuplicate": "Already in your wishlist",
+    "mediaType": {
+      "movie": "Movie",
+      "tv": "TV Show"
+    }
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "empty": "Your wishlist is empty",
+    "addToWishlist": "Add to Wishlist",
+    "acquired": "Acquired",
+    "markAcquired": "Mark as acquired",
+    "markNotAcquired": "Mark as not acquired",
+    "acquiredOn": "Acquired on",
+    "remove": "Remove from wishlist",
+    "removeConfirm": "Remove this item from your wishlist?",
+    "loadError": "Failed to load wishlist"
+  },
+  "profile": {
+    "title": "Profile",
+    "displayName": "Display Name",
+    "email": "Email",
+    "role": "Role",
+    "preferences": "Preferences",
+    "language": "Language",
+    "languageSaved": "Language preference saved",
+    "loadError": "Failed to load profile",
+    "roles": {
+      "User": "User",
+      "Admin": "Admin"
+    },
+    "languages": {
+      "en": "English",
+      "fr": "Français"
+    }
+  },
+  "error": {
+    "badRequest": "Bad Request",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "notFound": "Not Found",
+    "conflict": "Conflict",
+    "tooManyRequests": "Too Many Requests",
+    "serverError": "Server Error",
+    "unknown": "Error"
+  }
+}

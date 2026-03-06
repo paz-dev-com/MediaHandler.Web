@@ -1,0 +1,41 @@
+<ng-container *transloco="let t">
+  <div class="wishlist-page p-4">
+    <h1 class="wishlist-page__title">{{ t('wishlist.title') }}</h1>
+
+    @if (wishlistService.loading()) {
+      <app-loading-skeleton variant="list" [count]="5" />
+    } @else if (wishlistService.error()) {
+      <app-error-message
+        [message]="t(wishlistService.error()!)"
+        [showRetry]="true"
+        (retry)="onRetry()"
+      />
+    } @else if (wishlistService.items().length === 0) {
+      <div class="wishlist-page__empty">
+        <i class="pi pi-bookmark"></i>
+        <p>{{ t('wishlist.empty') }}</p>
+      </div>
+    } @else {
+      <div class="wishlist-page__list">
+        @for (item of wishlistService.items(); track item.id) {
+          <app-wishlist-card
+            [item]="item"
+            (acquiredToggle)="onAcquiredToggle($event)"
+            (remove)="onRemove($event)"
+          />
+        }
+      </div>
+
+      @if (wishlistService.pagination(); as pagination) {
+        @if (pagination.totalCount > pageSize) {
+          <p-paginator
+            [rows]="pageSize"
+            [totalRecords]="pagination.totalCount"
+            (onPageChange)="onPageChange($event)"
+            styleClass="wishlist-page__paginator"
+          />
+        }
+      }
+    }
+  </div>
+</ng-container>

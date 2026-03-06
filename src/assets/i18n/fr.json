@@ -1,0 +1,138 @@
+{
+  "nav": {
+    "collection": "Collection",
+    "search": "Rechercher",
+    "wishlist": "Liste de souhaits",
+    "profile": "Profil"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "empty": "Aucun élément trouvé",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "remove": "Retirer",
+    "add": "Ajouter",
+    "back": "Retour",
+    "copyPath": "Copier le chemin",
+    "pathCopied": "Chemin copié dans le presse-papiers",
+    "copyFailed": "Échec de la copie du chemin"
+  },
+  "collection": {
+    "title": "Ma Collection",
+    "searchPlaceholder": "Rechercher par titre...",
+    "filterType": "Type",
+    "filterGenre": "Genre",
+    "filterWatched": "Vu",
+    "allTypes": "Tous les types",
+    "allGenres": "Tous les genres",
+    "film": "Film",
+    "tvShow": "Série TV",
+    "watched": "Vu",
+    "unwatched": "Non vu",
+    "allStatuses": "Tous",
+    "empty": {
+      "title": "Votre collection est vide",
+      "description": "Commencez à constituer votre collection en recherchant des médias sur TMDB.",
+      "cta": "Rechercher sur TMDB"
+    },
+    "stats": {
+      "total": "Total",
+      "films": "Films",
+      "tvShows": "Séries TV",
+      "watched": "Vus",
+      "unwatched": "Non vus"
+    }
+  },
+  "media": {
+    "overview": "Synopsis",
+    "releaseDate": "Date de sortie",
+    "runtime": "Durée",
+    "genres": "Genres",
+    "rating": "Note",
+    "language": "Langue",
+    "files": "Fichiers",
+    "seasons": "Saisons",
+    "episodes": "Épisodes",
+    "noFiles": "Aucun fichier disponible",
+    "noSeasons": "Aucune saison disponible",
+    "markWatched": "Marquer comme vu",
+    "markUnwatched": "Marquer comme non vu",
+    "watchedOn": "Vu le",
+    "minutes": "min"
+  },
+  "season": {
+    "episodeCount": "{{count}} épisodes",
+    "watchedCount": "{{watched}}/{{total}} vus",
+    "markAllWatched": "Marquer la saison vue",
+    "markAllUnwatched": "Marquer la saison non vue"
+  },
+  "episode": {
+    "season": "S{{season}}",
+    "episode": "E{{episode}}"
+  },
+  "tmdb": {
+    "title": "Rechercher sur TMDB",
+    "searchTitle": "Rechercher sur TMDB",
+    "searchPlaceholder": "Rechercher un film ou une série...",
+    "import": "Importer dans la collection",
+    "importing": "Importation...",
+    "imported": "Déjà dans votre collection",
+    "importStarted": "Importation démarrée",
+    "importSuccess": "Média ajouté à la collection",
+    "importDuplicate": "Ce média est déjà dans votre collection",
+    "noResults": "Aucun résultat trouvé",
+    "searchError": "Échec de la recherche",
+    "addToWishlist": "Ajouter à la liste de souhaits",
+    "addedToWishlist": "Ajouté à la liste de souhaits",
+    "wishlistDuplicate": "Déjà dans votre liste de souhaits",
+    "mediaType": {
+      "movie": "Film",
+      "tv": "Série TV"
+    }
+  },
+  "wishlist": {
+    "title": "Liste de souhaits",
+    "empty": "Votre liste de souhaits est vide",
+    "addToWishlist": "Ajouter à la liste",
+    "acquired": "Acquis",
+    "markAcquired": "Marquer comme acquis",
+    "markNotAcquired": "Marquer comme non acquis",
+    "acquiredOn": "Acquis le",
+    "remove": "Retirer de la liste",
+    "removeConfirm": "Retirer cet élément de votre liste de souhaits ?",
+    "loadError": "Impossible de charger la liste de souhaits"
+  },
+  "profile": {
+    "title": "Profil",
+    "displayName": "Nom d'affichage",
+    "email": "E-mail",
+    "role": "Rôle",
+    "preferences": "Préférences",
+    "language": "Langue",
+    "languageSaved": "Préférence de langue enregistrée",
+    "loadError": "Impossible de charger le profil",
+    "roles": {
+      "User": "Utilisateur",
+      "Admin": "Administrateur"
+    },
+    "languages": {
+      "en": "English",
+      "fr": "Français"
+    }
+  },
+  "error": {
+    "badRequest": "Requête invalide",
+    "unauthorized": "Non autorisé",
+    "forbidden": "Accès refusé",
+    "notFound": "Introuvable",
+    "conflict": "Conflit",
+    "tooManyRequests": "Trop de requêtes",
+    "serverError": "Erreur serveur",
+    "unknown": "Erreur"
+  }
+}

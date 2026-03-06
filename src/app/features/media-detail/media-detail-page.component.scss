@@ -1,0 +1,164 @@
+.detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--p-text-color-secondary);
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+
+    &:hover {
+      color: var(--p-text-color);
+    }
+  }
+
+  &__backdrop {
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center top;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, var(--p-surface-50) 100%);
+      border-radius: 12px;
+    }
+  }
+
+  &__content {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+
+  &__poster-col {
+    flex-shrink: 0;
+    width: 220px;
+
+    @media (max-width: 768px) {
+      width: 160px;
+    }
+  }
+
+  &__poster {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  &__poster-placeholder {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background: var(--p-surface-100);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--p-text-color-secondary);
+
+    i {
+      font-size: 3rem;
+    }
+  }
+
+  &__meta {
+    flex: 1;
+  }
+
+  &__header {
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    margin: 0 0 0.25rem;
+    font-size: 2rem;
+    color: var(--p-text-color);
+  }
+
+  &__original-title {
+    margin: 0 0 0.5rem;
+    color: var(--p-text-color-secondary);
+    font-style: italic;
+  }
+
+  &__tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  &__details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    margin-bottom: 1rem;
+  }
+
+  &__genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__overview {
+    margin-bottom: 1.5rem;
+
+    h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--p-text-color-secondary);
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.6;
+      color: var(--p-text-color);
+    }
+  }
+
+  &__watched-action {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__files,
+  &__seasons {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--p-surface-0);
+    border: 1px solid var(--p-surface-200);
+    border-radius: 8px;
+  }
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  &__label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--p-text-color-secondary);
+  }
+}

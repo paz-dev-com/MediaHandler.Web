@@ -1,0 +1,30 @@
+<nav class="sidebar" [class.sidebar--collapsed]="collapsed()">
+  <button
+    class="sidebar__toggle p-button p-button-text p-button-rounded"
+    (click)="toggleCollapse()"
+    [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+  >
+    <i [class]="collapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
+  </button>
+
+  <ul class="sidebar__nav" role="navigation">
+    @for (item of navItems; track item.route) {
+      <li>
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="sidebar__link--active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+          class="sidebar__link"
+          [attr.aria-label]="item.labelKey | transloco"
+          [pTooltip]="collapsed() ? (item.labelKey | transloco) : ''"
+          tooltipPosition="right"
+        >
+          <i [class]="item.icon"></i>
+          @if (!collapsed()) {
+            <span>{{ item.labelKey | transloco }}</span>
+          }
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

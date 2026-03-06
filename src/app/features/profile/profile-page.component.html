@@ -1,0 +1,60 @@
+<ng-container *transloco="let t">
+  <div class="profile-page p-4">
+    <h1 class="profile-page__title">{{ t('profile.title') }}</h1>
+
+    @if (profileService.loading()) {
+      <app-loading-skeleton variant="list" [count]="3" />
+    } @else if (profileService.error()) {
+      <app-error-message
+        [message]="t(profileService.error()!)"
+        [showRetry]="true"
+        (retry)="onRetry()"
+      />
+    } @else if (profileService.user(); as user) {
+      <div class="profile-page__content">
+        <div class="profile-page__card p-card p-4">
+          <div class="profile-page__avatar">
+            <i class="pi pi-user"></i>
+          </div>
+
+          <div class="profile-page__info">
+            <div class="profile-page__field">
+              <span class="profile-page__label">{{ t('profile.displayName') }}</span>
+              <span class="profile-page__value">{{ user.displayName }}</span>
+            </div>
+            <div class="profile-page__field">
+              <span class="profile-page__label">{{ t('profile.email') }}</span>
+              <span class="profile-page__value">{{ user.email }}</span>
+            </div>
+            <div class="profile-page__field">
+              <span class="profile-page__label">{{ t('profile.role') }}</span>
+              <p-tag
+                [value]="t('profile.roles.' + user.role)"
+                [severity]="user.role === 'Admin' ? 'warn' : 'secondary'"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-page__preferences p-card p-4">
+          <h2 class="profile-page__section-title">{{ t('profile.preferences') }}</h2>
+
+          <div class="profile-page__field">
+            <label class="profile-page__label" for="language-select">
+              {{ t('profile.language') }}
+            </label>
+            <p-select
+              inputId="language-select"
+              [options]="languages"
+              optionLabel="label"
+              optionValue="value"
+              [(ngModel)]="selectedLanguage"
+              (onChange)="onLanguageChange($event.value)"
+              styleClass="profile-page__lang-select"
+            />
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

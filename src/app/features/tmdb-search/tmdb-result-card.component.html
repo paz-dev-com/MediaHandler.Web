@@ -1,0 +1,60 @@
+<ng-container *transloco="let t">
+  <div class="result-card">
+    @if (result.posterPath) {
+      <img
+        class="result-card__poster"
+        [src]="result.posterPath | tmdbImage"
+        [alt]="result.title"
+        loading="lazy"
+      />
+    } @else {
+      <div class="result-card__poster-placeholder">
+        <i class="pi pi-image"></i>
+      </div>
+    }
+
+    <div class="result-card__body">
+      <div class="result-card__header">
+        <h3 class="result-card__title">{{ result.title }}</h3>
+        <p-tag
+          [value]="t('tmdb.mediaType.' + result.mediaType)"
+          [severity]="result.mediaType === 'movie' ? 'info' : 'success'"
+        />
+      </div>
+
+      <p class="result-card__meta">
+        @if (result.releaseDate) {
+          <span>{{ result.releaseDate | slice: 0:4 }}</span>
+        }
+        @if (result.voteAverage) {
+          <span>
+            <i class="pi pi-star-fill"></i>
+            {{ result.voteAverage | number: '1.1-1' }}
+          </span>
+        }
+      </p>
+
+      @if (result.overview) {
+        <p class="result-card__overview">{{ result.overview }}</p>
+      }
+
+      <div class="result-card__actions">
+        <p-button
+          [label]="t('tmdb.import')"
+          icon="pi pi-download"
+          size="small"
+          [loading]="importing"
+          (onClick)="onImport()"
+        />
+        <p-button
+          [label]="t('wishlist.addToWishlist')"
+          icon="pi pi-bookmark"
+          size="small"
+          severity="secondary"
+          [loading]="wishlisting"
+          (onClick)="onWishlist()"
+        />
+      </div>
+    </div>
+  </div>
+</ng-container>

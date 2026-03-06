@@ -1,0 +1,119 @@
+@if (service.loading()) {
+  <app-loading-skeleton variant="list" [count]="6" />
+} @else if (service.error()) {
+  <app-error-message [message]="service.error()!" (retry)="reload()" />
+} @else if (service.media(); as media) {
+  <div class="detail-page">
+    <a routerLink="/" class="detail-page__back">
+      <i class="pi pi-arrow-left"></i> {{ 'common.back' | transloco }}
+    </a>
+
+    @if (media.backdropPath) {
+      <div
+        class="detail-page__backdrop"
+        [style.background-image]="'url(' + (media.backdropPath | tmdbImage: 'w1280') + ')'"
+      ></div>
+    }
+
+    <div class="detail-page__content">
+      <div class="detail-page__poster-col">
+        @if (media.posterPath | tmdbImage: 'w342'; as posterUrl) {
+          <img [src]="posterUrl" [alt]="media.title" class="detail-page__poster" />
+        } @else {
+          <div class="detail-page__poster-placeholder">
+            <i class="pi pi-image"></i>
+          </div>
+        }
+      </div>
+
+      <div class="detail-page__meta">
+        <div class="detail-page__header">
+          <h1 class="detail-page__title">{{ media.title }}</h1>
+          @if (media.originalTitle && media.originalTitle !== media.title) {
+            <p class="detail-page__original-title">{{ media.originalTitle }}</p>
+          }
+          <div class="detail-page__tags">
+            <p-tag
+              [value]="media.type === MediaType.Film ? ('collection.film' | transloco) : ('collection.tvShow' | transloco)"
+              [severity]="media.type === MediaType.Film ? 'info' : 'success'"
+            />
+            @if (media.userMedia?.isWatched) {
+              <p-tag icon="pi pi-check" value="" severity="secondary" />
+            }
+          </div>
+        </div>
+
+        <div class="detail-page__details">
+          @if (media.releaseDate) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.releaseDate' | transloco }}</span>
+              <span>{{ media.releaseDate | slice: 0 : 10 }}</span>
+            </div>
+          }
+          @if (media.runtime) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.runtime' | transloco }}</span>
+              <span>{{ media.runtime }} {{ 'media.minutes' | transloco }}</span>
+            </div>
+          }
+          @if (media.voteAverage) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.rating' | transloco }}</span>
+              <span>⭐ {{ media.voteAverage | number: '1.1-1' }}</span>
+            </div>
+          }
+          @if (media.language) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.language' | transloco }}</span>
+              <span>{{ media.language }}</span>
+            </div>
+          }
+        </div>
+
+        @if (media.genres.length) {
+          <div class="detail-page__genres">
+            @for (genre of media.genres; track genre.name) {
+              <p-chip [label]="genre.name" />
+            }
+          </div>
+        }
+
+        @if (media.overview) {
+          <div class="detail-page__overview">
+            <h3>{{ 'media.overview' | transloco }}</h3>
+            <p>{{ media.overview }}</p>
+          </div>
+        }
+
+        <div class="detail-page__watched-action">
+          <p-button
+            [icon]="media.userMedia?.isWatched ? 'pi pi-eye-slash' : 'pi pi-eye'"
+            [label]="(media.userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco"
+            [severity]="media.userMedia?.isWatched ? 'secondary' : 'primary'"
+            (onClick)="onWatchedToggle()"
+          />
+          @if (media.userMedia?.watchedAt) {
+            <span class="text-sm text-color-secondary">
+              {{ 'media.watchedOn' | transloco }} {{ media.userMedia!.watchedAt | slice: 0 : 10 }}
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-page__files">
+      <app-media-files [files]="media.mediaFiles" />
+    </div>
+
+    @if (media.type === MediaType.TvShow) {
+      <div class="detail-page__seasons">
+        <app-season-list
+          [seasons]="service.seasons()"
+          [mediaId]="media.id"
+          (episodeWatchedToggle)="onEpisodeToggle($event)"
+          (seasonBatchToggle)="onSeasonBatchToggle($event)"
+        />
+      </div>
+    }
+  </div>
+}
