@@ -1,60 +1,38 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { ApiService } from '@core/api/api.service';
-import { environment } from '@env/environment';
-import OktaAuth from '@okta/okta-auth-js';
 import { User } from '@shared/models/user.model';
-
-const oktaAuth = new OktaAuth({
-  issuer: environment.okta.issuer,
-  clientId: environment.okta.clientId,
-  redirectUri: environment.okta.redirectUri,
-  scopes: environment.okta.scopes,
-});
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly auth0 = inject(Auth0Service);
   private readonly api = inject(ApiService);
 
-  private readonly _isAuthenticated = signal<boolean>(false);
   private readonly _user = signal<User | null>(null);
 
-  readonly isAuthenticated = computed(() => this._isAuthenticated());
+  readonly isAuthenticated = toSignal(this.auth0.isAuthenticated$, { initialValue: false });
   readonly user = computed(() => this._user());
 
-  async initialize(): Promise<void> {
-    const authenticated = await oktaAuth.isAuthenticated();
-    this._isAuthenticated.set(authenticated);
-    if (authenticated) {
-      await this.syncUser();
-    }
+  login(): void {
+    this.auth0.loginWithRedirect();
   }
 
-  async login(): Promise<void> {
-    await oktaAuth.signInWithRedirect();
-  }
-
-  async logout(): Promise<void> {
-    this._isAuthenticated.set(false);
+  logout(): void {
     this._user.set(null);
-    await oktaAuth.signOut();
-  }
-
-  async handleCallback(): Promise<void> {
-    await oktaAuth.handleLoginRedirect();
-    this._isAuthenticated.set(true);
-    await this.syncUser();
+    this.auth0.logout({ logoutParams: { returnTo: window.location.origin } });
   }
 
   async getAccessToken(): Promise<string | undefined> {
-    const tokenManager = oktaAuth.tokenManager;
-    const token = await tokenManager.get('accessToken');
-    if (token && 'accessToken' in token) {
-      return token.accessToken;
+    try {
+      return await firstValueFrom(this.auth0.getAccessTokenSilently());
+    } catch {
+      return undefined;
     }
-    return undefined;
   }
 
-  private async syncUser(): Promise<void> {
+  syncUser(): void {
     this.api.post<User>('auth/sync', {}).subscribe({
       next: (response) => this._user.set(response.data),
       error: () => {

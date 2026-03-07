@@ -42,3 +42,10 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Local secrets (equivalent to .NET User Secrets — never commit)
+.env
+
+# Generated from .NET User Secrets + .env by scripts/generate-env.mjs
+src/environments/environment.ts
+src/environments/environment.prod.ts

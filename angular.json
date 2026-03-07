@@ -58,11 +58,7 @@
                   "maximumError": "8kB"
                 }
               ],
-              "allowedCommonJsDependencies": [
-                "tiny-emitter",
-                "cross-fetch",
-                "p-cancelable"
-              ],
+              "allowedCommonJsDependencies": [],
               "outputHashing": "all"
             },
             "development": {
