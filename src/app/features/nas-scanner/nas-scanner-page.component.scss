@@ -1,0 +1,81 @@
+.nas-scanner-page {
+  padding: 2rem;
+  max-width: 800px;
+
+  &__header {
+    margin-bottom: 2rem;
+
+    h1 {
+      margin: 0 0 0.5rem;
+    }
+  }
+
+  &__locations {
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+    border-radius: var(--border-radius);
+    background-color: var(--surface-50);
+    border: 1px solid var(--surface-200);
+  }
+
+  &__locations-label {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__locations-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__form {
+    margin-bottom: 2rem;
+  }
+
+  &__form-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  &__input {
+    flex: 1;
+    width: 100%;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--red-50);
+    color: var(--red-700);
+    margin-bottom: 1.5rem;
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+
+  &__results {
+    margin-top: 1.5rem;
+  }
+}

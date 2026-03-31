@@ -9,7 +9,10 @@ export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
 
-  get<T>(path: string, params?: Record<string, string | number | boolean | null | undefined>): Observable<ApiResponse<T>> {
+  get<T>(
+    path: string,
+    params?: Record<string, string | number | boolean | null | undefined>,
+  ): Observable<ApiResponse<T>> {
     let httpParams = new HttpParams();
     if (params) {
       for (const [key, value] of Object.entries(params)) {
@@ -21,7 +24,11 @@ export class ApiService {
     return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${path}`, { params: httpParams });
   }
 
-  post<T>(path: string, body: unknown, params?: Record<string, string | number | boolean | null | undefined>): Observable<ApiResponse<T>> {
+  post<T>(
+    path: string,
+    body: unknown,
+    params?: Record<string, string | number | boolean | null | undefined>,
+  ): Observable<ApiResponse<T>> {
     let httpParams = new HttpParams();
     if (params) {
       for (const [key, value] of Object.entries(params)) {

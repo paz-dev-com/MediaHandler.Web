@@ -10,7 +10,11 @@
       }
       <div class="media-card__badges">
         <p-tag
-          [value]="media().type === MediaType.Film ? ('collection.film' | transloco) : ('collection.tvShow' | transloco)"
+          [value]="
+            media().type === MediaType.Film
+              ? ('collection.film' | transloco)
+              : ('collection.tvShow' | transloco)
+          "
           [severity]="media().type === MediaType.Film ? 'info' : 'success'"
           styleClass="text-xs"
         />
@@ -28,12 +32,16 @@
     <div class="media-card__actions">
       <p-button
         [icon]="media().userMedia?.isWatched ? 'pi pi-eye-slash' : 'pi pi-eye'"
-        [pTooltip]="(media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco"
+        [pTooltip]="
+          (media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco
+        "
         [severity]="media().userMedia?.isWatched ? 'secondary' : 'primary'"
         size="small"
         variant="text"
         (onClick)="onToggleWatched($event)"
-        [attr.aria-label]="(media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco"
+        [attr.aria-label]="
+          (media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco
+        "
       />
     </div>
   </div>

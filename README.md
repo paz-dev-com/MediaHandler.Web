@@ -15,15 +15,15 @@ MediaHandler Web is the frontend for the MediaHandler platform. It consumes the 
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Angular 21 (standalone components, signals, `OnPush` change detection) |
-| UI Components | PrimeNG 21, PrimeFlex 4 |
-| Authentication | Auth0 via `@auth0/auth0-angular` (OIDC + PKCE, refresh tokens, `localStorage` cache) |
-| i18n | `@jsverse/transloco` (English + French, runtime switching) |
-| HTTP | Angular `HttpClient` with functional interceptors (auth token injection, global error handling) |
-| Testing | Vitest |
-| Styling | SCSS |
+| Layer          | Technology                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| Framework      | Angular 21 (standalone components, signals, `OnPush` change detection)                          |
+| UI Components  | PrimeNG 21, PrimeFlex 4                                                                         |
+| Authentication | Auth0 via `@auth0/auth0-angular` (OIDC + PKCE, refresh tokens, `localStorage` cache)            |
+| i18n           | `@jsverse/transloco` (English + French, runtime switching)                                      |
+| HTTP           | Angular `HttpClient` with functional interceptors (auth token injection, global error handling) |
+| Testing        | Vitest                                                                                          |
+| Styling        | SCSS                                                                                            |
 
 ## Project Structure
 
@@ -72,23 +72,23 @@ Environment files are **auto-generated** by `scripts/generate-env.mjs` and are g
 
 ### Required Secrets
 
-| .NET User Secret Key | `.env` Key | Description |
-|----------------------|------------|-------------|
-| `Okta:Domain` | `AUTH0_DOMAIN` | Auth0 tenant domain (e.g. `your-tenant.auth0.com`) |
-| `Okta:ClientId` | `AUTH0_CLIENT_ID` | Auth0 SPA application Client ID |
+| .NET User Secret Key | `.env` Key        | Description                                        |
+| -------------------- | ----------------- | -------------------------------------------------- |
+| `Okta:Domain`        | `AUTH0_DOMAIN`    | Auth0 tenant domain (e.g. `your-tenant.auth0.com`) |
+| `Okta:ClientId`      | `AUTH0_CLIENT_ID` | Auth0 SPA application Client ID                    |
 
 > **Note:** The .NET secret keys are named `Okta:*` for backward compatibility with the backend configuration. The frontend uses Auth0.
 
 ### Optional Overrides
 
-| `.env` Key | Default | Description |
-|------------|---------|-------------|
-| `API_BASE_URL` | `https://localhost:7001/api/v1` | Backend API base URL |
-| `AUTH0_REDIRECT_URI` | `http://localhost:4200/auth/callback` | OAuth callback URL |
-| `AUTH0_AUDIENCE` | Same as `API_BASE_URL` | Auth0 API audience identifier |
-| `PROD_API_BASE_URL` | Same as `API_BASE_URL` | Production API URL |
-| `PROD_AUTH0_REDIRECT_URI` | Same as `AUTH0_REDIRECT_URI` | Production callback URL |
-| `PROD_AUTH0_AUDIENCE` | Same as `AUTH0_AUDIENCE` | Production audience |
+| `.env` Key                | Default                               | Description                   |
+| ------------------------- | ------------------------------------- | ----------------------------- |
+| `API_BASE_URL`            | `https://localhost:7001/api/v1`       | Backend API base URL          |
+| `AUTH0_REDIRECT_URI`      | `http://localhost:4200/auth/callback` | OAuth callback URL            |
+| `AUTH0_AUDIENCE`          | Same as `API_BASE_URL`                | Auth0 API audience identifier |
+| `PROD_API_BASE_URL`       | Same as `API_BASE_URL`                | Production API URL            |
+| `PROD_AUTH0_REDIRECT_URI` | Same as `AUTH0_REDIRECT_URI`          | Production callback URL       |
+| `PROD_AUTH0_AUDIENCE`     | Same as `AUTH0_AUDIENCE`              | Production audience           |
 
 ### Example `.env`
 
@@ -113,12 +113,12 @@ The app will be available at `http://localhost:4200`. It redirects to Auth0 logi
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Generate env files + start dev server (`ng serve`) |
-| `npm run build` | Generate env files + production build |
-| `npm test` | Run unit tests with Vitest |
-| `npm run watch` | Build in watch mode (development) |
+| Command         | Description                                        |
+| --------------- | -------------------------------------------------- |
+| `npm start`     | Generate env files + start dev server (`ng serve`) |
+| `npm run build` | Generate env files + production build              |
+| `npm test`      | Run unit tests with Vitest                         |
+| `npm run watch` | Build in watch mode (development)                  |
 
 ## Authentication Flow
 
@@ -130,14 +130,14 @@ The app will be available at `http://localhost:4200`. It redirects to Auth0 logi
 
 ## Routing
 
-| Path | Feature | Auth Required |
-|------|---------|:------------:|
-| `/` | Collection (default landing page) | Yes |
-| `/media/:id` | Media detail | Yes |
-| `/tmdb-search` | TMDB search & import | Yes |
-| `/wishlist` | Wishlist management | Yes |
-| `/profile` | User profile & preferences | Yes |
-| `/auth/callback` | Auth0 OIDC callback | No |
+| Path             | Feature                           | Auth Required |
+| ---------------- | --------------------------------- | :-----------: |
+| `/`              | Collection (default landing page) |      Yes      |
+| `/media/:id`     | Media detail                      |      Yes      |
+| `/tmdb-search`   | TMDB search & import              |      Yes      |
+| `/wishlist`      | Wishlist management               |      Yes      |
+| `/profile`       | User profile & preferences        |      Yes      |
+| `/auth/callback` | Auth0 OIDC callback               |      No       |
 
 ## API Integration
 
@@ -153,19 +153,19 @@ interface ApiResponse<T> {
 
 ### Key Endpoints
 
-| Method | Path | Purpose |
-|--------|------|---------|
-| `GET` | `/media` | List collection (paginated, filterable) |
-| `GET` | `/media/:id` | Get media details |
-| `GET` | `/media/stats` | Collection statistics |
-| `PUT` | `/media/:id/watched` | Toggle film watched status |
-| `GET` | `/media/:id/seasons` | List TV seasons & episodes |
-| `PUT` | `/media/:id/seasons/:sid/episodes/:eid/watched` | Toggle episode watched |
-| `GET` | `/tmdb/search` | Search TMDB |
-| `POST` | `/tmdb/import/:tmdbId` | Import media from TMDB |
-| `POST` | `/auth/sync` | Sync user profile after login |
-| `GET` | `/auth/me` | Get current user profile |
-| `PUT` | `/auth/preferences` | Update user preferences |
+| Method | Path                                            | Purpose                                 |
+| ------ | ----------------------------------------------- | --------------------------------------- |
+| `GET`  | `/media`                                        | List collection (paginated, filterable) |
+| `GET`  | `/media/:id`                                    | Get media details                       |
+| `GET`  | `/media/stats`                                  | Collection statistics                   |
+| `PUT`  | `/media/:id/watched`                            | Toggle film watched status              |
+| `GET`  | `/media/:id/seasons`                            | List TV seasons & episodes              |
+| `PUT`  | `/media/:id/seasons/:sid/episodes/:eid/watched` | Toggle episode watched                  |
+| `GET`  | `/tmdb/search`                                  | Search TMDB                             |
+| `POST` | `/tmdb/import/:tmdbId`                          | Import media from TMDB                  |
+| `POST` | `/auth/sync`                                    | Sync user profile after login           |
+| `GET`  | `/auth/me`                                      | Get current user profile                |
+| `PUT`  | `/auth/preferences`                             | Update user preferences                 |
 
 ## Internationalization
 

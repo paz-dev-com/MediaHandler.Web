@@ -13,6 +13,16 @@ import { TranslocoHttpLoader } from '@core/i18n/transloco-loader';
 import { environment } from '@env/environment';
 import { routes } from './app.routes';
 
+// Only include audience if it's configured — prevents Auth0 "Service not found"
+// error when no API is registered in the Auth0 Dashboard yet.
+const authParams: Record<string, string> = {
+  redirect_uri: environment.auth0.redirectUri,
+  scope: 'openid profile email',
+};
+if (environment.auth0.audience) {
+  authParams['audience'] = environment.auth0.audience;
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
@@ -21,11 +31,7 @@ export const appConfig: ApplicationConfig = {
       clientId: environment.auth0.clientId,
       cacheLocation: 'localstorage',
       useRefreshTokens: true,
-      authorizationParams: {
-        redirect_uri: environment.auth0.redirectUri,
-        audience: environment.auth0.audience,
-        scope: 'openid profile email',
-      },
+      authorizationParams: authParams,
     }),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]), withFetch()),
     providePrimeNG({

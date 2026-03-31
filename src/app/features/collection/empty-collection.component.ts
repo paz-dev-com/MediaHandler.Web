@@ -19,34 +19,36 @@ import { ButtonModule } from 'primeng/button';
       />
     </div>
   `,
-  styles: [`
-    .empty-collection {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 2rem;
-      text-align: center;
-      gap: 1rem;
+  styles: [
+    `
+      .empty-collection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem;
+        text-align: center;
+        gap: 1rem;
 
-      &__icon {
-        font-size: 4rem;
-        color: var(--p-text-color-secondary);
-        opacity: 0.4;
-      }
+        &__icon {
+          font-size: 4rem;
+          color: var(--p-text-color-secondary);
+          opacity: 0.4;
+        }
 
-      &__title {
-        margin: 0;
-        font-size: 1.5rem;
-        color: var(--p-text-color);
-      }
+        &__title {
+          margin: 0;
+          font-size: 1.5rem;
+          color: var(--p-text-color);
+        }
 
-      &__description {
-        margin: 0;
-        color: var(--p-text-color-secondary);
-        max-width: 400px;
+        &__description {
+          margin: 0;
+          color: var(--p-text-color-secondary);
+          max-width: 400px;
+        }
       }
-    }
-  `],
+    `,
+  ],
 })
 export class EmptyCollectionComponent {}

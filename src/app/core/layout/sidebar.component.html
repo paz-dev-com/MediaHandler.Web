@@ -7,8 +7,8 @@
     <i [class]="collapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
   </button>
 
-  <ul class="sidebar__nav" role="navigation">
-    @for (item of navItems; track item.route) {
+  <ul class="sidebar__nav" role="listbox">
+    @for (item of navItems(); track item.route) {
       <li>
         <a
           [routerLink]="item.route"

@@ -18,7 +18,7 @@ export class ProfileService {
     this.loading.set(true);
     this.error.set(null);
     this.api.get<User>('auth/me').subscribe({
-      next: res => {
+      next: (res) => {
         this.user.set(res.data);
         this.loading.set(false);
       },
@@ -31,7 +31,7 @@ export class ProfileService {
 
   updatePreferences(preferences: UserPreferences): void {
     this.api.put<User>('auth/preferences', preferences).subscribe({
-      next: res => this.user.set(res.data),
+      next: (res) => this.user.set(res.data),
     });
   }
 }

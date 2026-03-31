@@ -3,7 +3,8 @@
     "collection": "Collection",
     "search": "Rechercher",
     "wishlist": "Liste de souhaits",
-    "profile": "Profil"
+    "profile": "Profil",
+    "nasScanner": "Scanner NAS"
   },
   "common": {
     "loading": "Chargement...",
@@ -134,5 +135,28 @@
     "tooManyRequests": "Trop de requêtes",
     "serverError": "Erreur serveur",
     "unknown": "Erreur"
+  },
+  "nasScanner": {
+    "title": "Scanner NAS",
+    "description": "Scannez votre NAS pour découvrir de nouveaux fichiers médias.",
+    "basePath": "Chemin de base",
+    "basePathPlaceholder": "Laissez vide pour scanner tous les chemins configurés...",
+    "scan": "Scanner",
+    "scanning": "Scan en cours...",
+    "locations": {
+      "label": "Scan rapide par emplacement",
+      "tooltip": "Cliquer pour scanner cet emplacement",
+      "scanAll": "Tout scanner"
+    },
+    "results": {
+      "title": "Résultats du scan",
+      "foldersFound": "Dossiers trouvés",
+      "newFiles": "Nouveaux fichiers",
+      "existingFiles": "Fichiers existants",
+      "totalScanned": "Total scanné"
+    },
+    "empty": "Aucun scan n'a encore été lancé. Cliquez sur \"Scanner\" pour découvrir les fichiers sur votre NAS.",
+    "error": "Le scan a échoué. Veuillez réessayer.",
+    "forbidden": "Vous n'avez pas la permission de scanner les fichiers NAS."
   }
 }

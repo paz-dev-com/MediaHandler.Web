@@ -85,8 +85,20 @@ export class CollectionService {
               ? {
                   ...item,
                   userMedia: item.userMedia
-                    ? { ...item.userMedia, isWatched, watchedAt: isWatched ? new Date().toISOString() : null }
-                    : { id: '', userId: '', mediaId, isWatched, watchedAt: isWatched ? new Date().toISOString() : null, personalRating: null, notes: null },
+                    ? {
+                        ...item.userMedia,
+                        isWatched,
+                        watchedAt: isWatched ? new Date().toISOString() : null,
+                      }
+                    : {
+                        id: '',
+                        userId: '',
+                        mediaId,
+                        isWatched,
+                        watchedAt: isWatched ? new Date().toISOString() : null,
+                        personalRating: null,
+                        notes: null,
+                      },
                 }
               : item,
           ),

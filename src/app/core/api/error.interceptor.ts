@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { environment } from '@env/environment';
 import { MessageService } from 'primeng/api';
 import { catchError, throwError } from 'rxjs';
 
@@ -14,6 +15,11 @@ const ERROR_MESSAGES: Record<number, string> = {
 };
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  // Only handle errors for our own API — never interfere with Auth0 SDK requests.
+  if (!req.url.startsWith(environment.apiBaseUrl)) {
+    return next(req);
+  }
+
   const messageService = inject(MessageService);
 
   return next(req).pipe(

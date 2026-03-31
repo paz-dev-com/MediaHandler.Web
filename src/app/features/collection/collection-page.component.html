@@ -3,10 +3,7 @@
 
   <app-collection-stats [stats]="service.stats()" />
 
-  <app-collection-filters
-    [filters]="service.filters()"
-    (filtersChange)="onFiltersChange($event)"
-  />
+  <app-collection-filters [filters]="service.filters()" (filtersChange)="onFiltersChange($event)" />
 
   @if (service.loading()) {
     <app-loading-skeleton variant="card" [count]="8" />

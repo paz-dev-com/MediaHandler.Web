@@ -13,7 +13,9 @@
   overflow: hidden;
   background: var(--p-surface-0);
   border: 1px solid var(--p-surface-200);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
   cursor: pointer;
 
   &:hover {

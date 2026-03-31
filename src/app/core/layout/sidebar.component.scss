@@ -45,7 +45,9 @@
     color: var(--p-text-color-secondary);
     text-decoration: none;
     border-left: 3px solid transparent;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
 
     i {
       font-size: 1.1rem;

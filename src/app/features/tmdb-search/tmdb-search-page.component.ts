@@ -1,10 +1,10 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    OnDestroy,
-    OnInit,
-    inject,
-    signal,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WishlistService } from '@features/wishlist/wishlist.service';
@@ -45,7 +45,7 @@ export class TmdbSearchPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.query$
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe(q => this.searchService.search(q));
+      .subscribe((q) => this.searchService.search(q));
   }
 
   ngOnDestroy(): void {

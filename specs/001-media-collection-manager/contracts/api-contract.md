@@ -104,15 +104,15 @@ Searches TMDB for films and TV shows.
 
 #### TmdbSearchResult
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `tmdbId` | `number` | TMDB identifier |
-| `title` | `string` | Display title |
-| `overview` | `string \| null` | Synopsis |
-| `posterPath` | `string \| null` | TMDB poster path |
-| `releaseDate` | `string \| null` | ISO date |
-| `mediaType` | `string` | `"movie"` or `"tv"` |
-| `voteAverage` | `number \| null` | Rating |
+| Field         | Type             | Description         |
+| ------------- | ---------------- | ------------------- |
+| `tmdbId`      | `number`         | TMDB identifier     |
+| `title`       | `string`         | Display title       |
+| `overview`    | `string \| null` | Synopsis            |
+| `posterPath`  | `string \| null` | TMDB poster path    |
+| `releaseDate` | `string \| null` | ISO date            |
+| `mediaType`   | `string`         | `"movie"` or `"tv"` |
+| `voteAverage` | `number \| null` | Rating              |
 
 ### POST /api/v1/tmdb/import/{tmdbId}
 
@@ -171,6 +171,7 @@ https://image.tmdb.org/t/p/{size}{path}
 ```
 
 Common sizes:
+
 - Poster: `w185`, `w342`, `w500`, `original`
 - Backdrop: `w780`, `w1280`, `original`
 - Still: `w300`, `original`
@@ -193,6 +194,7 @@ All error responses use the same envelope:
 ```
 
 HTTP status codes:
+
 - `400` — Validation error
 - `401` — Unauthorized (missing or invalid JWT)
 - `403` — Forbidden (insufficient role)

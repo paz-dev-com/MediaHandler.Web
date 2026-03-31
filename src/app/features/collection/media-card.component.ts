@@ -15,7 +15,15 @@ import { TooltipModule } from 'primeng/tooltip';
   templateUrl: './media-card.component.html',
   styleUrl: './media-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, TranslocoModule, ButtonModule, TagModule, CardModule, TooltipModule, SlicePipe],
+  imports: [
+    RouterLink,
+    TranslocoModule,
+    ButtonModule,
+    TagModule,
+    CardModule,
+    TooltipModule,
+    SlicePipe,
+  ],
 })
 export class MediaCardComponent {
   readonly media = input.required<Media>();

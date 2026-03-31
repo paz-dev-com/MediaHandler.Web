@@ -52,11 +52,26 @@ export class MediaDetailPageComponent implements OnInit {
     this.service.toggleWatched(isWatched);
   }
 
-  onEpisodeToggle(event: { mediaId: string; seasonId: string; episodeId: string; isWatched: boolean }): void {
-    this.service.toggleEpisodeWatched(event.mediaId, event.seasonId, event.episodeId, event.isWatched);
+  onEpisodeToggle(event: {
+    mediaId: string;
+    seasonId: string;
+    episodeId: string;
+    isWatched: boolean;
+  }): void {
+    this.service.toggleEpisodeWatched(
+      event.mediaId,
+      event.seasonId,
+      event.episodeId,
+      event.isWatched,
+    );
   }
 
-  onSeasonBatchToggle(event: { mediaId: string; seasonId: string; episodeIds: string[]; isWatched: boolean }): void {
+  onSeasonBatchToggle(event: {
+    mediaId: string;
+    seasonId: string;
+    episodeIds: string[];
+    isWatched: boolean;
+  }): void {
     for (const episodeId of event.episodeIds) {
       this.service.toggleEpisodeWatched(event.mediaId, event.seasonId, episodeId, event.isWatched);
     }

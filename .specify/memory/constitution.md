@@ -122,6 +122,7 @@ All technical decisions MUST be evaluated against these criteria, in order:
    it within 5 minutes?
 
 New third-party dependencies MUST be justified in writing with:
+
 - Problem being solved
 - Bundle size cost (checked via `npx bundlephobia <package>` or equivalent)
 - Alternatives considered and why they were rejected

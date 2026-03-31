@@ -15,7 +15,7 @@
 - Q: Should users be able to mark an entire TV season as watched/unwatched in one action, or only individual episodes? → A: Mark all per season — a "mark season as watched/unwatched" toggle on each season header.
 - Q: Should the application UI support multiple languages or be English-only? → A: Bilingual (English + French). English by default; French for users located in France. Users can switch language at any time.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Browse Media Collection (Priority: P1)
 
@@ -137,7 +137,7 @@ As a user, I want to log in securely so my collection, watch history, and wishli
 - What happens when the user's collection is empty (new user)? The collection page displays an onboarding prompt with a friendly message and a call-to-action directing the user to search and import media from TMDB.
 - What happens when pagination reaches the last page? The "next page" control is disabled.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -177,7 +177,7 @@ As a user, I want to log in securely so my collection, watch history, and wishli
 - **UserEpisode**: The relationship between a user and a TV episode that tracks per-episode watch status.
 - **WishlistItem**: A reference to a TMDB media entry that the user wants to acquire. Tracks TMDB ID, title, poster, release date, acquisition status, and personal notes. Independent from the local media collection.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

@@ -12,7 +12,15 @@ import { CollectionFilters } from './collection.service';
 @Component({
   selector: 'app-collection-filters',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, TranslocoModule, InputTextModule, SelectModule, ButtonModule, IconFieldModule, InputIconModule],
+  imports: [
+    FormsModule,
+    TranslocoModule,
+    InputTextModule,
+    SelectModule,
+    ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+  ],
   template: `
     <div class="collection-filters">
       <p-iconfield>
@@ -50,20 +58,22 @@ import { CollectionFilters } from './collection.service';
       />
     </div>
   `,
-  styles: [`
-    .collection-filters {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 1.5rem;
+  styles: [
+    `
+      .collection-filters {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 1.5rem;
 
-      > * {
-        flex: 1;
-        min-width: 180px;
+        > * {
+          flex: 1;
+          min-width: 180px;
+        }
       }
-    }
-  `],
+    `,
+  ],
 })
 export class CollectionFiltersComponent {
   readonly filters = input.required<CollectionFilters>();
