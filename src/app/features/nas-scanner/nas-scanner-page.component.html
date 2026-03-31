@@ -1,0 +1,83 @@
+<div class="nas-scanner-page">
+  <div class="nas-scanner-page__header">
+    <h1>{{ 'nasScanner.title' | transloco }}</h1>
+    <p class="text-color-secondary">{{ 'nasScanner.description' | transloco }}</p>
+  </div>
+
+  <!-- Quick-scan buttons per configured NAS location -->
+  @if (locations().length > 0) {
+    <div class="nas-scanner-page__locations">
+      <p class="nas-scanner-page__locations-label">
+        {{ 'nasScanner.locations.label' | transloco }}
+      </p>
+      <div class="nas-scanner-page__locations-list">
+        @for (loc of locations(); track loc) {
+          <p-button
+            [label]="loc"
+            icon="pi pi-folder"
+            severity="secondary"
+            [outlined]="true"
+            [disabled]="service.scanning()"
+            [pTooltip]="'nasScanner.locations.tooltip' | transloco"
+            tooltipPosition="top"
+            (onClick)="scanLocation(loc)"
+          />
+        }
+        <p-button
+          [label]="'nasScanner.locations.scanAll' | transloco"
+          icon="pi pi-server"
+          [disabled]="service.scanning()"
+          [loading]="service.scanning() && !basePath()"
+          (onClick)="basePath.set(''); triggerScan()"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- Manual path input -->
+  <div class="nas-scanner-page__form">
+    <label for="basePath" class="block mb-2">{{ 'nasScanner.basePath' | transloco }}</label>
+    <div class="nas-scanner-page__form-row">
+      <input
+        id="basePath"
+        pInputText
+        type="text"
+        class="nas-scanner-page__input"
+        [placeholder]="'nasScanner.basePathPlaceholder' | transloco"
+        [value]="basePath()"
+        (input)="basePath.set($any($event.target).value)"
+        [disabled]="service.scanning()"
+      />
+      <p-button
+        [label]="
+          service.scanning() ? ('nasScanner.scanning' | transloco) : ('nasScanner.scan' | transloco)
+        "
+        icon="pi pi-search"
+        [disabled]="service.scanning()"
+        [loading]="service.scanning()"
+        (onClick)="triggerScan()"
+      />
+    </div>
+  </div>
+
+  @if (service.scanning()) {
+    <div class="nas-scanner-page__loading">
+      <p-progress-spinner strokeWidth="4" />
+    </div>
+  }
+
+  @if (service.error()) {
+    <div class="nas-scanner-page__error" role="alert">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ service.error()! | transloco }}</span>
+    </div>
+  }
+
+  <div class="nas-scanner-page__results">
+    @if (service.result(); as result) {
+      <app-scan-results [result]="result" />
+    } @else if (!service.scanning() && !service.error()) {
+      <p class="text-color-secondary">{{ 'nasScanner.empty' | transloco }}</p>
+    }
+  </div>
+</div>

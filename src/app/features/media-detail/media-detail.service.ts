@@ -48,9 +48,7 @@ export class MediaDetailService {
 
     this.api.put<UserMedia>(`media/${current.id}/watched`, { isWatched }).subscribe({
       next: (response) => {
-        this.media.update((m) =>
-          m ? { ...m, userMedia: response.data } : m,
-        );
+        this.media.update((m) => (m ? { ...m, userMedia: response.data } : m));
       },
     });
   }
@@ -70,16 +68,24 @@ export class MediaDetailService {
               s.id === seasonId
                 ? {
                     ...s,
-                    watchedCount: isWatched
-                      ? s.watchedCount + 1
-                      : Math.max(0, s.watchedCount - 1),
+                    watchedCount: isWatched ? s.watchedCount + 1 : Math.max(0, s.watchedCount - 1),
                     tvEpisodes: s.tvEpisodes.map((ep) =>
                       ep.id === episodeId
                         ? {
                             ...ep,
                             userEpisode: ep.userEpisode
-                              ? { ...ep.userEpisode, isWatched, watchedAt: isWatched ? new Date().toISOString() : null }
-                              : { id: '', userId: '', episodeId, isWatched, watchedAt: isWatched ? new Date().toISOString() : null },
+                              ? {
+                                  ...ep.userEpisode,
+                                  isWatched,
+                                  watchedAt: isWatched ? new Date().toISOString() : null,
+                                }
+                              : {
+                                  id: '',
+                                  userId: '',
+                                  episodeId,
+                                  isWatched,
+                                  watchedAt: isWatched ? new Date().toISOString() : null,
+                                },
                           }
                         : ep,
                     ),

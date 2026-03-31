@@ -24,34 +24,32 @@ export class WishlistService {
   loadItems(page = 1, pageSize = 20): void {
     this.loading.set(true);
     this.error.set(null);
-    this.api
-      .get<WishlistItem[]>('wishlist', { page, pageSize })
-      .subscribe({
-        next: res => {
-          this.items.set(res.data);
-          this.pagination.set(res.meta ?? null);
-          this.loading.set(false);
-        },
-        error: () => {
-          this.error.set('wishlist.loadError');
-          this.loading.set(false);
-        },
-      });
+    this.api.get<WishlistItem[]>('wishlist', { page, pageSize }).subscribe({
+      next: (res) => {
+        this.items.set(res.data);
+        this.pagination.set(res.meta ?? null);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('wishlist.loadError');
+        this.loading.set(false);
+      },
+    });
   }
 
   addItem(request: AddWishlistItemRequest): void {
-    this.addingIds.update(ids => new Set([...ids, request.tmdbId]));
+    this.addingIds.update((ids) => new Set([...ids, request.tmdbId]));
     this.api.post<WishlistItem>('wishlist', request).subscribe({
-      next: res => {
-        this.items.update(list => [res.data, ...list]);
-        this.addingIds.update(ids => {
+      next: (res) => {
+        this.items.update((list) => [res.data, ...list]);
+        this.addingIds.update((ids) => {
           const next = new Set(ids);
           next.delete(request.tmdbId);
           return next;
         });
       },
       error: () => {
-        this.addingIds.update(ids => {
+        this.addingIds.update((ids) => {
           const next = new Set(ids);
           next.delete(request.tmdbId);
           return next;
@@ -61,25 +59,19 @@ export class WishlistService {
   }
 
   markAcquired(id: string, isAcquired: boolean): void {
-    this.api
-      .put<WishlistItem>(`wishlist/${id}/acquired`, { isAcquired })
-      .subscribe({
-        next: res => {
-          this.items.update(list =>
-            list.map(item => (item.id === id ? res.data : item))
-          );
-        },
-      });
+    this.api.put<WishlistItem>(`wishlist/${id}/acquired`, { isAcquired }).subscribe({
+      next: (res) => {
+        this.items.update((list) => list.map((item) => (item.id === id ? res.data : item)));
+      },
+    });
   }
 
   removeItem(id: string): void {
     this.api.delete<null>(`wishlist/${id}`).subscribe({
       next: () => {
-        this.items.update(list => list.filter(item => item.id !== id));
+        this.items.update((list) => list.filter((item) => item.id !== id));
         if (this.pagination()) {
-          this.pagination.update(p =>
-            p ? { ...p, totalCount: p.totalCount - 1 } : p
-          );
+          this.pagination.update((p) => (p ? { ...p, totalCount: p.totalCount - 1 } : p));
         }
       },
     });

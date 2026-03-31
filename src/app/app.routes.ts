@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from '@core/auth/admin.guard';
 import { AuthCallbackComponent } from '@core/auth/auth-callback.component';
 import { authGuard } from '@core/auth/auth.guard';
 
@@ -28,14 +29,18 @@ export const routes: Routes = [
   {
     path: 'wishlist',
     canActivate: [authGuard],
-    loadChildren: () =>
-      import('./features/wishlist/wishlist.routes').then((m) => m.wishlistRoutes),
+    loadChildren: () => import('./features/wishlist/wishlist.routes').then((m) => m.wishlistRoutes),
   },
   {
     path: 'profile',
     canActivate: [authGuard],
+    loadChildren: () => import('./features/profile/profile.routes').then((m) => m.profileRoutes),
+  },
+  {
+    path: 'nas-scanner',
+    canActivate: [authGuard, adminGuard],
     loadChildren: () =>
-      import('./features/profile/profile.routes').then((m) => m.profileRoutes),
+      import('./features/nas-scanner/nas-scanner.routes').then((m) => m.nasScannerRoutes),
   },
   {
     path: '**',

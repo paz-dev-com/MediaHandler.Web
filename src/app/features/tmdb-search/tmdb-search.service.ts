@@ -30,40 +30,36 @@ export class TmdbSearchService {
     this.loading.set(true);
     this.error.set(null);
     const language = this.transloco.getActiveLang();
-    this.api
-      .get<TmdbSearchResult[]>('tmdb/search', { query, language })
-      .subscribe({
-        next: res => {
-          this.results.set(res.data);
-          this.loading.set(false);
-        },
-        error: () => {
-          this.error.set('tmdb.searchError');
-          this.loading.set(false);
-        },
-      });
+    this.api.get<TmdbSearchResult[]>('tmdb/search', { query, language }).subscribe({
+      next: (res) => {
+        this.results.set(res.data);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('tmdb.searchError');
+        this.loading.set(false);
+      },
+    });
   }
 
   import(tmdbId: number, mediaType: string): void {
-    this.importingIds.update(ids => new Set([...ids, tmdbId]));
+    this.importingIds.update((ids) => new Set([...ids, tmdbId]));
     const language = this.transloco.getActiveLang();
-    this.api
-      .post<void>(`tmdb/import/${tmdbId}`, null, { mediaType, language })
-      .subscribe({
-        complete: () => {
-          this.importingIds.update(ids => {
-            const next = new Set(ids);
-            next.delete(tmdbId);
-            return next;
-          });
-        },
-        error: () => {
-          this.importingIds.update(ids => {
-            const next = new Set(ids);
-            next.delete(tmdbId);
-            return next;
-          });
-        },
-      });
+    this.api.post<void>(`tmdb/import/${tmdbId}`, null, { mediaType, language }).subscribe({
+      complete: () => {
+        this.importingIds.update((ids) => {
+          const next = new Set(ids);
+          next.delete(tmdbId);
+          return next;
+        });
+      },
+      error: () => {
+        this.importingIds.update((ids) => {
+          const next = new Set(ids);
+          next.delete(tmdbId);
+          return next;
+        });
+      },
+    });
   }
 }

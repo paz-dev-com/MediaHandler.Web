@@ -33,6 +33,7 @@ npm install @jsverse/transloco
 Create environment files:
 
 **`src/environments/environment.ts`** (development):
+
 ```typescript
 export const environment = {
   production: false,
@@ -47,6 +48,7 @@ export const environment = {
 ```
 
 **`src/environments/environment.prod.ts`** (production):
+
 ```typescript
 export const environment = {
   production: true,
@@ -82,11 +84,11 @@ GitHub: https://github.com/paz-dev-com/MediaHandler.API
 
 ## Key Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `angular.json` | Build config, bundle budgets, SCSS |
-| `src/app/app.config.ts` | Root providers (router, HTTP, PrimeNG, Transloco, auth) |
-| `src/app/app.routes.ts` | Top-level routes with lazy loading |
-| `src/environments/environment.ts` | API URL, Okta config |
-| `src/assets/i18n/en.json` | English translations |
-| `src/assets/i18n/fr.json` | French translations |
+| File                              | Purpose                                                 |
+| --------------------------------- | ------------------------------------------------------- |
+| `angular.json`                    | Build config, bundle budgets, SCSS                      |
+| `src/app/app.config.ts`           | Root providers (router, HTTP, PrimeNG, Transloco, auth) |
+| `src/app/app.routes.ts`           | Top-level routes with lazy loading                      |
+| `src/environments/environment.ts` | API URL, Okta config                                    |
+| `src/assets/i18n/en.json`         | English translations                                    |
+| `src/assets/i18n/fr.json`         | French translations                                     |

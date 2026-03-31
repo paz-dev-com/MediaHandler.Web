@@ -300,32 +300,32 @@ US1, US2, and US6 have no cross-dependencies — they can be implemented simulta
 
 ## FR Traceability
 
-| FR | Task(s) | User Story |
-|----|---------|------------|
-| FR-001 Paginated card grid | T029, T033 | US1 |
-| FR-002 Filtering | T030, T028 | US1 |
-| FR-003 Collection stats | T031, T028 | US1 |
-| FR-004 Media detail view | T039 | US2 |
-| FR-005 NAS file paths | T036 | US2 |
-| FR-006 Copy NAS path | T036, T023 | US2 |
-| FR-007 Toggle film watched | T044, T045 | US3 |
-| FR-008 Seasons/episodes display | T038, T037 | US2 |
-| FR-009 Season progress | T048 | US3 |
-| FR-010 Toggle episode watched | T046 | US3 |
-| FR-011 Season batch toggle | T047 | US3 |
-| FR-012 TMDB search | T051, T049 | US4 |
-| FR-013 TMDB import | T051, T049 | US4 |
-| FR-014 Add to wishlist | T055 | US5 |
-| FR-015 Wishlist display | T056, T053 | US5 |
-| FR-016 Wishlist acquired/remove | T056, T054 | US5 |
-| FR-017 Okta auth + sync | T011, T014 | Foundational |
-| FR-018 Redirect unauthenticated | T012 | Foundational |
-| FR-019 Language preference | T042 | US6 |
-| FR-020 Bilingual EN/FR | T016–T018, T042, T058 | Foundational + US6 + Polish |
-| FR-021 Error handling | T015, T025 | Foundational |
-| FR-022 Responsive design | T059 | Polish |
-| FR-023 Sidebar navigation | T020 | Foundational |
-| FR-024 Empty state onboarding | T032 | US1 |
+| FR                              | Task(s)               | User Story                  |
+| ------------------------------- | --------------------- | --------------------------- |
+| FR-001 Paginated card grid      | T029, T033            | US1                         |
+| FR-002 Filtering                | T030, T028            | US1                         |
+| FR-003 Collection stats         | T031, T028            | US1                         |
+| FR-004 Media detail view        | T039                  | US2                         |
+| FR-005 NAS file paths           | T036                  | US2                         |
+| FR-006 Copy NAS path            | T036, T023            | US2                         |
+| FR-007 Toggle film watched      | T044, T045            | US3                         |
+| FR-008 Seasons/episodes display | T038, T037            | US2                         |
+| FR-009 Season progress          | T048                  | US3                         |
+| FR-010 Toggle episode watched   | T046                  | US3                         |
+| FR-011 Season batch toggle      | T047                  | US3                         |
+| FR-012 TMDB search              | T051, T049            | US4                         |
+| FR-013 TMDB import              | T051, T049            | US4                         |
+| FR-014 Add to wishlist          | T055                  | US5                         |
+| FR-015 Wishlist display         | T056, T053            | US5                         |
+| FR-016 Wishlist acquired/remove | T056, T054            | US5                         |
+| FR-017 Okta auth + sync         | T011, T014            | Foundational                |
+| FR-018 Redirect unauthenticated | T012                  | Foundational                |
+| FR-019 Language preference      | T042                  | US6                         |
+| FR-020 Bilingual EN/FR          | T016–T018, T042, T058 | Foundational + US6 + Polish |
+| FR-021 Error handling           | T015, T025            | Foundational                |
+| FR-022 Responsive design        | T059                  | Polish                      |
+| FR-023 Sidebar navigation       | T020                  | Foundational                |
+| FR-024 Empty state onboarding   | T032                  | US1                         |
 
 ---
 

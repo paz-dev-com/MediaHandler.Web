@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '@core/auth/auth.service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
@@ -18,14 +19,25 @@ interface NavItem {
   imports: [RouterLink, RouterLinkActive, TranslocoModule, ButtonModule, TooltipModule],
 })
 export class SidebarComponent {
+  private readonly auth = inject(AuthService);
   readonly collapsed = signal(false);
 
-  readonly navItems: NavItem[] = [
+  private readonly baseNavItems: NavItem[] = [
     { labelKey: 'nav.collection', icon: 'pi pi-video', route: '/' },
     { labelKey: 'nav.search', icon: 'pi pi-search', route: '/tmdb-search' },
     { labelKey: 'nav.wishlist', icon: 'pi pi-heart', route: '/wishlist' },
     { labelKey: 'nav.profile', icon: 'pi pi-user', route: '/profile' },
   ];
+
+  readonly navItems = computed<NavItem[]>(() => {
+    if (this.auth.isAdmin()) {
+      return [
+        ...this.baseNavItems,
+        { labelKey: 'nav.nasScanner', icon: 'pi pi-server', route: '/nas-scanner' },
+      ];
+    }
+    return this.baseNavItems;
+  });
 
   toggleCollapse(): void {
     this.collapsed.update((v) => !v);

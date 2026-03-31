@@ -21,27 +21,27 @@ Build the Angular 21 web interface for managing a NAS-stored media collection. T
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Pre-Research Check
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. Code Quality & Maintainability | PASS | Standalone components, signals-first, strict TS, OnPush — all planned |
-| II. Testing Standards | PASS | Vitest already configured; unit tests planned for all services/components |
-| III. User Experience Consistency | PASS | PrimeNG/PrimeFlex for consistent responsive UI; loading states, error feedback, empty states specified |
-| IV. Performance Requirements | PASS | Lazy-loaded routes, tree-shakeable PrimeNG, signals state, OnPush detection, bundle budgets from angular.json |
-| Technical Decision Framework | PASS | All dependency choices documented in research.md with bundle impact and alternatives |
+| Principle                         | Status | Notes                                                                                                         |
+| --------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| I. Code Quality & Maintainability | PASS   | Standalone components, signals-first, strict TS, OnPush — all planned                                         |
+| II. Testing Standards             | PASS   | Vitest already configured; unit tests planned for all services/components                                     |
+| III. User Experience Consistency  | PASS   | PrimeNG/PrimeFlex for consistent responsive UI; loading states, error feedback, empty states specified        |
+| IV. Performance Requirements      | PASS   | Lazy-loaded routes, tree-shakeable PrimeNG, signals state, OnPush detection, bundle budgets from angular.json |
+| Technical Decision Framework      | PASS   | All dependency choices documented in research.md with bundle impact and alternatives                          |
 
 ### Post-Design Check
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. Code Quality & Maintainability | PASS | Each component < 200 lines; one service per domain; no `any` types; standalone only |
-| II. Testing Standards | PASS | Services, guards, interceptors, and interactive components all testable in isolation |
-| III. User Experience Consistency | PASS | Card grid with loading skeletons, empty state onboarding, error toasts, clipboard feedback, keyboard-navigable sidebar |
-| IV. Performance Requirements | PASS | 5 lazy-loaded feature chunks; PrimeNG tree-shaken; translation files lazy-loaded; only shell+auth in initial bundle |
-| Technical Decision Framework | PASS | 3 new dependencies justified (PrimeNG: UI components; okta-auth-js: mandatory auth; transloco: runtime i18n). PrimeFlex is CSS-only. All within bundle budget. |
+| Principle                         | Status | Notes                                                                                                                                                          |
+| --------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I. Code Quality & Maintainability | PASS   | Each component < 200 lines; one service per domain; no `any` types; standalone only                                                                            |
+| II. Testing Standards             | PASS   | Services, guards, interceptors, and interactive components all testable in isolation                                                                           |
+| III. User Experience Consistency  | PASS   | Card grid with loading skeletons, empty state onboarding, error toasts, clipboard feedback, keyboard-navigable sidebar                                         |
+| IV. Performance Requirements      | PASS   | 5 lazy-loaded feature chunks; PrimeNG tree-shaken; translation files lazy-loaded; only shell+auth in initial bundle                                            |
+| Technical Decision Framework      | PASS   | 3 new dependencies justified (PrimeNG: UI components; okta-auth-js: mandatory auth; transloco: runtime i18n). PrimeFlex is CSS-only. All within bundle budget. |
 
 **Gate result**: PASS — no violations requiring justification.
 
