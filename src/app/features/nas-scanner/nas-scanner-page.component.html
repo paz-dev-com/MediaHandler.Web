@@ -17,7 +17,7 @@
             icon="pi pi-folder"
             severity="secondary"
             [outlined]="true"
-            [disabled]="service.scanning()"
+            [disabled]="service.loading()"
             [pTooltip]="'nasScanner.locations.tooltip' | transloco"
             tooltipPosition="top"
             (onClick)="scanLocation(loc)"
@@ -26,8 +26,8 @@
         <p-button
           [label]="'nasScanner.locations.scanAll' | transloco"
           icon="pi pi-server"
-          [disabled]="service.scanning()"
-          [loading]="service.scanning() && !basePath()"
+          [disabled]="service.loading()"
+          [loading]="service.loading() && !basePath()"
           (onClick)="basePath.set(''); triggerScan()"
         />
       </div>
@@ -46,21 +46,21 @@
         [placeholder]="'nasScanner.basePathPlaceholder' | transloco"
         [value]="basePath()"
         (input)="basePath.set($any($event.target).value)"
-        [disabled]="service.scanning()"
+        [disabled]="service.loading()"
       />
       <p-button
         [label]="
-          service.scanning() ? ('nasScanner.scanning' | transloco) : ('nasScanner.scan' | transloco)
+          service.loading() ? ('nasScanner.scanning' | transloco) : ('nasScanner.scan' | transloco)
         "
         icon="pi pi-search"
-        [disabled]="service.scanning()"
-        [loading]="service.scanning()"
+        [disabled]="service.loading()"
+        [loading]="service.loading()"
         (onClick)="triggerScan()"
       />
     </div>
   </div>
 
-  @if (service.scanning()) {
+  @if (service.loading()) {
     <div class="nas-scanner-page__loading">
       <p-progress-spinner strokeWidth="4" />
     </div>
@@ -74,9 +74,9 @@
   }
 
   <div class="nas-scanner-page__results">
-    @if (service.result(); as result) {
+    @if (service.scanResult(); as result) {
       <app-scan-results [result]="result" />
-    } @else if (!service.scanning() && !service.error()) {
+    } @else if (!service.loading() && !service.error()) {
       <p class="text-color-secondary">{{ 'nasScanner.empty' | transloco }}</p>
     }
   </div>
