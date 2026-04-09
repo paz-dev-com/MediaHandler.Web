@@ -6,6 +6,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { NasScannerService } from './nas-scanner.service';
 import { ScanResultsComponent } from './scan-results.component';
+import { ImportResultsComponent } from './import-results.component';
 
 @Component({
   selector: 'app-nas-scanner-page',
@@ -19,6 +20,7 @@ import { ScanResultsComponent } from './scan-results.component';
     ProgressSpinnerModule,
     TooltipModule,
     ScanResultsComponent,
+    ImportResultsComponent,
   ],
 })
 export class NasScannerPageComponent implements OnInit {
@@ -35,12 +37,15 @@ export class NasScannerPageComponent implements OnInit {
     });
   }
 
-  scanLocation(path: string): void {
+  selectLocation(path: string): void {
     this.basePath.set(path);
-    this.service.scan(path);
   }
 
   triggerScan(): void {
     this.service.scan(this.basePath() || undefined);
+  }
+
+  triggerScanAndImport(): void {
+    this.service.scanAndImport(this.basePath() || undefined);
   }
 }
