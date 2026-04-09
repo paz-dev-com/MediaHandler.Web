@@ -146,7 +146,8 @@
     "locations": {
       "label": "Scan rapide par emplacement",
       "tooltip": "Cliquer pour scanner cet emplacement",
-      "scanAll": "Tout scanner"
+      "scanAll": "Tout scanner",
+      "selectTooltip": "Cliquer pour sélectionner cet emplacement"
     },
     "results": {
       "title": "Résultats du scan",
@@ -154,6 +155,22 @@
       "newFiles": "Nouveaux fichiers",
       "existingFiles": "Fichiers existants",
       "totalScanned": "Total scanné"
+    },
+    "scanAndImport": {
+      "button": "Scanner et importer",
+      "loading": "Scan et importation en cours...",
+      "error": "Le scan et l'importation ont échoué. Veuillez réessayer.",
+      "results": { "title": "Résultats de l'importation", "matched": "Correspondants", "skipped": "Ignorés", "failed": "Échoués" },
+      "errors": { "title": "Détails des erreurs" }
+    },
+    "autoImport": {
+      "title": "Importation automatique",
+      "description": "Réessayer la correspondance TMDB pour tous les fichiers médias non liés précédemment scannés.",
+      "button": "Importation automatique",
+      "loading": "Importation en cours...",
+      "error": "L'importation automatique a échoué. Veuillez réessayer.",
+      "results": { "title": "Résultats de l'importation automatique", "totalUnlinked": "Total non liés", "matched": "Correspondants", "skipped": "Ignorés", "failed": "Échoués" },
+      "errors": { "title": "Détails des erreurs" }
     },
     "empty": "Aucun scan n'a encore été lancé. Cliquez sur \"Scanner\" pour découvrir les fichiers sur votre NAS.",
     "error": "Le scan a échoué. Veuillez réessayer.",

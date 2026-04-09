@@ -146,7 +146,8 @@
     "locations": {
       "label": "Quick scan by location",
       "tooltip": "Click to scan this location",
-      "scanAll": "Scan All"
+      "scanAll": "Scan All",
+      "selectTooltip": "Click to select this location"
     },
     "results": {
       "title": "Scan Results",
@@ -154,6 +155,22 @@
       "newFiles": "New Files",
       "existingFiles": "Existing Files",
       "totalScanned": "Total Scanned"
+    },
+    "scanAndImport": {
+      "button": "Scan & Import",
+      "loading": "Scanning & Importing...",
+      "error": "Scan & Import failed. Please try again.",
+      "results": { "title": "Import Results", "matched": "Matched", "skipped": "Skipped", "failed": "Failed" },
+      "errors": { "title": "Error Details" }
+    },
+    "autoImport": {
+      "title": "Auto Import",
+      "description": "Retry TMDB matching for all previously scanned but unlinked media files.",
+      "button": "Auto Import",
+      "loading": "Importing...",
+      "error": "Auto Import failed. Please try again.",
+      "results": { "title": "Auto Import Results", "totalUnlinked": "Total Unlinked", "matched": "Matched", "skipped": "Skipped", "failed": "Failed" },
+      "errors": { "title": "Error Details" }
     },
     "empty": "No scan has been run yet. Click \"Scan\" to start discovering files on your NAS.",
     "error": "Scan failed. Please try again.",
