@@ -42,12 +42,26 @@ export class NasScannerService {
       .post<ScanAndImportNasResult>(
         'files/scan-and-import',
         {},
-        { language, ...(basePath ? { basePath } : {}) }
+        { language, ...(basePath ? { basePath } : {}) },
       )
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (response) => this.scanAndImportResult.set(response.data),
         error: () => this.error.set('nasScanner.scanAndImport.error'),
+      });
+  }
+
+  autoImport(): void {
+    this.error.set(null);
+    this.loading.set(true);
+    const language = this.transloco.getActiveLang();
+
+    this.api
+      .post<AutoImportResult>('files/auto-import', {}, { language })
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (response) => this.autoImportResult.set(response.data),
+        error: () => this.error.set('nasScanner.autoImport.error'),
       });
   }
 }

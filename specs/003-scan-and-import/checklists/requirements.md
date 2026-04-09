@@ -34,4 +34,3 @@
 - All items pass validation. Specification is ready for `/speckit.clarify` or `/speckit.plan`.
 - No [NEEDS CLARIFICATION] markers were needed — the feature description was sufficiently detailed to make informed decisions for all requirements.
 - Assumptions section documents all inferred details about backend API behavior.
-

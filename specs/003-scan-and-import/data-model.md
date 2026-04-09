@@ -128,4 +128,3 @@ Loading        → [error]                → Error (previous results preserved)
 Loading = true  → All buttons disabled, input disabled, spinner shown
 Loading = false → All buttons enabled, input enabled, spinner hidden
 ```
-

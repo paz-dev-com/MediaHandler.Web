@@ -28,7 +28,9 @@ import { AccordionModule } from 'primeng/accordion';
       </p-accordion-panel>
       @if (errors().length > 0) {
         <p-accordion-panel>
-          <p-accordion-header>{{ 'nasScanner.scanAndImport.errors.title' | transloco }}</p-accordion-header>
+          <p-accordion-header>{{
+            'nasScanner.scanAndImport.errors.title' | transloco
+          }}</p-accordion-header>
           <p-accordion-content>
             <ul>
               @for (err of errors(); track err) {
@@ -40,24 +42,26 @@ import { AccordionModule } from 'primeng/accordion';
       }
     </p-accordion>
   `,
-  styles: [`
-    .import-results__stats {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.4rem 1.5rem;
-      margin: 0;
-
-      dt {
-        font-weight: 600;
-        color: var(--text-color-secondary);
-      }
-
-      dd {
+  styles: [
+    `
+      .import-results__stats {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.4rem 1.5rem;
         margin: 0;
-        font-weight: 500;
+
+        dt {
+          font-weight: 600;
+          color: var(--text-color-secondary);
+        }
+
+        dd {
+          margin: 0;
+          font-weight: 500;
+        }
       }
-    }
-  `],
+    `,
+  ],
 })
 export class ImportResultsComponent {
   readonly matched = input.required<number>();
@@ -67,4 +71,3 @@ export class ImportResultsComponent {
   readonly totalUnlinked = input<number | null>(null);
   readonly titleKey = input<string>('nasScanner.scanAndImport.results.title');
 }
-

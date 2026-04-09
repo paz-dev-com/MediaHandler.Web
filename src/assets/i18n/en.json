@@ -160,7 +160,12 @@
       "button": "Scan & Import",
       "loading": "Scanning & Importing...",
       "error": "Scan & Import failed. Please try again.",
-      "results": { "title": "Import Results", "matched": "Matched", "skipped": "Skipped", "failed": "Failed" },
+      "results": {
+        "title": "Import Results",
+        "matched": "Matched",
+        "skipped": "Skipped",
+        "failed": "Failed"
+      },
       "errors": { "title": "Error Details" }
     },
     "autoImport": {
@@ -169,7 +174,13 @@
       "button": "Auto Import",
       "loading": "Importing...",
       "error": "Auto Import failed. Please try again.",
-      "results": { "title": "Auto Import Results", "totalUnlinked": "Total Unlinked", "matched": "Matched", "skipped": "Skipped", "failed": "Failed" },
+      "results": {
+        "title": "Auto Import Results",
+        "totalUnlinked": "Total Unlinked",
+        "matched": "Matched",
+        "skipped": "Skipped",
+        "failed": "Failed"
+      },
       "errors": { "title": "Error Details" }
     },
     "empty": "No scan has been run yet. Click \"Scan\" to start discovering files on your NAS.",

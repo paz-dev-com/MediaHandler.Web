@@ -26,23 +26,23 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Pre-Research Check
 
-| Principle                         | Status | Notes                                                                                                                       |
-| --------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
-| I. Code Quality & Maintainability | PASS   | Standalone components, signals-first state, strict TS, OnPush — all aligned with existing patterns                          |
-| II. Testing Standards             | PASS   | Vitest configured; unit tests planned for new service methods, new components, and modified component behavior               |
-| III. User Experience Consistency  | PASS   | PrimeNG Accordion/Card for consistent UI; loading states, error feedback, collapsible results per spec; bilingual i18n       |
-| IV. Performance Requirements      | PASS   | No new dependencies (zero bundle impact); Accordion already tree-shakeable from PrimeNG; lazy-loaded route preserved         |
-| Technical Decision Framework      | PASS   | No new third-party dependencies — all changes use existing stack (PrimeNG, Transloco, Angular signals)                      |
+| Principle                         | Status | Notes                                                                                                                  |
+| --------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| I. Code Quality & Maintainability | PASS   | Standalone components, signals-first state, strict TS, OnPush — all aligned with existing patterns                     |
+| II. Testing Standards             | PASS   | Vitest configured; unit tests planned for new service methods, new components, and modified component behavior         |
+| III. User Experience Consistency  | PASS   | PrimeNG Accordion/Card for consistent UI; loading states, error feedback, collapsible results per spec; bilingual i18n |
+| IV. Performance Requirements      | PASS   | No new dependencies (zero bundle impact); Accordion already tree-shakeable from PrimeNG; lazy-loaded route preserved   |
+| Technical Decision Framework      | PASS   | No new third-party dependencies — all changes use existing stack (PrimeNG, Transloco, Angular signals)                 |
 
 ### Post-Design Check
 
-| Principle                         | Status | Notes                                                                                                                                                    |
-| --------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| I. Code Quality & Maintainability | PASS   | New components (ImportResultsComponent) < 100 lines each; service methods follow existing pattern; no `any` types; all standalone                        |
-| II. Testing Standards             | PASS   | Service: test scanAndImport(), autoImport(), modified scan(); Components: test accordion expand/collapse, error list rendering, button disable states     |
-| III. User Experience Consistency  | PASS   | Collapsible accordion for import results; loading spinner during operations; all buttons disabled during operations; i18n for all new text                |
-| IV. Performance Requirements      | PASS   | No new dependencies; PrimeNG Accordion tree-shaken; no new routes; no impact on initial bundle; OnPush on all components                                 |
-| Technical Decision Framework      | PASS   | Simplest approach: extend existing service + page component; new child component for import results only. No unnecessary abstractions.                    |
+| Principle                         | Status | Notes                                                                                                                                                 |
+| --------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I. Code Quality & Maintainability | PASS   | New components (ImportResultsComponent) < 100 lines each; service methods follow existing pattern; no `any` types; all standalone                     |
+| II. Testing Standards             | PASS   | Service: test scanAndImport(), autoImport(), modified scan(); Components: test accordion expand/collapse, error list rendering, button disable states |
+| III. User Experience Consistency  | PASS   | Collapsible accordion for import results; loading spinner during operations; all buttons disabled during operations; i18n for all new text            |
+| IV. Performance Requirements      | PASS   | No new dependencies; PrimeNG Accordion tree-shaken; no new routes; no impact on initial bundle; OnPush on all components                              |
+| Technical Decision Framework      | PASS   | Simplest approach: extend existing service + page component; new child component for import results only. No unnecessary abstractions.                |
 
 **Gate result**: PASS — no violations requiring justification.
 

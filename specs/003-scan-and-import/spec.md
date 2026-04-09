@@ -41,8 +41,8 @@ The Scan & Import follows the same UX pattern as the adjusted scan: select a loc
 
 1. **Given** the admin is on the NAS Scanner page, **When** the page loads, **Then** a "Scan & Import" button is visible alongside the existing "Scan" button.
 2. **Given** the admin has set a base path (via location button or manual input), **When** they click "Scan & Import", **Then** the system calls the scan-and-import endpoint with the specified base path.
- 3. **Given** the scan-and-import operation completes successfully, **When** results are displayed, **Then** the admin sees scan statistics as stat cards (new files, existing files, total scanned, folders found) AND import statistics (matched, skipped, failed, errors) displayed in a collapsible accordion panel below the stat cards, collapsed by default and expandable on click.
- 4. **Given** the scan-and-import operation returns errors in the errors array, **When** results are displayed, **Then** the individual error messages are shown in a collapsible error list within the results area so the admin can expand and review which files failed to import and why.
+3. **Given** the scan-and-import operation completes successfully, **When** results are displayed, **Then** the admin sees scan statistics as stat cards (new files, existing files, total scanned, folders found) AND import statistics (matched, skipped, failed, errors) displayed in a collapsible accordion panel below the stat cards, collapsed by default and expandable on click.
+4. **Given** the scan-and-import operation returns errors in the errors array, **When** results are displayed, **Then** the individual error messages are shown in a collapsible error list within the results area so the admin can expand and review which files failed to import and why.
 5. **Given** the admin clicks "Scan & Import" without specifying a base path, **When** the operation executes, **Then** the system scans all NAS locations (same behavior as scan without a path).
 6. **Given** a scan-and-import operation is in progress, **When** the admin looks at the page, **Then** a loading indicator is shown and all action buttons are disabled.
 
@@ -60,12 +60,12 @@ This is a standalone action that does not require a base path — it operates on
 
 **Acceptance Scenarios**:
 
- 1. **Given** the admin is on the NAS Scanner page, **When** the page loads, **Then** an "Auto Import" button is visible in a visually separate section from the path-dependent actions (Scan, Scan & Import), clearly distinguishing it as an action that does not require a base path.
- 2. **Given** the admin clicks "Auto Import", **When** the operation executes, **Then** the system calls the auto-import endpoint without any base path parameter.
- 3. **Given** the auto-import operation completes, **When** results are displayed, **Then** the admin sees import statistics (total unlinked files processed, matched, skipped, failed, and any errors) displayed in a collapsible accordion panel, collapsed by default and expandable on click.
- 4. **Given** no unlinked files exist in the system, **When** the admin triggers auto-import, **Then** results show zero totals with no errors.
- 5. **Given** auto-import encounters errors for some files, **When** results are displayed, **Then** the error details are visible in a collapsible error list within the results area.
-6. **Given** an auto-import is in progress, **When** the admin views the page, **Then** a loading indicator is shown and all action buttons are disabled.
+1.  **Given** the admin is on the NAS Scanner page, **When** the page loads, **Then** an "Auto Import" button is visible in a visually separate section from the path-dependent actions (Scan, Scan & Import), clearly distinguishing it as an action that does not require a base path.
+2.  **Given** the admin clicks "Auto Import", **When** the operation executes, **Then** the system calls the auto-import endpoint without any base path parameter.
+3.  **Given** the auto-import operation completes, **When** results are displayed, **Then** the admin sees import statistics (total unlinked files processed, matched, skipped, failed, and any errors) displayed in a collapsible accordion panel, collapsed by default and expandable on click.
+4.  **Given** no unlinked files exist in the system, **When** the admin triggers auto-import, **Then** results show zero totals with no errors.
+5.  **Given** auto-import encounters errors for some files, **When** results are displayed, **Then** the error details are visible in a collapsible error list within the results area.
+6.  **Given** an auto-import is in progress, **When** the admin views the page, **Then** a loading indicator is shown and all action buttons are disabled.
 
 ---
 
