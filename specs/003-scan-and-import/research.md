@@ -118,10 +118,12 @@ Each operation method clears only its own result signal and sets the appropriate
 **Rationale**: The spec requires import results (matched, skipped, failed, errors) displayed as a collapsible accordion below the scan stat cards. Extracting this into its own component keeps the page component under the 200-line limit (constitution requirement) and follows the existing pattern where `ScanResultsComponent` is a separate presentational component.
 
 The component supports two modes:
+
 - **Scan & Import results**: Shows import stats (matched, skipped, failed) + errors
 - **Auto Import results**: Shows import stats (totalUnlinked, matched, skipped, failed) + errors
 
 Both share the same visual pattern. The component uses `@input()` for the import data and renders:
+
 1. An accordion panel with summary statistics (key-value pairs)
 2. A nested accordion panel for errors (only shown when errors exist)
 
@@ -131,4 +133,3 @@ Both share the same visual pattern. The component uses `@input()` for the import
 - < 200 lines: presentational component with minimal logic
 - OnPush + signals: uses `input()` signal-based inputs
 - Standalone: no NgModule
-

@@ -48,4 +48,8 @@ export class NasScannerPageComponent implements OnInit {
   triggerScanAndImport(): void {
     this.service.scanAndImport(this.basePath() || undefined);
   }
+
+  triggerAutoImport(): void {
+    this.service.autoImport();
+  }
 }

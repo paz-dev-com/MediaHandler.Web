@@ -53,28 +53,27 @@ npm test
 
 ## Key Files Modified/Created
 
-| File                                                         | Change                                                              |
-| ------------------------------------------------------------ | ------------------------------------------------------------------- |
-| `src/app/shared/models/scan.model.ts`                       | Add `ScanAndImportNasResult`, `AutoImportResult` interfaces         |
-| `src/app/features/nas-scanner/nas-scanner.service.ts`        | Add `scanAndImport()`, `autoImport()` methods + new result signals  |
-| `src/app/features/nas-scanner/nas-scanner-page.component.ts` | Decouple location click, add new action buttons                     |
-| `src/app/features/nas-scanner/nas-scanner-page.component.html` | Restructured template with 3 actions + auto-import section       |
-| `src/app/features/nas-scanner/nas-scanner-page.component.scss` | Styles for auto-import section separator                         |
-| `src/app/features/nas-scanner/import-results.component.ts`   | **NEW** — collapsible accordion for import stats + error list       |
-| `src/assets/i18n/en.json`                                    | Add `nasScanner.scanAndImport.*`, `nasScanner.autoImport.*` keys    |
-| `src/assets/i18n/fr.json`                                    | Add French translations for new keys                                |
+| File                                                           | Change                                                             |
+| -------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `src/app/shared/models/scan.model.ts`                          | Add `ScanAndImportNasResult`, `AutoImportResult` interfaces        |
+| `src/app/features/nas-scanner/nas-scanner.service.ts`          | Add `scanAndImport()`, `autoImport()` methods + new result signals |
+| `src/app/features/nas-scanner/nas-scanner-page.component.ts`   | Decouple location click, add new action buttons                    |
+| `src/app/features/nas-scanner/nas-scanner-page.component.html` | Restructured template with 3 actions + auto-import section         |
+| `src/app/features/nas-scanner/nas-scanner-page.component.scss` | Styles for auto-import section separator                           |
+| `src/app/features/nas-scanner/import-results.component.ts`     | **NEW** — collapsible accordion for import stats + error list      |
+| `src/assets/i18n/en.json`                                      | Add `nasScanner.scanAndImport.*`, `nasScanner.autoImport.*` keys   |
+| `src/assets/i18n/fr.json`                                      | Add French translations for new keys                               |
 
 ## Backend API Requirements
 
 The following backend endpoints must be available:
 
-| Endpoint                              | Status    | Description                        |
-| ------------------------------------- | --------- | ---------------------------------- |
-| `POST /api/v1/files/scan`            | Existing  | Scan NAS files                     |
-| `GET /api/v1/files/locations`        | Existing  | Get configured NAS base paths      |
-| `POST /api/v1/files/scan-and-import` | **New**   | Combined scan + TMDB auto-import   |
-| `POST /api/v1/files/auto-import`     | **New**   | Retry TMDB matching on unlinked    |
+| Endpoint                             | Status   | Description                      |
+| ------------------------------------ | -------- | -------------------------------- |
+| `POST /api/v1/files/scan`            | Existing | Scan NAS files                   |
+| `GET /api/v1/files/locations`        | Existing | Get configured NAS base paths    |
+| `POST /api/v1/files/scan-and-import` | **New**  | Combined scan + TMDB auto-import |
+| `POST /api/v1/files/auto-import`     | **New**  | Retry TMDB matching on unlinked  |
 
 API source: MediaHandler.API  
 See: [contracts/api-contract.md](contracts/api-contract.md) for full endpoint specifications.
-

@@ -160,7 +160,12 @@
       "button": "Scanner et importer",
       "loading": "Scan et importation en cours...",
       "error": "Le scan et l'importation ont échoué. Veuillez réessayer.",
-      "results": { "title": "Résultats de l'importation", "matched": "Correspondants", "skipped": "Ignorés", "failed": "Échoués" },
+      "results": {
+        "title": "Résultats de l'importation",
+        "matched": "Correspondants",
+        "skipped": "Ignorés",
+        "failed": "Échoués"
+      },
       "errors": { "title": "Détails des erreurs" }
     },
     "autoImport": {
@@ -169,7 +174,13 @@
       "button": "Importation automatique",
       "loading": "Importation en cours...",
       "error": "L'importation automatique a échoué. Veuillez réessayer.",
-      "results": { "title": "Résultats de l'importation automatique", "totalUnlinked": "Total non liés", "matched": "Correspondants", "skipped": "Ignorés", "failed": "Échoués" },
+      "results": {
+        "title": "Résultats de l'importation automatique",
+        "totalUnlinked": "Total non liés",
+        "matched": "Correspondants",
+        "skipped": "Ignorés",
+        "failed": "Échoués"
+      },
       "errors": { "title": "Détails des erreurs" }
     },
     "empty": "Aucun scan n'a encore été lancé. Cliquez sur \"Scanner\" pour découvrir les fichiers sur votre NAS.",

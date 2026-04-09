@@ -51,16 +51,16 @@ Triggers a combined NAS scan and TMDB auto-import. Scans files from the NAS, the
 
 #### ScanAndImportNasResult
 
-| Field           | Type       | Description                                                     |
-| --------------- | ---------- | --------------------------------------------------------------- |
-| `newFiles`      | `number`   | Count of newly discovered files added to the database           |
-| `existingFiles` | `number`   | Count of files that already existed in the database             |
-| `totalScanned`  | `number`   | Total number of files scanned on the NAS                        |
-| `foldersFound`  | `number`   | Number of folders traversed during scan                         |
-| `matched`       | `number`   | Count of files successfully matched to TMDB entries             |
-| `skipped`       | `number`   | Count of files skipped (already linked or not matchable)        |
-| `failed`        | `number`   | Count of files that failed TMDB matching                        |
-| `errors`        | `string[]` | Error detail strings for each file that failed import           |
+| Field           | Type       | Description                                              |
+| --------------- | ---------- | -------------------------------------------------------- |
+| `newFiles`      | `number`   | Count of newly discovered files added to the database    |
+| `existingFiles` | `number`   | Count of files that already existed in the database      |
+| `totalScanned`  | `number`   | Total number of files scanned on the NAS                 |
+| `foldersFound`  | `number`   | Number of folders traversed during scan                  |
+| `matched`       | `number`   | Count of files successfully matched to TMDB entries      |
+| `skipped`       | `number`   | Count of files skipped (already linked or not matchable) |
+| `failed`        | `number`   | Count of files that failed TMDB matching                 |
+| `errors`        | `string[]` | Error detail strings for each file that failed import    |
 
 #### Success Response Example
 
@@ -74,9 +74,7 @@ Triggers a combined NAS scan and TMDB auto-import. Scans files from the NAS, the
     "matched": 10,
     "skipped": 1,
     "failed": 1,
-    "errors": [
-      "Could not match file 'The.Unknown.Movie.2025.mkv': No TMDB result found"
-    ]
+    "errors": ["Could not match file 'The.Unknown.Movie.2025.mkv': No TMDB result found"]
   },
   "meta": null,
   "errors": []
@@ -104,13 +102,13 @@ Retries TMDB matching for all previously scanned but unlinked media files. Does 
 
 #### AutoImportResult
 
-| Field           | Type       | Description                                                     |
-| --------------- | ---------- | --------------------------------------------------------------- |
-| `totalUnlinked` | `number`   | Total number of unlinked files that were processed              |
-| `matched`       | `number`   | Count of files successfully matched to TMDB entries             |
-| `skipped`       | `number`   | Count of files skipped (not matchable or already attempted)     |
-| `failed`        | `number`   | Count of files that failed TMDB matching                        |
-| `errors`        | `string[]` | Error detail strings for each file that failed import           |
+| Field           | Type       | Description                                                 |
+| --------------- | ---------- | ----------------------------------------------------------- |
+| `totalUnlinked` | `number`   | Total number of unlinked files that were processed          |
+| `matched`       | `number`   | Count of files successfully matched to TMDB entries         |
+| `skipped`       | `number`   | Count of files skipped (not matchable or already attempted) |
+| `failed`        | `number`   | Count of files that failed TMDB matching                    |
+| `errors`        | `string[]` | Error detail strings for each file that failed import       |
 
 #### Success Response Example
 
@@ -190,9 +188,9 @@ export interface AutoImportResult {
 
 ## Frontend API Call Mapping
 
-| UI Action        | Service Method                  | API Endpoint                         | Query Params                |
-| ---------------- | ------------------------------- | ------------------------------------ | --------------------------- |
-| Click "Scan"     | `NasScannerService.scan()`      | `POST /api/v1/files/scan`           | `basePath?`                 |
+| UI Action             | Service Method                      | API Endpoint                         | Query Params             |
+| --------------------- | ----------------------------------- | ------------------------------------ | ------------------------ |
+| Click "Scan"          | `NasScannerService.scan()`          | `POST /api/v1/files/scan`            | `basePath?`              |
 | Click "Scan & Import" | `NasScannerService.scanAndImport()` | `POST /api/v1/files/scan-and-import` | `basePath?`, `language?` |
 | Click "Auto Import"   | `NasScannerService.autoImport()`    | `POST /api/v1/files/auto-import`     | `language?`              |
 
@@ -212,4 +210,3 @@ All error responses use the standard `ApiResponse` envelope:
   ]
 }
 ```
-

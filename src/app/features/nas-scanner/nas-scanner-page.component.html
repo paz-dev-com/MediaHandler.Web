@@ -59,7 +59,9 @@
       />
       <p-button
         [label]="
-          service.loading() ? ('nasScanner.scanAndImport.loading' | transloco) : ('nasScanner.scanAndImport.button' | transloco)
+          service.loading()
+            ? ('nasScanner.scanAndImport.loading' | transloco)
+            : ('nasScanner.scanAndImport.button' | transloco)
         "
         icon="pi pi-download"
         [disabled]="service.loading()"
@@ -94,8 +96,43 @@
         [failed]="result.failed"
         [errors]="result.errors"
       />
-    } @else if (!service.loading() && !service.error() && !service.scanResult() && !service.scanAndImportResult()) {
+    } @else if (
+      !service.loading() &&
+      !service.error() &&
+      !service.scanResult() &&
+      !service.scanAndImportResult() &&
+      !service.autoImportResult()
+    ) {
       <p class="text-color-secondary">{{ 'nasScanner.empty' | transloco }}</p>
+    }
+  </div>
+
+  <!-- Auto Import section — independent of base path -->
+  <div class="nas-scanner-page__auto-import">
+    <h2>{{ 'nasScanner.autoImport.title' | transloco }}</h2>
+    <p class="text-color-secondary">{{ 'nasScanner.autoImport.description' | transloco }}</p>
+
+    <p-button
+      [label]="
+        service.loading()
+          ? ('nasScanner.autoImport.loading' | transloco)
+          : ('nasScanner.autoImport.button' | transloco)
+      "
+      icon="pi pi-sync"
+      [disabled]="service.loading()"
+      [loading]="service.loading()"
+      (onClick)="triggerAutoImport()"
+    />
+
+    @if (service.autoImportResult(); as result) {
+      <app-import-results
+        [matched]="result.matched"
+        [skipped]="result.skipped"
+        [failed]="result.failed"
+        [errors]="result.errors"
+        [totalUnlinked]="result.totalUnlinked"
+        [titleKey]="'nasScanner.autoImport.results.title'"
+      />
     }
   </div>
 </div>

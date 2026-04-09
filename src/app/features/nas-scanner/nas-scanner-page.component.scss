@@ -78,4 +78,18 @@
   &__results {
     margin-top: 1.5rem;
   }
+
+  &__auto-import {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--surface-200);
+
+    h2 {
+      margin: 0 0 0.5rem;
+    }
+
+    p {
+      margin: 0 0 1.25rem;
+    }
+  }
 }
