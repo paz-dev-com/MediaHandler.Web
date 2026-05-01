@@ -34,6 +34,7 @@ export class SidebarComponent {
       return [
         ...this.baseNavItems,
         { labelKey: 'nav.nasScanner', icon: 'pi pi-server', route: '/nas-scanner' },
+        { labelKey: 'nav.admin', icon: 'pi pi-cog', route: '/admin' },
       ];
     }
     return this.baseNavItems;
