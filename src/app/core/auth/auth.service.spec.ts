@@ -148,7 +148,11 @@ describe('AuthService', () => {
   describe('syncUser()', () => {
     it('calls api.post("auth/sync", {}) and updates the user', () => {
       service.syncUser();
-      expect(mockApiPost).toHaveBeenCalledWith('auth/sync', {});
+      expect(mockApiPost).toHaveBeenCalledWith('auth/sync', {
+        sub: null,
+        email: null,
+        name: null,
+      });
       expect(service.user()?.role).toBe(UserRole.Admin);
     });
 

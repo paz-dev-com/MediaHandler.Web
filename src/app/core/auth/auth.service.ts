@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ApiService } from '@core/api/api.service';
 import { User } from '@shared/models/user.model';
 import { filter, firstValueFrom, take } from 'rxjs';
@@ -16,9 +17,10 @@ export class AuthService {
   private readonly _user = signal<User | null>(null);
   private readonly _auth0User = toSignal(this.auth0.user$, { initialValue: null });
 
-  /** Prevents loadProfile() / syncUser() from firing more than once per session. */
-  private _profileLoaded = false;
+  /** Prevents syncUser() from firing more than once per session. */
   private _synced = false;
+  /** Prevents loadProfile() from firing more than once per session. */
+  private _profileLoaded = false;
 
   readonly isAuthenticated = toSignal(this.auth0.isAuthenticated$, { initialValue: false });
   readonly user = computed(() => this._user());
@@ -38,8 +40,8 @@ export class AuthService {
   constructor() {
     // Once Auth0 confirms the user is authenticated (login OR page-refresh with
     // valid tokens in localStorage), fetch the backend profile exactly once.
-    // This is intentionally LAZY and fire-and-forget — it never triggers a
-    // redirect, so it cannot cause a login loop.
+    // If the user is not yet in the DB (404), loadProfile() will automatically
+    // trigger syncUser() to provision them, regardless of the entry point.
     this.auth0.isAuthenticated$.pipe(filter(Boolean), take(1)).subscribe(() => this.loadProfile());
   }
 
@@ -49,6 +51,8 @@ export class AuthService {
 
   logout(): void {
     this._user.set(null);
+    this._synced = false;
+    this._profileLoaded = false;
     this.auth0.logout({ logoutParams: { returnTo: window.location.origin } });
   }
 
@@ -62,33 +66,64 @@ export class AuthService {
 
   /**
    * POST auth/sync — creates the user in the DB if new, updates email/name.
-   * Called ONLY from the auth-callback component after a fresh login.
-   * Fire-and-forget: does not block navigation.
+   *
+   * Called either:
+   *  - explicitly by AuthCallbackComponent after a fresh Auth0 login, OR
+   *  - automatically by loadProfile() when the user is not found in the DB (404).
+   *
+   * The email/name are sent in the request body sourced from the Auth0 ID token
+   * (auth0.user$) because Auth0 access tokens do NOT include those claims by
+   * default — they are only available in the ID token.
    */
   syncUser(): void {
     if (this._synced) return;
     this._synced = true;
-    this._profileLoaded = true; // sync already returns the full profile
-    this.api.post<User>('auth/sync', {}).subscribe({
-      next: (response) => this._user.set(response.data),
-      error: () => {
-        /* silently fail — profile will be fetched on demand */
-      },
-    });
+
+    const auth0User = this._auth0User();
+
+    this.api
+      .post<User>('auth/sync', {
+        // sub, email and name are sourced from the Auth0 ID token (auth0.user$).
+        // This is the only reliable source in dev when Auth0 issues an opaque access
+        // token (no audience configured) — the backend cannot decode the sub from it.
+        sub: auth0User?.sub ?? null,
+        email: auth0User?.email ?? null,
+        name: auth0User?.name ?? null,
+      })
+      .subscribe({
+        next: (response) => {
+          this._profileLoaded = true;
+          this._user.set(response.data);
+        },
+        error: () => {
+          // Sync failed — reset so loadProfile() can retry GET /auth/me as a fallback.
+          this._profileLoaded = false;
+          this.loadProfile();
+        },
+      });
   }
 
   /**
    * GET auth/me — fetch profile from the backend without creating/updating.
-   * Used on page refresh (user already exists in DB from a previous login).
-   * Fire-and-forget: does not block navigation.
+   * Used on every authenticated session (fresh login AND page refresh).
+   *
+   * If the user is not found (404), syncUser() is triggered automatically so the
+   * user is provisioned regardless of the entry point into the application —
+   * not only when going through /auth/callback.
    */
   private loadProfile(): void {
     if (this._profileLoaded) return;
     this._profileLoaded = true;
     this.api.get<User>('auth/me').subscribe({
       next: (response) => this._user.set(response.data),
-      error: () => {
-        /* silently fail */
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 404) {
+          // User is authenticated in Auth0 but not yet in the DB.
+          // Trigger a sync — handles page-refresh where /auth/callback was never visited.
+          this._profileLoaded = false;
+          this.syncUser();
+        }
+        // Other errors (401, 500, network…): silently fail.
       },
     });
   }
