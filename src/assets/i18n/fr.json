@@ -218,6 +218,18 @@
         "createdAt": "Créé le"
       }
     },
+    "dashboard": {
+      "title": "Tableau de bord admin",
+      "systemHealth": "Santé du système"
+    },
+    "health": {
+      "status": "Statut",
+      "healthy": "Sain",
+      "unhealthy": "Dégradé",
+      "timestamp": "Heure serveur",
+      "version": "Version",
+      "unavailable": "Statut de santé indisponible"
+    },
     "libraryRoots": {
       "title": "Gestion des racines de bibliothèque",
       "addButton": "Ajouter une racine",

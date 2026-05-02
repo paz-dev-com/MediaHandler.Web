@@ -296,6 +296,18 @@
         "Cancelled": "Cancelled"
       }
     },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "systemHealth": "System Health"
+    },
+    "health": {
+      "status": "Status",
+      "healthy": "Healthy",
+      "unhealthy": "Unhealthy",
+      "timestamp": "Server Time",
+      "version": "Version",
+      "unavailable": "Health status unavailable"
+    },
     "review": {
       "title": "Review Queue",
       "filterStatus": "Filter by status",
