@@ -41,7 +41,7 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 Create `AdminLayoutComponent` with PrimeNG `TabMenu` sub-navigation (Dashboard, Users, Library Roots, Scanner, Review tabs linked to child routes) and `<router-outlet>` in `src/app/features/admin/admin-layout.component.ts`, `src/app/features/admin/admin-layout.component.html`, and `src/app/features/admin/admin-layout.component.scss`
+- [x] T009 Create `AdminLayoutComponent` with PrimeNG `TabMenu` sub-navigation (Dashboard, Users, Library Roots, Scanner, Review tabs linked to child routes) and `<router-outlet>` in `src/app/features/admin/admin-layout.component.ts`, `src/app/features/admin/admin-layout.component.html`, and `src/app/features/admin/admin-layout.component.scss`
 
 **Checkpoint**: Admin layout shell renders at `/admin` with working tab navigation between empty child routes
 
