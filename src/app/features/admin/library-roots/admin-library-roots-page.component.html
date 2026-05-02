@@ -12,6 +12,7 @@
         [placeholder]="t('admin.libraryRoots.filterKind')"
         [style]="{ 'min-width': '10rem' }"
         (ngModelChange)="onKindFilterChange($event)"
+        appendTo="body"
       />
       <p-select
         [options]="enabledFilterOptions"
@@ -21,6 +22,7 @@
         [placeholder]="t('admin.libraryRoots.filterEnabled')"
         [style]="{ 'min-width': '10rem' }"
         (ngModelChange)="onEnabledFilterChange($event)"
+        appendTo="body"
       />
       <p-button
         [label]="t('admin.libraryRoots.addButton')"

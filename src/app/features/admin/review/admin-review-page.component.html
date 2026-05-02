@@ -10,6 +10,7 @@
         [placeholder]="t('admin.review.filterStatus')"
         [style]="{ 'min-width': '10rem' }"
         (ngModelChange)="onStatusFilterChange($event)"
+        appendTo="body"
       />
       <p-select
         [options]="reasonFilterOptions"
@@ -19,6 +20,7 @@
         [placeholder]="t('admin.review.filterReason')"
         [style]="{ 'min-width': '12rem' }"
         (ngModelChange)="onReasonFilterChange($event)"
+        appendTo="body"
       />
       <input
         pInputText
