@@ -1,11 +1,15 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  DestroyRef,
   OnInit,
   ViewChild,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -58,6 +62,8 @@ export class AdminLibraryRootsPageComponent implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly transloco = inject(TranslocoService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly roots = this.rootService.roots;
   readonly loading = this.rootService.loading;
@@ -66,20 +72,40 @@ export class AdminLibraryRootsPageComponent implements OnInit {
   readonly selectedKindFilter = signal<LibraryRootKind | null>(null);
   readonly selectedEnabledFilter = signal<boolean | null>(null);
 
-  readonly kindFilterOptions: KindFilterOption[] = [
-    { label: 'All', value: null },
-    { label: 'Movies', value: LibraryRootKind.Movies },
-    { label: 'TV Shows', value: LibraryRootKind.TvShows },
-    { label: 'Mixed', value: LibraryRootKind.Mixed },
-  ];
+  kindFilterOptions: KindFilterOption[] = [];
+  enabledFilterOptions: EnabledFilterOption[] = [];
 
-  readonly enabledFilterOptions: EnabledFilterOption[] = [
-    { label: 'All', value: null },
-    { label: 'Enabled', value: true },
-    { label: 'Disabled', value: false },
-  ];
+  private buildFilterOptions(): void {
+    this.kindFilterOptions = [
+      { label: this.transloco.translate('common.all'), value: null },
+      {
+        label: this.transloco.translate('admin.libraryRoots.kinds.Movies'),
+        value: LibraryRootKind.Movies,
+      },
+      {
+        label: this.transloco.translate('admin.libraryRoots.kinds.TvShows'),
+        value: LibraryRootKind.TvShows,
+      },
+      {
+        label: this.transloco.translate('admin.libraryRoots.kinds.Mixed'),
+        value: LibraryRootKind.Mixed,
+      },
+    ];
+    this.enabledFilterOptions = [
+      { label: this.transloco.translate('common.all'), value: null },
+      { label: this.transloco.translate('admin.libraryRoots.statusEnabled'), value: true },
+      { label: this.transloco.translate('admin.libraryRoots.statusDisabled'), value: false },
+    ];
+  }
 
   ngOnInit(): void {
+    this.transloco.langChanges$
+      .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.buildFilterOptions();
+        this.cdr.markForCheck();
+      });
+
     this.rootService.getRoots(1, 20);
   }
 
