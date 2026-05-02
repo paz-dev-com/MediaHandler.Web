@@ -1,0 +1,31 @@
+.admin-users-page {
+  padding: 1.5rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  &__search {
+    .p-input-icon-left {
+      i {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    input {
+      min-width: 16rem;
+    }
+  }
+}

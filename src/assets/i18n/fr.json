@@ -4,7 +4,8 @@
     "search": "Rechercher",
     "wishlist": "Liste de souhaits",
     "profile": "Profil",
-    "nasScanner": "Scanner NAS"
+    "nasScanner": "Scanner NAS",
+    "admin": "Administration"
   },
   "common": {
     "loading": "Chargement...",
@@ -198,6 +199,24 @@
       "libraryRoots": "Racines de bibliothèque",
       "scanner": "Scanner",
       "review": "Révision"
+    },
+    "users": {
+      "title": "Gestion des utilisateurs",
+      "searchPlaceholder": "Rechercher par nom ou e-mail…",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "empty": "Aucun utilisateur trouvé.",
+      "roleChanged": "Rôle mis à jour avec succès.",
+      "activated": "Utilisateur activé.",
+      "deactivated": "Utilisateur désactivé.",
+      "columns": {
+        "name": "Nom",
+        "email": "E-mail",
+        "role": "Rôle",
+        "status": "Statut",
+        "active": "Actif",
+        "createdAt": "Créé le"
+      }
     }
   }
 }
