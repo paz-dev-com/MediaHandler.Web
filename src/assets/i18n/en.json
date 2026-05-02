@@ -217,6 +217,42 @@
         "active": "Active",
         "createdAt": "Created"
       }
+    },
+    "libraryRoots": {
+      "title": "Library Root Management",
+      "addButton": "Add Library Root",
+      "filterKind": "Filter by kind",
+      "filterEnabled": "Filter by status",
+      "statusEnabled": "Enabled",
+      "statusDisabled": "Disabled",
+      "enabled": "Library root enabled.",
+      "disabled": "Library root disabled.",
+      "removedSuccess": "Library root removed.",
+      "addedSuccess": "Library root added.",
+      "removeTitle": "Confirm Removal",
+      "removeConfirm": "Remove library root \"{{ path }}\"? This cannot be undone.",
+      "removeButton": "Remove library root",
+      "empty": "No library roots found.",
+      "columns": {
+        "path": "Path",
+        "kind": "Kind",
+        "label": "Label",
+        "status": "Status",
+        "enabled": "Enabled",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "addDialog": {
+        "title": "Add Library Root",
+        "pathLabel": "Path",
+        "pathPlaceholder": "/mnt/nas/movies",
+        "kindLabel": "Kind",
+        "kindPlaceholder": "Select kind…",
+        "labelLabel": "Label",
+        "labelPlaceholder": "Optional display name",
+        "optional": "optional",
+        "submit": "Add"
+      }
     }
   }
 }

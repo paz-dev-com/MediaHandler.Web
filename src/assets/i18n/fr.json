@@ -217,6 +217,42 @@
         "active": "Actif",
         "createdAt": "Créé le"
       }
+    },
+    "libraryRoots": {
+      "title": "Gestion des racines de bibliothèque",
+      "addButton": "Ajouter une racine",
+      "filterKind": "Filtrer par type",
+      "filterEnabled": "Filtrer par statut",
+      "statusEnabled": "Activée",
+      "statusDisabled": "Désactivée",
+      "enabled": "Racine de bibliothèque activée.",
+      "disabled": "Racine de bibliothèque désactivée.",
+      "removedSuccess": "Racine de bibliothèque supprimée.",
+      "addedSuccess": "Racine de bibliothèque ajoutée.",
+      "removeTitle": "Confirmer la suppression",
+      "removeConfirm": "Supprimer la racine de bibliothèque « {{ path }} » ? Cette action est irréversible.",
+      "removeButton": "Supprimer la racine",
+      "empty": "Aucune racine de bibliothèque trouvée.",
+      "columns": {
+        "path": "Chemin",
+        "kind": "Type",
+        "label": "Étiquette",
+        "status": "Statut",
+        "enabled": "Activée",
+        "createdAt": "Créée le",
+        "actions": "Actions"
+      },
+      "addDialog": {
+        "title": "Ajouter une racine de bibliothèque",
+        "pathLabel": "Chemin",
+        "pathPlaceholder": "/mnt/nas/films",
+        "kindLabel": "Type",
+        "kindPlaceholder": "Sélectionner un type…",
+        "labelLabel": "Étiquette",
+        "labelPlaceholder": "Nom d'affichage facultatif",
+        "optional": "facultatif",
+        "submit": "Ajouter"
+      }
     }
   }
 }

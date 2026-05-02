@@ -1,0 +1,101 @@
+<div class="admin-library-roots-page" *transloco="let t">
+  <p-confirmDialog />
+
+  <div class="admin-library-roots-page__header">
+    <h2 class="admin-library-roots-page__title">{{ t('admin.libraryRoots.title') }}</h2>
+    <div class="admin-library-roots-page__actions">
+      <p-select
+        [options]="kindFilterOptions"
+        [ngModel]="selectedKindFilter()"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="t('admin.libraryRoots.filterKind')"
+        [style]="{ 'min-width': '10rem' }"
+        (ngModelChange)="onKindFilterChange($event)"
+      />
+      <p-select
+        [options]="enabledFilterOptions"
+        [ngModel]="selectedEnabledFilter()"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="t('admin.libraryRoots.filterEnabled')"
+        [style]="{ 'min-width': '10rem' }"
+        (ngModelChange)="onEnabledFilterChange($event)"
+      />
+      <p-button
+        [label]="t('admin.libraryRoots.addButton')"
+        icon="pi pi-plus"
+        (onClick)="onAddRoot()"
+      />
+    </div>
+  </div>
+
+  <p-table
+    [value]="roots()"
+    [lazy]="true"
+    [loading]="loading()"
+    [paginator]="true"
+    [rows]="meta().pageSize"
+    [totalRecords]="meta().total"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-striped"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ t('admin.libraryRoots.columns.path') }}</th>
+        <th>{{ t('admin.libraryRoots.columns.kind') }}</th>
+        <th>{{ t('admin.libraryRoots.columns.label') }}</th>
+        <th>{{ t('admin.libraryRoots.columns.status') }}</th>
+        <th>{{ t('admin.libraryRoots.columns.enabled') }}</th>
+        <th>{{ t('admin.libraryRoots.columns.createdAt') }}</th>
+        <th>{{ t('admin.libraryRoots.columns.actions') }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-root>
+      <tr>
+        <td class="admin-library-roots-page__path">{{ root.path }}</td>
+        <td>{{ root.kind }}</td>
+        <td>{{ root.label ?? '—' }}</td>
+        <td>
+          <p-tag
+            [value]="
+              root.isEnabled
+                ? t('admin.libraryRoots.statusEnabled')
+                : t('admin.libraryRoots.statusDisabled')
+            "
+            [severity]="getEnabledTagSeverity(root.isEnabled)"
+          />
+        </td>
+        <td>
+          <p-toggleswitch
+            [ngModel]="root.isEnabled"
+            (ngModelChange)="onEnabledToggle(root, $event)"
+          />
+        </td>
+        <td>{{ root.createdAt | date: 'short' }}</td>
+        <td>
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            [ariaLabel]="t('admin.libraryRoots.removeButton')"
+            (onClick)="onRemove(root)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center p-4">
+          {{ t('admin.libraryRoots.empty') }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-add-library-root-dialog />
+</div>
