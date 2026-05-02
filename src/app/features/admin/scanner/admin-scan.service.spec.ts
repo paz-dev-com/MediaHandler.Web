@@ -69,7 +69,7 @@ describe('AdminScanService', () => {
   it('should POST scan/start with libraryRootIds and mode', () => {
     service.startScan(['root-1', 'root-2'], ScanMode.Full);
 
-    const req = httpTesting.expectOne(`${base}/scan/start`);
+    const req = httpTesting.expectOne(`${base}/admin/scan`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
       libraryRootIds: ['root-1', 'root-2'],
@@ -82,7 +82,7 @@ describe('AdminScanService', () => {
   it('should update activeScan signal after startScan resolves', () => {
     service.startScan(['root-1'], ScanMode.Incremental);
 
-    const req = httpTesting.expectOne(`${base}/scan/start`);
+    const req = httpTesting.expectOne(`${base}/admin/scan`);
     req.flush({ data: mockActiveScan, meta: null, errors: [] });
 
     expect(service.activeScan()).toEqual(mockActiveScan);
@@ -95,7 +95,7 @@ describe('AdminScanService', () => {
     service.startScan(['root-1'], ScanMode.Full);
     expect(service.loading()).toBe(true);
 
-    const req = httpTesting.expectOne(`${base}/scan/start`);
+    const req = httpTesting.expectOne(`${base}/admin/scan`);
     req.flush({ data: mockCompletedScan, meta: null, errors: [] });
 
     expect(service.loading()).toBe(false);
@@ -105,7 +105,7 @@ describe('AdminScanService', () => {
     service.startScan(['root-1'], ScanMode.Full);
     expect(service.loading()).toBe(true);
 
-    const req = httpTesting.expectOne(`${base}/scan/start`);
+    const req = httpTesting.expectOne(`${base}/admin/scan`);
     req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
 
     expect(service.loading()).toBe(false);
@@ -116,7 +116,7 @@ describe('AdminScanService', () => {
   it('should GET scan/active', () => {
     service.getActiveScan();
 
-    const req = httpTesting.expectOne(`${base}/scan/active`);
+    const req = httpTesting.expectOne(`${base}/admin/scan/active`);
     expect(req.request.method).toBe('GET');
     req.flush({ data: null, meta: null, errors: [] });
   });
@@ -124,7 +124,9 @@ describe('AdminScanService', () => {
   it('should update activeScan signal to null after getActiveScan resolves with null', () => {
     service.getActiveScan();
 
-    httpTesting.expectOne(`${base}/scan/active`).flush({ data: null, meta: null, errors: [] });
+    httpTesting
+      .expectOne(`${base}/admin/scan/active`)
+      .flush({ data: null, meta: null, errors: [] });
 
     expect(service.activeScan()).toBeNull();
   });
@@ -133,7 +135,7 @@ describe('AdminScanService', () => {
     service.getActiveScan();
 
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     expect(service.activeScan()).toEqual(mockActiveScan);
@@ -144,17 +146,17 @@ describe('AdminScanService', () => {
     service.getActiveScan();
 
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.clearAllTimers();
@@ -162,38 +164,40 @@ describe('AdminScanService', () => {
 
   // ── cancelScan ───────────────────────────────────────────────────────────────
 
-  it('should DELETE scan/{id}', () => {
+  it('should POST scan/{id}/cancel', () => {
     service.cancelScan('scan-123');
 
-    const req = httpTesting.expectOne(`${base}/scan/scan-123`);
-    expect(req.request.method).toBe('DELETE');
+    const req = httpTesting.expectOne(`${base}/admin/scan/scan-123/cancel`);
+    expect(req.request.method).toBe('POST');
     req.flush({ data: null, meta: null, errors: [] });
 
     // getScanHistory refresh triggered after cancel
     httpTesting
-      .expectOne((r) => r.url === `${base}/scan`)
+      .expectOne((r) => r.url === `${base}/admin/scan`)
       .flush({ data: [], meta: null, errors: [] });
   });
 
   it('should clear activeScan after cancelScan succeeds', () => {
     service.getActiveScan();
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     // cancelScan stops polling and clears activeScan
     service.cancelScan('scan-1');
-    httpTesting.expectOne(`${base}/scan/scan-1`).flush({ data: null, meta: null, errors: [] });
+    httpTesting
+      .expectOne(`${base}/admin/scan/scan-1/cancel`)
+      .flush({ data: null, meta: null, errors: [] });
 
     expect(service.activeScan()).toBeNull();
 
     httpTesting
-      .expectOne((r) => r.url === `${base}/scan`)
+      .expectOne((r) => r.url === `${base}/admin/scan`)
       .flush({ data: [], meta: null, errors: [] });
 
     // polling stopped - advancing time should NOT trigger any more scan/active requests
     vi.advanceTimersByTime(4000);
-    httpTesting.expectNone(`${base}/scan/active`);
+    httpTesting.expectNone(`${base}/admin/scan/active`);
   });
 
   // ── getScanHistory ───────────────────────────────────────────────────────────
@@ -203,7 +207,7 @@ describe('AdminScanService', () => {
 
     const req = httpTesting.expectOne(
       (r) =>
-        r.url === `${base}/scan` &&
+        r.url === `${base}/admin/scan` &&
         r.params.get('page') === '1' &&
         r.params.get('pageSize') === '20',
     );
@@ -221,7 +225,7 @@ describe('AdminScanService', () => {
     service.getScanHistory(1, 20);
 
     httpTesting
-      .expectOne((r) => r.url === `${base}/scan`)
+      .expectOne((r) => r.url === `${base}/admin/scan`)
       .flush({ data: [mockHistorySummary], meta: mockMeta, errors: [] });
 
     expect(service.scanHistory()).toEqual([mockHistorySummary]);
@@ -232,7 +236,7 @@ describe('AdminScanService', () => {
     service.getScanHistory(2, 20);
 
     const req = httpTesting.expectOne(
-      (r) => r.url === `${base}/scan` && r.params.get('page') === '2',
+      (r) => r.url === `${base}/admin/scan` && r.params.get('page') === '2',
     );
     req.flush({ data: [], meta: null, errors: [] });
   });
@@ -243,7 +247,7 @@ describe('AdminScanService', () => {
     let result: unknown;
     service.getScanDetail('scan-123').subscribe((v) => (result = v));
 
-    const req = httpTesting.expectOne((r) => r.url === `${base}/scan/scan-123`);
+    const req = httpTesting.expectOne((r) => r.url === `${base}/admin/scan/scan-123`);
     expect(req.request.method).toBe('GET');
     req.flush({ data: mockActiveScan, meta: null, errors: [] });
 
@@ -254,7 +258,7 @@ describe('AdminScanService', () => {
     service.getScanDetail('scan-123', true).subscribe();
 
     const req = httpTesting.expectOne(
-      (r) => r.url === `${base}/scan/scan-123` && r.params.get('includeReview') === 'true',
+      (r) => r.url === `${base}/admin/scan/scan-123` && r.params.get('includeReview') === 'true',
     );
     expect(req.request.method).toBe('GET');
     req.flush({ data: mockActiveScan, meta: null, errors: [] });
@@ -263,7 +267,7 @@ describe('AdminScanService', () => {
   it('should NOT include includeReview param when not specified', () => {
     service.getScanDetail('scan-123').subscribe();
 
-    const req = httpTesting.expectOne((r) => r.url === `${base}/scan/scan-123`);
+    const req = httpTesting.expectOne((r) => r.url === `${base}/admin/scan/scan-123`);
     expect(req.request.params.has('includeReview')).toBe(false);
     req.flush({ data: mockActiveScan, meta: null, errors: [] });
   });
@@ -274,17 +278,17 @@ describe('AdminScanService', () => {
     service.startScan(['root-1'], ScanMode.Full);
 
     httpTesting
-      .expectOne(`${base}/scan/start`)
+      .expectOne(`${base}/admin/scan`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.clearAllTimers();
@@ -294,65 +298,67 @@ describe('AdminScanService', () => {
     service.startScan(['root-1'], ScanMode.Full);
 
     httpTesting
-      .expectOne(`${base}/scan/start`)
+      .expectOne(`${base}/admin/scan`)
       .flush({ data: mockCompletedScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
-    httpTesting.expectNone(`${base}/scan/active`);
+    httpTesting.expectNone(`${base}/admin/scan/active`);
   });
 
   it('should stop polling when terminal state (Completed) is returned', () => {
     service.startScan(['root-1'], ScanMode.Full);
     httpTesting
-      .expectOne(`${base}/scan/start`)
+      .expectOne(`${base}/admin/scan`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockCompletedScan, meta: null, errors: [] });
 
     // getScanHistory refresh
     httpTesting
-      .expectOne((r) => r.url === `${base}/scan`)
+      .expectOne((r) => r.url === `${base}/admin/scan`)
       .flush({ data: [], meta: null, errors: [] });
 
     // polling stopped — no more requests
     vi.advanceTimersByTime(4000);
-    httpTesting.expectNone(`${base}/scan/active`);
+    httpTesting.expectNone(`${base}/admin/scan/active`);
   });
 
   it('should stop polling when scan/active returns null', () => {
     service.startScan(['root-1'], ScanMode.Full);
     httpTesting
-      .expectOne(`${base}/scan/start`)
+      .expectOne(`${base}/admin/scan`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
-    httpTesting.expectOne(`${base}/scan/active`).flush({ data: null, meta: null, errors: [] });
+    httpTesting
+      .expectOne(`${base}/admin/scan/active`)
+      .flush({ data: null, meta: null, errors: [] });
 
     // getScanHistory refresh
     httpTesting
-      .expectOne((r) => r.url === `${base}/scan`)
+      .expectOne((r) => r.url === `${base}/admin/scan`)
       .flush({ data: [], meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
-    httpTesting.expectNone(`${base}/scan/active`);
+    httpTesting.expectNone(`${base}/admin/scan/active`);
   });
 
   it('should refresh scan history after polling stops on terminal state', () => {
     const mockHistory = [mockHistorySummary];
     service.startScan(['root-1'], ScanMode.Full);
     httpTesting
-      .expectOne(`${base}/scan/start`)
+      .expectOne(`${base}/admin/scan`)
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
     httpTesting
-      .expectOne(`${base}/scan/active`)
+      .expectOne(`${base}/admin/scan/active`)
       .flush({ data: mockCompletedScan, meta: null, errors: [] });
 
-    const historyReq = httpTesting.expectOne((r) => r.url === `${base}/scan`);
+    const historyReq = httpTesting.expectOne((r) => r.url === `${base}/admin/scan`);
     historyReq.flush({
       data: mockHistory,
       meta: { page: 1, pageSize: 20, totalCount: 1, totalPages: 1 },

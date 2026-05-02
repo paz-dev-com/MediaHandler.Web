@@ -18,6 +18,8 @@ const TERMINAL_STATES: ScanStatus[] = [
   ScanStatus.Cancelled,
 ];
 
+const API_URL = 'admin/scan';
+
 const ACTIVE_STATES: ScanStatus[] = [ScanStatus.Running, ScanStatus.Pending];
 
 @Injectable({ providedIn: 'root' })
@@ -34,7 +36,7 @@ export class AdminScanService {
 
   startScan(libraryRootIds: string[], mode: ScanMode): void {
     this.loading.set(true);
-    this.api.post<ScanRunDetail>('scan/start', { libraryRootIds, mode }).subscribe({
+    this.api.post<ScanRunDetail>(`${API_URL}`, { libraryRootIds, mode }).subscribe({
       next: (resp) => {
         this.activeScan.set(resp.data);
         this.loading.set(false);
@@ -49,7 +51,7 @@ export class AdminScanService {
   }
 
   getActiveScan(): void {
-    this.api.get<ScanRunDetail | null>('scan/active').subscribe({
+    this.api.get<ScanRunDetail | null>(`${API_URL}/active`).subscribe({
       next: (resp) => {
         this.activeScan.set(resp.data);
         if (resp.data && this.isActiveStatus(resp.data.status)) {
@@ -61,7 +63,7 @@ export class AdminScanService {
 
   cancelScan(id: string): void {
     this.stopPolling$.next();
-    this.api.delete<void>(`scan/${id}`).subscribe({
+    this.api.post<void>(`${API_URL}/${id}/cancel`, {}).subscribe({
       next: () => {
         this.activeScan.set(null);
         this.getScanHistory(1, 20);
@@ -71,7 +73,7 @@ export class AdminScanService {
 
   getScanHistory(page: number, pageSize: number): void {
     this.historyLoading.set(true);
-    this.api.get<ScanRunSummary[]>('scan', { page, pageSize }).subscribe({
+    this.api.get<ScanRunSummary[]>(`${API_URL}`, { page, pageSize }).subscribe({
       next: (resp) => {
         this.scanHistory.set(resp.data ?? []);
         const meta = resp.meta;
@@ -96,7 +98,7 @@ export class AdminScanService {
       params['includeReview'] = includeReview;
     }
     return this.api
-      .get<ScanRunDetail>(`scan/${id}`, Object.keys(params).length ? params : undefined)
+      .get<ScanRunDetail>(`${API_URL}/${id}`, Object.keys(params).length ? params : undefined)
       .pipe(map((resp) => resp.data));
   }
 
@@ -105,7 +107,7 @@ export class AdminScanService {
 
     interval(4000)
       .pipe(
-        switchMap(() => this.api.get<ScanRunDetail | null>('scan/active')),
+        switchMap(() => this.api.get<ScanRunDetail | null>(`admin/scan/active`)),
         takeUntil(this.stopPolling$),
         takeUntilDestroyed(this.destroyRef),
       )

@@ -11,6 +11,7 @@
       [loading]="rootsLoading()"
       [style]="{ 'min-width': '20rem' }"
       (ngModelChange)="selectedRootIds.set($event)"
+      appendTo="body"
     />
 
     <p-select
@@ -21,6 +22,7 @@
       [placeholder]="t('admin.scanner.selectMode')"
       [style]="{ 'min-width': '12rem' }"
       (ngModelChange)="selectedMode.set($event)"
+      appendTo="body"
     />
 
     <p-button
