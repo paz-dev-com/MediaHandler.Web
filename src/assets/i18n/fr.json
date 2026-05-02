@@ -166,7 +166,9 @@
         "skipped": "Ignorés",
         "failed": "Échoués"
       },
-      "errors": { "title": "Détails des erreurs" }
+      "errors": {
+        "title": "Détails des erreurs"
+      }
     },
     "autoImport": {
       "title": "Importation automatique",
@@ -181,10 +183,21 @@
         "skipped": "Ignorés",
         "failed": "Échoués"
       },
-      "errors": { "title": "Détails des erreurs" }
+      "errors": {
+        "title": "Détails des erreurs"
+      }
     },
     "empty": "Aucun scan n'a encore été lancé. Cliquez sur \"Scanner\" pour découvrir les fichiers sur votre NAS.",
     "error": "Le scan a échoué. Veuillez réessayer.",
     "forbidden": "Vous n'avez pas la permission de scanner les fichiers NAS."
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Tableau de bord",
+      "users": "Utilisateurs",
+      "libraryRoots": "Racines de bibliothèque",
+      "scanner": "Scanner",
+      "review": "Révision"
+    }
   }
 }

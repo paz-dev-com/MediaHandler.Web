@@ -1,0 +1,14 @@
+<div class="admin-layout">
+  <p-tabs [value]="activeTabValue()" (valueChange)="navigateTo($event)">
+    <p-tablist>
+      @for (tab of tabs; track tab.value) {
+        <p-tab [value]="tab.value">{{ tab.labelKey | transloco }}</p-tab>
+      }
+    </p-tablist>
+  </p-tabs>
+
+  <div class="admin-content">
+    <router-outlet />
+  </div>
+</div>
+
