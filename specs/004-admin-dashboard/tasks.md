@@ -116,13 +116,13 @@
 
 ### Tests for User Story 4
 
-- [ ] T023 [P] [US4] Create unit tests for `AdminReviewService` in `src/app/features/admin/review/admin-review.service.spec.ts` — test `getItems()`, `resolveItem()` with all action types (Assign, Dismiss, Delete, Reopen) HTTP calls and signal state
+- [x] T023 [P] [US4] Create unit tests for `AdminReviewService` in `src/app/features/admin/review/admin-review.service.spec.ts` — test `getItems()`, `resolveItem()` with all action types (Assign, Dismiss, Delete, Reopen) HTTP calls and signal state
 
 ### Implementation for User Story 4
 
-- [ ] T024 [US4] Implement `AdminReviewService` with signals (`items`, `loading`, `meta`) and methods `getItems(status?, reason?, scanRunId?, page?, pageSize?)`, `resolveItem(id, action, tmdbId?, kind?)` in `src/app/features/admin/review/admin-review.service.ts`
-- [ ] T025 [P] [US4] Create `ReviewResolveDialogComponent` with PrimeNG `Dialog` displaying the selected review item's file path, parsed metadata, TMDB candidate list with poster previews, and action buttons (Assign selected candidate, Dismiss, Delete, Reopen) in `src/app/features/admin/review/review-resolve-dialog.component.ts`
-- [ ] T026 [US4] Create `AdminReviewPageComponent` with PrimeNG `Table` (server-side pagination), `Select` filters for status, reason, and scan run, `Tag` for status/reason columns, and row click opening `ReviewResolveDialogComponent` in `src/app/features/admin/review/admin-review-page.component.ts`, `src/app/features/admin/review/admin-review-page.component.html`, and `src/app/features/admin/review/admin-review-page.component.scss`
+- [x] T024 [US4] Implement `AdminReviewService` with signals (`items`, `loading`, `meta`) and methods `getItems(status?, reason?, scanRunId?, page?, pageSize?)`, `resolveItem(id, action, tmdbId?, kind?)` in `src/app/features/admin/review/admin-review.service.ts`
+- [x] T025 [P] [US4] Create `ReviewResolveDialogComponent` with PrimeNG `Dialog` displaying the selected review item's file path, parsed metadata, TMDB candidate list with poster previews, and action buttons (Assign selected candidate, Dismiss, Delete, Reopen) in `src/app/features/admin/review/review-resolve-dialog.component.ts`
+- [x] T026 [US4] Create `AdminReviewPageComponent` with PrimeNG `Table` (server-side pagination), `Select` filters for status, reason, and scan run, `Tag` for status/reason columns, and row click opening `ReviewResolveDialogComponent` in `src/app/features/admin/review/admin-review-page.component.ts`, `src/app/features/admin/review/admin-review-page.component.html`, and `src/app/features/admin/review/admin-review-page.component.scss`
 
 **Checkpoint**: User Story 4 fully functional — admin can manage the full review item lifecycle
 

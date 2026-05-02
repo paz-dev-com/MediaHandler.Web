@@ -1,0 +1,84 @@
+<div class="admin-review-page" *transloco="let t">
+  <div class="admin-review-page__header">
+    <h2 class="admin-review-page__title">{{ t('admin.review.title') }}</h2>
+    <div class="admin-review-page__filters">
+      <p-select
+        [options]="statusFilterOptions"
+        [ngModel]="selectedStatusFilter()"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="t('admin.review.filterStatus')"
+        [style]="{ 'min-width': '10rem' }"
+        (ngModelChange)="onStatusFilterChange($event)"
+      />
+      <p-select
+        [options]="reasonFilterOptions"
+        [ngModel]="selectedReasonFilter()"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="t('admin.review.filterReason')"
+        [style]="{ 'min-width': '12rem' }"
+        (ngModelChange)="onReasonFilterChange($event)"
+      />
+      <input
+        pInputText
+        type="text"
+        [placeholder]="t('admin.review.filterScanRunId')"
+        [ngModel]="scanRunIdFilter()"
+        (ngModelChange)="onScanRunIdFilterChange($event)"
+        [style]="{ 'min-width': '14rem' }"
+      />
+    </div>
+  </div>
+
+  <p-table
+    [value]="items()"
+    [lazy]="true"
+    [loading]="loading()"
+    [paginator]="true"
+    [rows]="meta().pageSize"
+    [totalRecords]="meta().total"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    (onLazyLoad)="onLazyLoad($event)"
+    selectionMode="single"
+    styleClass="p-datatable-striped"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ t('admin.review.columns.filePath') }}</th>
+        <th>{{ t('admin.review.columns.parsedTitle') }}</th>
+        <th>{{ t('admin.review.columns.reason') }}</th>
+        <th>{{ t('admin.review.columns.status') }}</th>
+        <th>{{ t('admin.review.columns.createdAt') }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item>
+      <tr class="admin-review-page__row" (click)="onRowSelect(item)">
+        <td class="admin-review-page__path">{{ item.filePath }}</td>
+        <td>{{ item.parsedTitle ?? '—' }}</td>
+        <td>
+          <p-tag [value]="item.reason" [severity]="getReasonSeverity(item.reason)" />
+        </td>
+        <td>
+          <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
+        </td>
+        <td>{{ item.createdAt | date: 'short' }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center p-4">
+          {{ t('admin.review.empty') }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-review-resolve-dialog
+    [item]="selectedItem()"
+    (resolved)="onDialogResolved()"
+    (closed)="onDialogClosed()"
+  />
+</div>

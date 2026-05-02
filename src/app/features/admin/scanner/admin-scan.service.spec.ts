@@ -187,7 +187,9 @@ describe('AdminScanService', () => {
 
     expect(service.activeScan()).toBeNull();
 
-    httpTesting.expectOne((r) => r.url === `${base}/scan`).flush({ data: [], meta: null, errors: [] });
+    httpTesting
+      .expectOne((r) => r.url === `${base}/scan`)
+      .flush({ data: [], meta: null, errors: [] });
 
     // polling stopped - advancing time should NOT trigger any more scan/active requests
     vi.advanceTimersByTime(4000);
@@ -252,8 +254,7 @@ describe('AdminScanService', () => {
     service.getScanDetail('scan-123', true).subscribe();
 
     const req = httpTesting.expectOne(
-      (r) =>
-        r.url === `${base}/scan/scan-123` && r.params.get('includeReview') === 'true',
+      (r) => r.url === `${base}/scan/scan-123` && r.params.get('includeReview') === 'true',
     );
     expect(req.request.method).toBe('GET');
     req.flush({ data: mockActiveScan, meta: null, errors: [] });
@@ -328,9 +329,7 @@ describe('AdminScanService', () => {
       .flush({ data: mockActiveScan, meta: null, errors: [] });
 
     vi.advanceTimersByTime(4000);
-    httpTesting
-      .expectOne(`${base}/scan/active`)
-      .flush({ data: null, meta: null, errors: [] });
+    httpTesting.expectOne(`${base}/scan/active`).flush({ data: null, meta: null, errors: [] });
 
     // getScanHistory refresh
     httpTesting
@@ -372,4 +371,3 @@ describe('AdminScanService', () => {
     expect(service.loading()).toBe(false);
   });
 });
-

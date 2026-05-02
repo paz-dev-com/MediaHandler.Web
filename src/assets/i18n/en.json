@@ -295,6 +295,54 @@
         "Failed": "Failed",
         "Cancelled": "Cancelled"
       }
+    },
+    "review": {
+      "title": "Review Queue",
+      "filterStatus": "Filter by status",
+      "filterReason": "Filter by reason",
+      "filterScanRunId": "Filter by scan run ID",
+      "empty": "No review items found.",
+      "resolvedSuccess": "Item resolved successfully.",
+      "columns": {
+        "filePath": "File Path",
+        "parsedTitle": "Parsed Title",
+        "reason": "Reason",
+        "status": "Status",
+        "createdAt": "Created"
+      },
+      "status": {
+        "Open": "Open",
+        "Resolved": "Resolved",
+        "Dismissed": "Dismissed"
+      },
+      "reason": {
+        "NoTmdbResult": "No TMDB Result",
+        "MultipleCandidates": "Multiple Candidates",
+        "YearMismatch": "Year Mismatch",
+        "UnparseableEpisode": "Unparseable Episode",
+        "NfoMalformed": "NFO Malformed",
+        "UnknownFormat": "Unknown Format",
+        "OrphanedAfterMissing": "Orphaned After Missing"
+      },
+      "resolveDialog": {
+        "title": "Resolve Review Item",
+        "filePath": "File Path",
+        "parsedTitle": "Parsed Title",
+        "parsedYear": "Parsed Year",
+        "reason": "Reason",
+        "status": "Status",
+        "candidates": "TMDB Candidates",
+        "noCandidates": "No TMDB candidates available.",
+        "score": "Score",
+        "assign": "Assign",
+        "dismiss": "Dismiss",
+        "delete": "Delete",
+        "reopen": "Reopen",
+        "assignedSuccess": "Candidate assigned successfully.",
+        "dismissedSuccess": "Item dismissed.",
+        "deletedSuccess": "Item deleted.",
+        "reopenedSuccess": "Item reopened."
+      }
     }
   }
 }
