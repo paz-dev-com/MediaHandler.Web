@@ -253,6 +253,48 @@
         "optional": "facultatif",
         "submit": "Ajouter"
       }
+    },
+    "scanner": {
+      "title": "Scanner",
+      "launcherTitle": "Démarrer un nouveau scan",
+      "statusTitle": "Scan en cours",
+      "historyTitle": "Historique des scans",
+      "startScan": "Démarrer le scan",
+      "cancelScan": "Annuler le scan",
+      "selectRoots": "Sélectionner les racines…",
+      "selectMode": "Sélectionner le mode…",
+      "mode": "Mode",
+      "startedAt": "Démarré le",
+      "finishedAt": "Terminé le",
+      "historyEmpty": "Aucun scan trouvé.",
+      "scanStarted": "Scan démarré avec succès.",
+      "scanCancelled": "Scan annulé.",
+      "counts": {
+        "discovered": "Découverts",
+        "added": "Ajoutés",
+        "updated": "Mis à jour",
+        "unchanged": "Inchangés",
+        "removed": "Supprimés",
+        "excluded": "Exclus",
+        "needsReview": "À réviser"
+      },
+      "columns": {
+        "mode": "Mode",
+        "status": "Statut",
+        "startedAt": "Démarré le",
+        "finishedAt": "Terminé le",
+        "discovered": "Découverts",
+        "added": "Ajoutés",
+        "updated": "Mis à jour",
+        "needsReview": "À réviser"
+      },
+      "status": {
+        "Pending": "En attente",
+        "Running": "En cours",
+        "Completed": "Terminé",
+        "Failed": "Échoué",
+        "Cancelled": "Annulé"
+      }
     }
   }
 }

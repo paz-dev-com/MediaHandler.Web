@@ -1,0 +1,18 @@
+<div class="admin-scanner-page" *transloco="let t">
+  <div class="admin-scanner-page__header">
+    <h2 class="admin-scanner-page__title">{{ t('admin.scanner.title') }}</h2>
+  </div>
+
+  <div class="admin-scanner-page__top-section">
+    @if (isActiveScan()) {
+      <app-scan-status />
+    } @else {
+      <app-scan-launcher />
+    }
+  </div>
+
+  <div class="admin-scanner-page__history-section">
+    <app-scan-history-table />
+  </div>
+</div>
+

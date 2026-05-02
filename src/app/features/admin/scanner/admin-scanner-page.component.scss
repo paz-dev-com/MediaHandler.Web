@@ -1,0 +1,28 @@
+.admin-scanner-page {
+  padding: 1.5rem;
+}
+
+.admin-scanner-page__header {
+  margin-bottom: 1.5rem;
+}
+
+.admin-scanner-page__title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.admin-scanner-page__top-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid var(--p-surface-border);
+  border-radius: 0.5rem;
+  background: var(--p-surface-card);
+}
+
+.admin-scanner-page__history-section {
+  padding: 1.5rem;
+  border: 1px solid var(--p-surface-border);
+  border-radius: 0.5rem;
+  background: var(--p-surface-card);
+}
+
