@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -42,6 +52,9 @@ interface ReasonFilterOption {
 })
 export class AdminReviewPageComponent implements OnInit {
   private readonly reviewService = inject(AdminReviewService);
+  private readonly transloco = inject(TranslocoService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly items = this.reviewService.items;
   readonly loading = this.reviewService.loading;
@@ -52,25 +65,63 @@ export class AdminReviewPageComponent implements OnInit {
   readonly scanRunIdFilter = signal<string>('');
   readonly selectedItem = signal<ReviewItem | null>(null);
 
-  readonly statusFilterOptions: StatusFilterOption[] = [
-    { label: 'All', value: null },
-    { label: 'Open', value: ReviewStatus.Open },
-    { label: 'Resolved', value: ReviewStatus.Resolved },
-    { label: 'Dismissed', value: ReviewStatus.Dismissed },
-  ];
+  statusFilterOptions: StatusFilterOption[] = [];
+  reasonFilterOptions: ReasonFilterOption[] = [];
 
-  readonly reasonFilterOptions: ReasonFilterOption[] = [
-    { label: 'All', value: null },
-    { label: 'No TMDB Result', value: ReviewReason.NoTmdbResult },
-    { label: 'Multiple Candidates', value: ReviewReason.MultipleCandidates },
-    { label: 'Year Mismatch', value: ReviewReason.YearMismatch },
-    { label: 'Unparseable Episode', value: ReviewReason.UnparseableEpisode },
-    { label: 'NFO Malformed', value: ReviewReason.NfoMalformed },
-    { label: 'Unknown Format', value: ReviewReason.UnknownFormat },
-    { label: 'Orphaned After Missing', value: ReviewReason.OrphanedAfterMissing },
-  ];
+  private buildFilterOptions(): void {
+    this.statusFilterOptions = [
+      { label: this.transloco.translate('common.all'), value: null },
+      { label: this.transloco.translate('admin.review.status.Open'), value: ReviewStatus.Open },
+      {
+        label: this.transloco.translate('admin.review.status.Resolved'),
+        value: ReviewStatus.Resolved,
+      },
+      {
+        label: this.transloco.translate('admin.review.status.Dismissed'),
+        value: ReviewStatus.Dismissed,
+      },
+    ];
+    this.reasonFilterOptions = [
+      { label: this.transloco.translate('common.all'), value: null },
+      {
+        label: this.transloco.translate('admin.review.reason.NoTmdbResult'),
+        value: ReviewReason.NoTmdbResult,
+      },
+      {
+        label: this.transloco.translate('admin.review.reason.MultipleCandidates'),
+        value: ReviewReason.MultipleCandidates,
+      },
+      {
+        label: this.transloco.translate('admin.review.reason.YearMismatch'),
+        value: ReviewReason.YearMismatch,
+      },
+      {
+        label: this.transloco.translate('admin.review.reason.UnparseableEpisode'),
+        value: ReviewReason.UnparseableEpisode,
+      },
+      {
+        label: this.transloco.translate('admin.review.reason.NfoMalformed'),
+        value: ReviewReason.NfoMalformed,
+      },
+      {
+        label: this.transloco.translate('admin.review.reason.UnknownFormat'),
+        value: ReviewReason.UnknownFormat,
+      },
+      {
+        label: this.transloco.translate('admin.review.reason.OrphanedAfterMissing'),
+        value: ReviewReason.OrphanedAfterMissing,
+      },
+    ];
+  }
 
   ngOnInit(): void {
+    this.transloco.langChanges$
+      .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.buildFilterOptions();
+        this.cdr.markForCheck();
+      });
+
     this.reviewService.getItems(undefined, undefined, undefined, 1, 20);
   }
 

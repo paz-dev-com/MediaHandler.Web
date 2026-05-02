@@ -16,7 +16,7 @@ import { SelectModule } from 'primeng/select';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, startWith, takeUntil } from 'rxjs';
 import { AdminUser, AdminUserService } from './admin-user.service';
 
 interface RoleOption {
@@ -55,12 +55,20 @@ export class AdminUsersPageComponent implements OnInit, OnDestroy {
 
   readonly searchQuery = signal('');
 
-  readonly roleOptions: RoleOption[] = [
-    { label: 'Admin', value: 'admin' },
-    { label: 'User', value: 'user' },
-  ];
+  roleOptions: RoleOption[] = [];
+
+  private buildRoleOptions(): void {
+    this.roleOptions = [
+      { label: this.transloco.translate('profile.roles.Admin'), value: 'admin' },
+      { label: this.transloco.translate('profile.roles.User'), value: 'user' },
+    ];
+  }
 
   ngOnInit(): void {
+    this.transloco.langChanges$
+      .pipe(startWith(null), takeUntil(this.destroy$))
+      .subscribe(() => this.buildRoleOptions());
+
     this.search$
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((query) => {

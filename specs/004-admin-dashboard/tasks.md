@@ -152,9 +152,9 @@
 
 ### Implementation for User Story 6
 
-- [ ] T030 [P] [US6] Add English translation keys (`admin.dashboard.*`, `admin.users.*`, `admin.libraryRoots.*`, `admin.scanner.*`, `admin.review.*`, `admin.health.*`, `nav.admin`) to `src/assets/i18n/en.json`
-- [ ] T031 [P] [US6] Add French translation keys (matching `admin.*` structure) to `src/assets/i18n/fr.json`
-- [ ] T032 [US6] Wire up `transloco` pipes in all admin component templates — replace all hardcoded strings with `{{ t('admin.*') }}` translation keys in every `.component.html` file under `src/app/features/admin/`
+- [x] T030 [P] [US6] Add English translation keys (`admin.dashboard.*`, `admin.users.*`, `admin.libraryRoots.*`, `admin.scanner.*`, `admin.review.*`, `admin.health.*`, `nav.admin`) to `src/assets/i18n/en.json`
+- [x] T031 [P] [US6] Add French translation keys (matching `admin.*` structure) to `src/assets/i18n/fr.json`
+- [x] T032 [US6] Wire up `transloco` pipes in all admin component templates — replace all hardcoded strings with `{{ t('admin.*') }}` translation keys in every `.component.html` file under `src/app/features/admin/`
 
 **Checkpoint**: All admin UI fully bilingual — no untranslated keys in either language
 

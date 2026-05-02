@@ -1,11 +1,16 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  DestroyRef,
   EventEmitter,
+  OnInit,
   Output,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
@@ -101,10 +106,12 @@ interface KindOption {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddLibraryRootDialogComponent {
+export class AddLibraryRootDialogComponent implements OnInit {
   private readonly rootService = inject(AdminLibraryRootService);
   private readonly messageService = inject(MessageService);
   private readonly transloco = inject(TranslocoService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   @Output() closed = new EventEmitter<void>();
 
@@ -114,11 +121,33 @@ export class AddLibraryRootDialogComponent {
   selectedKind: LibraryRootKind | null = null;
   label = '';
 
-  readonly kindOptions: KindOption[] = [
-    { label: 'Movies', value: LibraryRootKind.Movies },
-    { label: 'TV Shows', value: LibraryRootKind.TvShows },
-    { label: 'Mixed', value: LibraryRootKind.Mixed },
-  ];
+  kindOptions: KindOption[] = [];
+
+  private buildKindOptions(): void {
+    this.kindOptions = [
+      {
+        label: this.transloco.translate('admin.libraryRoots.kinds.Movies'),
+        value: LibraryRootKind.Movies,
+      },
+      {
+        label: this.transloco.translate('admin.libraryRoots.kinds.TvShows'),
+        value: LibraryRootKind.TvShows,
+      },
+      {
+        label: this.transloco.translate('admin.libraryRoots.kinds.Mixed'),
+        value: LibraryRootKind.Mixed,
+      },
+    ];
+  }
+
+  ngOnInit(): void {
+    this.transloco.langChanges$
+      .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.buildKindOptions();
+        this.cdr.markForCheck();
+      });
+  }
 
   open(): void {
     this.path = '';

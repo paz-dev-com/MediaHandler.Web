@@ -11,6 +11,7 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "empty": "No items found",
+    "all": "All",
     "retry": "Retry",
     "save": "Save",
     "cancel": "Cancel",
@@ -233,6 +234,11 @@
       "removeConfirm": "Remove library root \"{{ path }}\"? This cannot be undone.",
       "removeButton": "Remove library root",
       "empty": "No library roots found.",
+      "kinds": {
+        "Movies": "Movies",
+        "TvShows": "TV Shows",
+        "Mixed": "Mixed"
+      },
       "columns": {
         "path": "Path",
         "kind": "Kind",
@@ -269,6 +275,10 @@
       "historyEmpty": "No scans found.",
       "scanStarted": "Scan started successfully.",
       "scanCancelled": "Scan cancelled.",
+      "modes": {
+        "Full": "Full",
+        "Incremental": "Incremental"
+      },
       "counts": {
         "discovered": "Discovered",
         "added": "Added",
