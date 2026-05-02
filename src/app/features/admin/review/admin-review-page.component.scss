@@ -1,0 +1,41 @@
+.admin-review-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__row {
+    cursor: pointer;
+
+    &:hover td {
+      background-color: var(--surface-hover);
+    }
+  }
+
+  &__path {
+    font-family: monospace;
+    font-size: 0.8rem;
+    max-width: 20rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

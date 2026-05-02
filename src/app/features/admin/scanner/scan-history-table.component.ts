@@ -107,4 +107,3 @@ export class ScanHistoryTableComponent implements OnInit {
     }
   }
 }
-

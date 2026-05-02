@@ -9,12 +9,7 @@ import { ScanStatus } from '@shared/models/enums';
 @Component({
   selector: 'app-admin-scanner-page',
   standalone: true,
-  imports: [
-    TranslocoModule,
-    ScanLauncherComponent,
-    ScanStatusComponent,
-    ScanHistoryTableComponent,
-  ],
+  imports: [TranslocoModule, ScanLauncherComponent, ScanStatusComponent, ScanHistoryTableComponent],
   templateUrl: './admin-scanner-page.component.html',
   styleUrl: './admin-scanner-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,8 +26,7 @@ export class AdminScannerPageComponent implements OnInit {
   isActiveScan(): boolean {
     const scan = this.activeScan();
     return (
-      scan !== null &&
-      (scan.status === ScanStatus.Running || scan.status === ScanStatus.Pending)
+      scan !== null && (scan.status === ScanStatus.Running || scan.status === ScanStatus.Pending)
     );
   }
 }

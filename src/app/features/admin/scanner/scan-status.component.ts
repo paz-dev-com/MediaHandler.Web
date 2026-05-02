@@ -55,7 +55,9 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
             <span class="scan-status__count-value">{{ scan.counts.updated }}</span>
           </div>
           <div class="scan-status__count-item">
-            <span class="scan-status__count-label">{{ t('admin.scanner.counts.needsReview') }}</span>
+            <span class="scan-status__count-label">{{
+              t('admin.scanner.counts.needsReview')
+            }}</span>
             <span class="scan-status__count-value">{{ scan.counts.needsReview }}</span>
           </div>
         </div>
@@ -156,6 +158,3 @@ export class ScanStatusComponent {
     this.scanService.cancelScan(scan.id);
   }
 }
-
-
-

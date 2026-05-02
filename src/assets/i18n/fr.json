@@ -295,6 +295,54 @@
         "Failed": "Échoué",
         "Cancelled": "Annulé"
       }
+    },
+    "review": {
+      "title": "File de révision",
+      "filterStatus": "Filtrer par statut",
+      "filterReason": "Filtrer par raison",
+      "filterScanRunId": "Filtrer par ID de scan",
+      "empty": "Aucun élément à réviser.",
+      "resolvedSuccess": "Élément résolu avec succès.",
+      "columns": {
+        "filePath": "Chemin du fichier",
+        "parsedTitle": "Titre parsé",
+        "reason": "Raison",
+        "status": "Statut",
+        "createdAt": "Créé le"
+      },
+      "status": {
+        "Open": "Ouvert",
+        "Resolved": "Résolu",
+        "Dismissed": "Ignoré"
+      },
+      "reason": {
+        "NoTmdbResult": "Aucun résultat TMDB",
+        "MultipleCandidates": "Candidats multiples",
+        "YearMismatch": "Année incorrecte",
+        "UnparseableEpisode": "Épisode non analysable",
+        "NfoMalformed": "Fichier NFO invalide",
+        "UnknownFormat": "Format inconnu",
+        "OrphanedAfterMissing": "Orphelin après suppression"
+      },
+      "resolveDialog": {
+        "title": "Résoudre l'élément",
+        "filePath": "Chemin du fichier",
+        "parsedTitle": "Titre parsé",
+        "parsedYear": "Année parsée",
+        "reason": "Raison",
+        "status": "Statut",
+        "candidates": "Candidats TMDB",
+        "noCandidates": "Aucun candidat TMDB disponible.",
+        "score": "Score",
+        "assign": "Assigner",
+        "dismiss": "Ignorer",
+        "delete": "Supprimer",
+        "reopen": "Rouvrir",
+        "assignedSuccess": "Candidat assigné avec succès.",
+        "dismissedSuccess": "Élément ignoré.",
+        "deletedSuccess": "Élément supprimé.",
+        "reopenedSuccess": "Élément rouvert."
+      }
     }
   }
 }

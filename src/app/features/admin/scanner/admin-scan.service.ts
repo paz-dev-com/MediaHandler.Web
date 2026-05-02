@@ -117,4 +117,3 @@ export class AdminScanService {
     return ACTIVE_STATES.includes(status);
   }
 }
-
