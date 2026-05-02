@@ -74,13 +74,13 @@
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Create unit tests for `AdminLibraryRootService` in `src/app/features/admin/library-roots/admin-library-root.service.spec.ts` — test `getRoots()`, `addRoot()`, `removeRoot()`, `setEnabled()` HTTP calls and signal state updates
+- [x] T013 [P] [US2] Create unit tests for `AdminLibraryRootService` in `src/app/features/admin/library-roots/admin-library-root.service.spec.ts` — test `getRoots()`, `addRoot()`, `removeRoot()`, `setEnabled()` HTTP calls and signal state updates
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Implement `AdminLibraryRootService` with signals (`roots`, `loading`, `meta`) and methods `getRoots(page, pageSize, kind?, enabledOnly?)`, `addRoot(path, kind, label?)`, `removeRoot(id)`, `setEnabled(id, isEnabled)` in `src/app/features/admin/library-roots/admin-library-root.service.ts`
-- [ ] T015 [P] [US2] Create `AddLibraryRootDialogComponent` with PrimeNG `Dialog`, `InputText` for path, `Select` for kind, `InputText` for optional label, and submit/cancel buttons in `src/app/features/admin/library-roots/add-library-root-dialog.component.ts`
-- [ ] T016 [US2] Create `AdminLibraryRootsPageComponent` with PrimeNG `Table` (pagination, `Select` filter for kind, `Select` filter for enabled status), `ToggleSwitch` for enable/disable, remove button with `ConfirmDialog`, and "Add Library Root" button opening the dialog in `src/app/features/admin/library-roots/admin-library-roots-page.component.ts`, `src/app/features/admin/library-roots/admin-library-roots-page.component.html`, and `src/app/features/admin/library-roots/admin-library-roots-page.component.scss`
+- [x] T014 [US2] Implement `AdminLibraryRootService` with signals (`roots`, `loading`, `meta`) and methods `getRoots(page, pageSize, kind?, enabledOnly?)`, `addRoot(path, kind, label?)`, `removeRoot(id)`, `setEnabled(id, isEnabled)` in `src/app/features/admin/library-roots/admin-library-root.service.ts`
+- [x] T015 [P] [US2] Create `AddLibraryRootDialogComponent` with PrimeNG `Dialog`, `InputText` for path, `Select` for kind, `InputText` for optional label, and submit/cancel buttons in `src/app/features/admin/library-roots/add-library-root-dialog.component.ts`
+- [x] T016 [US2] Create `AdminLibraryRootsPageComponent` with PrimeNG `Table` (pagination, `Select` filter for kind, `Select` filter for enabled status), `ToggleSwitch` for enable/disable, remove button with `ConfirmDialog`, and "Add Library Root" button opening the dialog in `src/app/features/admin/library-roots/admin-library-roots-page.component.ts`, `src/app/features/admin/library-roots/admin-library-roots-page.component.html`, and `src/app/features/admin/library-roots/admin-library-roots-page.component.scss`
 
 **Checkpoint**: User Story 2 fully functional — admin can manage library roots with all CRUD + enable/disable operations
 
