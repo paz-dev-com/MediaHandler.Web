@@ -164,10 +164,10 @@
 
 **Purpose**: Final validation, accessibility checks, and cleanup across all admin sub-sections
 
-- [ ] T033 [P] Add loading states (`ProgressSpinner` or button `loading` property) to all async operations across admin components
-- [ ] T034 [P] Add empty state messages for empty tables/lists (no users found, no library roots, no scan history, no review items) across admin components
-- [ ] T035 Verify error handling — ensure backend `409`, `404`, `400`, `422` errors display meaningful toast messages via existing error interceptor across all admin services
-- [ ] T036 Run `quickstart.md` validation — start app, navigate to `/admin`, exercise each sub-section per the quickstart steps
+- [x] T033 [P] Add loading states (`ProgressSpinner` or button `loading` property) to all async operations across admin components
+- [x] T034 [P] Add empty state messages for empty tables/lists (no users found, no library roots, no scan history, no review items) across admin components
+- [x] T035 Verify error handling — ensure backend `409`, `404`, `400`, `422` errors display meaningful toast messages via existing error interceptor across all admin services
+- [x] T036 Run `quickstart.md` validation — start app, navigate to `/admin`, exercise each sub-section per the quickstart steps
 
 ---
 

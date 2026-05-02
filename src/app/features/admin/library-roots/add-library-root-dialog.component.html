@@ -1,0 +1,65 @@
+<p-dialog
+  *transloco="let t"
+  [header]="t('admin.libraryRoots.addDialog.title')"
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: '32rem' }"
+  [closable]="true"
+  [draggable]="false"
+>
+  <div class="flex flex-column gap-3 pt-2">
+    <div class="flex flex-column gap-1">
+      <label for="lr-path" class="font-semibold">
+        {{ t('admin.libraryRoots.addDialog.pathLabel') }}
+      </label>
+      <input
+        id="lr-path"
+        pInputText
+        type="text"
+        [placeholder]="t('admin.libraryRoots.addDialog.pathPlaceholder')"
+        [(ngModel)]="path"
+      />
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label for="lr-kind" class="font-semibold">
+        {{ t('admin.libraryRoots.addDialog.kindLabel') }}
+      </label>
+      <p-select
+        inputId="lr-kind"
+        [options]="kindOptions"
+        [(ngModel)]="selectedKind"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="t('admin.libraryRoots.addDialog.kindPlaceholder')"
+        [style]="{ width: '100%' }"
+      />
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label for="lr-label" class="font-semibold">
+        {{ t('admin.libraryRoots.addDialog.labelLabel') }}
+        <span class="text-color-secondary font-normal text-sm ml-1">
+          ({{ t('admin.libraryRoots.addDialog.optional') }})
+        </span>
+      </label>
+      <input
+        id="lr-label"
+        pInputText
+        type="text"
+        [placeholder]="t('admin.libraryRoots.addDialog.labelPlaceholder')"
+        [(ngModel)]="label"
+      />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button [label]="t('common.cancel')" severity="secondary" (onClick)="onCancel()" />
+    <p-button
+      [label]="t('admin.libraryRoots.addDialog.submit')"
+      [disabled]="!path || !selectedKind"
+      (onClick)="onSubmit(t)"
+    />
+  </ng-template>
+</p-dialog>

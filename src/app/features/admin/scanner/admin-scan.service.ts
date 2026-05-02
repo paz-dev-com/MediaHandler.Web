@@ -30,6 +30,7 @@ export class AdminScanService {
   readonly scanHistory = signal<ScanRunSummary[]>([]);
   readonly historyMeta = signal<ScanHistoryMeta>({ page: 1, pageSize: 20, total: 0 });
   readonly loading = signal<boolean>(false);
+  readonly historyLoading = signal<boolean>(false);
 
   startScan(libraryRootIds: string[], mode: ScanMode): void {
     this.loading.set(true);
@@ -69,6 +70,7 @@ export class AdminScanService {
   }
 
   getScanHistory(page: number, pageSize: number): void {
+    this.historyLoading.set(true);
     this.api.get<ScanRunSummary[]>('scan', { page, pageSize }).subscribe({
       next: (resp) => {
         this.scanHistory.set(resp.data ?? []);
@@ -80,6 +82,10 @@ export class AdminScanService {
             total: meta.totalCount,
           });
         }
+        this.historyLoading.set(false);
+      },
+      error: () => {
+        this.historyLoading.set(false);
       },
     });
   }
