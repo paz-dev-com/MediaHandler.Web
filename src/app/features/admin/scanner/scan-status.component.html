@@ -1,0 +1,58 @@
+<div class="scan-status" *transloco="let t">
+  @if (activeScan(); as scan) {
+    <div class="scan-status__header">
+      <h3 class="scan-status__title">{{ t('admin.scanner.statusTitle') }}</h3>
+      <div class="scan-status__badge">
+        @if (isRunning(scan)) {
+          <p-progressSpinner
+            styleClass="scan-status__spinner"
+            strokeWidth="4"
+            [style]="{ width: '1.5rem', height: '1.5rem' }"
+          />
+        }
+        <p-tag [value]="scan.status" [severity]="getStatusSeverity(scan.status)" />
+      </div>
+    </div>
+
+    <div class="scan-status__meta">
+      <span class="scan-status__meta-item">
+        <strong>{{ t('admin.scanner.mode') }}:</strong> {{ scan.mode }}
+      </span>
+      <span class="scan-status__meta-item">
+        <strong>{{ t('admin.scanner.startedAt') }}:</strong>
+        {{ scan.startedAt | date: 'short' }}
+      </span>
+    </div>
+
+    <div class="scan-status__counts">
+      <div class="scan-status__count-item">
+        <span class="scan-status__count-label">{{ t('admin.scanner.counts.discovered') }}</span>
+        <span class="scan-status__count-value">{{ scan.counts.totalDiscovered }}</span>
+      </div>
+      <div class="scan-status__count-item">
+        <span class="scan-status__count-label">{{ t('admin.scanner.counts.added') }}</span>
+        <span class="scan-status__count-value">{{ scan.counts.added }}</span>
+      </div>
+      <div class="scan-status__count-item">
+        <span class="scan-status__count-label">{{ t('admin.scanner.counts.updated') }}</span>
+        <span class="scan-status__count-value">{{ scan.counts.updated }}</span>
+      </div>
+      <div class="scan-status__count-item">
+        <span class="scan-status__count-label">{{ t('admin.scanner.counts.needsReview') }}</span>
+        <span class="scan-status__count-value">{{ scan.counts.needsReview }}</span>
+      </div>
+    </div>
+
+    @if (isRunning(scan)) {
+      <div class="scan-status__actions">
+        <p-button
+          [label]="t('admin.scanner.cancelScan')"
+          icon="pi pi-times"
+          severity="danger"
+          [outlined]="true"
+          (onClick)="onCancel(scan)"
+        />
+      </div>
+    }
+  }
+</div>

@@ -27,55 +27,8 @@ interface ScanModeOption {
   selector: 'app-scan-launcher',
   standalone: true,
   imports: [FormsModule, TranslocoModule, MultiSelectModule, SelectModule, ButtonModule],
-  template: `
-    <div class="scan-launcher" *transloco="let t">
-      <h3 class="scan-launcher__title">{{ t('admin.scanner.launcherTitle') }}</h3>
-
-      <div class="scan-launcher__controls">
-        <p-multiselect
-          [options]="roots()"
-          [ngModel]="selectedRootIds()"
-          optionLabel="path"
-          optionValue="id"
-          [placeholder]="t('admin.scanner.selectRoots')"
-          [loading]="rootsLoading()"
-          [style]="{ 'min-width': '20rem' }"
-          (ngModelChange)="selectedRootIds.set($event)"
-        />
-
-        <p-select
-          [options]="modeOptions"
-          [ngModel]="selectedMode()"
-          optionLabel="label"
-          optionValue="value"
-          [placeholder]="t('admin.scanner.selectMode')"
-          [style]="{ 'min-width': '12rem' }"
-          (ngModelChange)="selectedMode.set($event)"
-        />
-
-        <p-button
-          [label]="t('admin.scanner.startScan')"
-          icon="pi pi-play"
-          [loading]="scanLoading()"
-          [disabled]="!selectedRootIds().length || scanLoading()"
-          (onClick)="onStartScan()"
-        />
-      </div>
-    </div>
-  `,
-  styles: [
-    `
-      .scan-launcher__title {
-        margin: 0 0 1rem;
-      }
-      .scan-launcher__controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        align-items: center;
-      }
-    `,
-  ],
+  templateUrl: './scan-launcher.component.html',
+  styleUrl: './scan-launcher.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScanLauncherComponent implements OnInit {

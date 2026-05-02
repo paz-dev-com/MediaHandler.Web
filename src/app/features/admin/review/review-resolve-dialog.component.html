@@ -1,0 +1,141 @@
+<p-dialog
+  *transloco="let t"
+  [header]="t('admin.review.resolveDialog.title')"
+  [visible]="!!item"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: '50rem' }"
+  [closable]="true"
+  [draggable]="false"
+>
+  @if (item) {
+    <div class="review-resolve-dialog__content">
+      <!-- File info -->
+      <div class="review-resolve-dialog__section">
+        <div class="review-resolve-dialog__field">
+          <span class="review-resolve-dialog__label">{{
+            t('admin.review.resolveDialog.filePath')
+          }}</span>
+          <span class="review-resolve-dialog__value review-resolve-dialog__path">{{
+            item.filePath
+          }}</span>
+        </div>
+        <div class="review-resolve-dialog__meta-row">
+          @if (item.parsedTitle) {
+            <div class="review-resolve-dialog__field">
+              <span class="review-resolve-dialog__label">{{
+                t('admin.review.resolveDialog.parsedTitle')
+              }}</span>
+              <span class="review-resolve-dialog__value">{{ item.parsedTitle }}</span>
+            </div>
+          }
+          @if (item.parsedYear) {
+            <div class="review-resolve-dialog__field">
+              <span class="review-resolve-dialog__label">{{
+                t('admin.review.resolveDialog.parsedYear')
+              }}</span>
+              <span class="review-resolve-dialog__value">{{ item.parsedYear }}</span>
+            </div>
+          }
+          <div class="review-resolve-dialog__field">
+            <span class="review-resolve-dialog__label">{{
+              t('admin.review.resolveDialog.reason')
+            }}</span>
+            <p-tag [value]="item.reason" [severity]="'warn'" />
+          </div>
+          <div class="review-resolve-dialog__field">
+            <span class="review-resolve-dialog__label">{{
+              t('admin.review.resolveDialog.status')
+            }}</span>
+            <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- TMDB Candidates -->
+      @if (item.candidates && item.candidates.length > 0) {
+        <div class="review-resolve-dialog__section">
+          <h4 class="review-resolve-dialog__section-title">
+            {{ t('admin.review.resolveDialog.candidates') }}
+          </h4>
+          <div class="review-resolve-dialog__candidates">
+            @for (candidate of item.candidates; track candidate.tmdbId) {
+              <div
+                class="review-resolve-dialog__candidate"
+                [class.review-resolve-dialog__candidate--selected]="isSelected(candidate)"
+                (click)="selectCandidate(candidate)"
+                (keydown.enter)="selectCandidate(candidate)"
+                (keydown.space)="selectCandidate(candidate)"
+                tabindex="0"
+                role="button"
+              >
+                @if (candidate.posterPath) {
+                  <img
+                    [src]="getPosterUrl(candidate.posterPath)"
+                    [alt]="candidate.title"
+                    class="review-resolve-dialog__poster"
+                  />
+                } @else {
+                  <div
+                    class="review-resolve-dialog__poster review-resolve-dialog__poster--placeholder"
+                  >
+                    <i class="pi pi-image"></i>
+                  </div>
+                }
+                <div class="review-resolve-dialog__candidate-info">
+                  <span class="review-resolve-dialog__candidate-title">{{ candidate.title }}</span>
+                  @if (candidate.year) {
+                    <span class="review-resolve-dialog__candidate-year"
+                      >({{ candidate.year }})</span
+                    >
+                  }
+                  <p-tag [value]="candidate.kind" severity="info" />
+                  @if (candidate.score !== null) {
+                    <span class="review-resolve-dialog__candidate-score">
+                      {{ t('admin.review.resolveDialog.score') }}:
+                      {{ candidate.score | number: '1.0-2' }}
+                    </span>
+                  }
+                </div>
+                @if (isSelected(candidate)) {
+                  <i class="pi pi-check review-resolve-dialog__check"></i>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <p class="review-resolve-dialog__no-candidates">
+          {{ t('admin.review.resolveDialog.noCandidates') }}
+        </p>
+      }
+    </div>
+  }
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="t('admin.review.resolveDialog.assign')"
+      icon="pi pi-check"
+      [disabled]="!selectedCandidate()"
+      (onClick)="onAssign(t)"
+    />
+    <p-button
+      [label]="t('admin.review.resolveDialog.dismiss')"
+      icon="pi pi-eye-slash"
+      severity="secondary"
+      (onClick)="onAction(ReviewResolutionAction.Dismiss, t)"
+    />
+    <p-button
+      [label]="t('admin.review.resolveDialog.delete')"
+      icon="pi pi-trash"
+      severity="danger"
+      (onClick)="onAction(ReviewResolutionAction.Delete, t)"
+    />
+    <p-button
+      [label]="t('admin.review.resolveDialog.reopen')"
+      icon="pi pi-refresh"
+      severity="contrast"
+      (onClick)="onAction(ReviewResolutionAction.Reopen, t)"
+    />
+  </ng-template>
+</p-dialog>

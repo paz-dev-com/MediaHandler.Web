@@ -1,0 +1,35 @@
+.health-panel {
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__status,
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__label {
+    font-weight: 600;
+    min-width: 6rem;
+    color: var(--text-color-secondary);
+  }
+
+  &__value {
+    color: var(--text-color);
+  }
+
+  &__empty {
+    color: var(--text-color-secondary);
+    font-style: italic;
+  }
+}
