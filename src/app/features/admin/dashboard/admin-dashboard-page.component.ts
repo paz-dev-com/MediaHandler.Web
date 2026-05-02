@@ -1,9 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TranslocoModule } from '@jsverse/transloco';
+import { CardModule } from 'primeng/card';
+import { HealthPanelComponent } from './health-panel.component';
 
-/** Placeholder — implemented in Phase 7 (T029) */
 @Component({
   selector: 'app-admin-dashboard-page',
-  template: `<p>Admin Dashboard</p>`,
+  standalone: true,
+  imports: [TranslocoModule, CardModule, HealthPanelComponent],
+  templateUrl: './admin-dashboard-page.component.html',
+  styleUrl: './admin-dashboard-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardPageComponent {}

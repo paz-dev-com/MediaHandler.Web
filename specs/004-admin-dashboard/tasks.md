@@ -136,9 +136,9 @@
 
 ### Implementation for User Story 5
 
-- [ ] T027 [US5] Implement `AdminHealthService` with signal (`health`) and method `getHealth()` calling `GET health` in `src/app/features/admin/dashboard/admin-health.service.ts`
-- [ ] T028 [P] [US5] Create `HealthPanelComponent` with PrimeNG `Tag` (severity: `success` for Healthy, `danger` for Unhealthy), `ProgressSpinner` while loading, timestamp display, and version display in `src/app/features/admin/dashboard/health-panel.component.ts`
-- [ ] T029 [US5] Create `AdminDashboardPageComponent` embedding `HealthPanelComponent` and displaying quick-stats summary on the admin landing page in `src/app/features/admin/dashboard/admin-dashboard-page.component.ts`, `src/app/features/admin/dashboard/admin-dashboard-page.component.html`, and `src/app/features/admin/dashboard/admin-dashboard-page.component.scss`
+- [x] T027 [US5] Implement `AdminHealthService` with signal (`health`) and method `getHealth()` calling `GET health` in `src/app/features/admin/dashboard/admin-health.service.ts`
+- [x] T028 [P] [US5] Create `HealthPanelComponent` with PrimeNG `Tag` (severity: `success` for Healthy, `danger` for Unhealthy), `ProgressSpinner` while loading, timestamp display, and version display in `src/app/features/admin/dashboard/health-panel.component.ts`
+- [x] T029 [US5] Create `AdminDashboardPageComponent` embedding `HealthPanelComponent` and displaying quick-stats summary on the admin landing page in `src/app/features/admin/dashboard/admin-dashboard-page.component.ts`, `src/app/features/admin/dashboard/admin-dashboard-page.component.html`, and `src/app/features/admin/dashboard/admin-dashboard-page.component.scss`
 
 **Checkpoint**: User Story 5 fully functional — admin sees health status on dashboard landing
 
