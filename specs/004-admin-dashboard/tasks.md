@@ -55,12 +55,12 @@
 
 ### Tests for User Story 1
 
-- [ ] T010 [P] [US1] Create unit tests for `AdminUserService` in `src/app/features/admin/users/admin-user.service.spec.ts` — test `getUsers()`, `setRole()`, `setActive()` HTTP calls and signal state updates
+- [x] T010 [P] [US1] Create unit tests for `AdminUserService` in `src/app/features/admin/users/admin-user.service.spec.ts` — test `getUsers()`, `setRole()`, `setActive()` HTTP calls and signal state updates
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Implement `AdminUserService` with signals (`users`, `loading`, `meta`) and methods `getUsers(page, pageSize, search)`, `setRole(userId, role)`, `setActive(userId, isActive)` in `src/app/features/admin/users/admin-user.service.ts`
-- [ ] T012 [US1] Create `AdminUsersPageComponent` with PrimeNG `Table` (server-side pagination via `onLazyLoad`), `InputText` search, `Select` for role change, `ToggleSwitch`/`Button` for active toggle, and `Tag` for status display in `src/app/features/admin/users/admin-users-page.component.ts`, `src/app/features/admin/users/admin-users-page.component.html`, and `src/app/features/admin/users/admin-users-page.component.scss`
+- [x] T011 [US1] Implement `AdminUserService` with signals (`users`, `loading`, `meta`) and methods `getUsers(page, pageSize, search)`, `setRole(userId, role)`, `setActive(userId, isActive)` in `src/app/features/admin/users/admin-user.service.ts`
+- [x] T012 [US1] Create `AdminUsersPageComponent` with PrimeNG `Table` (server-side pagination via `onLazyLoad`), `InputText` search, `Select` for role change, `ToggleSwitch`/`Button` for active toggle, and `Tag` for status display in `src/app/features/admin/users/admin-users-page.component.ts`, `src/app/features/admin/users/admin-users-page.component.html`, and `src/app/features/admin/users/admin-users-page.component.scss`
 
 **Checkpoint**: User Story 1 fully functional — admin can list, search, paginate users, change roles, and toggle active status
 
