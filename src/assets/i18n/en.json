@@ -253,6 +253,48 @@
         "optional": "optional",
         "submit": "Add"
       }
+    },
+    "scanner": {
+      "title": "Scanner",
+      "launcherTitle": "Start New Scan",
+      "statusTitle": "Active Scan",
+      "historyTitle": "Scan History",
+      "startScan": "Start Scan",
+      "cancelScan": "Cancel Scan",
+      "selectRoots": "Select library roots…",
+      "selectMode": "Select mode…",
+      "mode": "Mode",
+      "startedAt": "Started",
+      "finishedAt": "Finished",
+      "historyEmpty": "No scans found.",
+      "scanStarted": "Scan started successfully.",
+      "scanCancelled": "Scan cancelled.",
+      "counts": {
+        "discovered": "Discovered",
+        "added": "Added",
+        "updated": "Updated",
+        "unchanged": "Unchanged",
+        "removed": "Removed",
+        "excluded": "Excluded",
+        "needsReview": "Needs Review"
+      },
+      "columns": {
+        "mode": "Mode",
+        "status": "Status",
+        "startedAt": "Started",
+        "finishedAt": "Finished",
+        "discovered": "Discovered",
+        "added": "Added",
+        "updated": "Updated",
+        "needsReview": "Needs Review"
+      },
+      "status": {
+        "Pending": "Pending",
+        "Running": "Running",
+        "Completed": "Completed",
+        "Failed": "Failed",
+        "Cancelled": "Cancelled"
+      }
     }
   }
 }

@@ -94,15 +94,15 @@
 
 ### Tests for User Story 3
 
-- [ ] T017 [P] [US3] Create unit tests for `AdminScanService` in `src/app/features/admin/scanner/admin-scan.service.spec.ts` — test `startScan()`, `getActiveScan()`, `cancelScan()`, `getScanHistory()`, `getScanDetail()` HTTP calls, polling lifecycle (start/stop on terminal state), and signal state
+- [x] T017 [P] [US3] Create unit tests for `AdminScanService` in `src/app/features/admin/scanner/admin-scan.service.spec.ts` — test `startScan()`, `getActiveScan()`, `cancelScan()`, `getScanHistory()`, `getScanDetail()` HTTP calls, polling lifecycle (start/stop on terminal state), and signal state
 
 ### Implementation for User Story 3
 
-- [ ] T018 [US3] Implement `AdminScanService` with signals (`activeScan`, `scanHistory`, `historyMeta`, `loading`) and methods `startScan(libraryRootIds, mode)`, `getActiveScan()`, `cancelScan(id)`, `getScanHistory(page, pageSize)`, `getScanDetail(id, includeReview)`, plus `interval(4000)` + `switchMap` polling with `takeUntilDestroyed()` in `src/app/features/admin/scanner/admin-scan.service.ts`
-- [ ] T019 [P] [US3] Create `ScanLauncherComponent` with PrimeNG `MultiSelect` for enabled library root selection (populated from `AdminLibraryRootService.getRoots` with `enabledOnly=true`), `Select` for scan mode (Full/Incremental), and "Start Scan" `Button` with loading state in `src/app/features/admin/scanner/scan-launcher.component.ts`
-- [ ] T020 [P] [US3] Create `ScanStatusComponent` with PrimeNG `Tag` for scan status badge, `ProgressSpinner` for running state, scan counts display, and "Cancel Scan" `Button` in `src/app/features/admin/scanner/scan-status.component.ts`
-- [ ] T021 [P] [US3] Create `ScanHistoryTableComponent` with PrimeNG `Table` (server-side pagination, 20 rows per page) displaying scan mode, status `Tag`, start/finish timestamps, and summary counts per row in `src/app/features/admin/scanner/scan-history-table.component.ts`
-- [ ] T022 [US3] Create `AdminScannerPageComponent` orchestrating `ScanLauncherComponent`, `ScanStatusComponent`, and `ScanHistoryTableComponent` — show launcher when no scan is active, show status when scan is running, always show history table below in `src/app/features/admin/scanner/admin-scanner-page.component.ts`, `src/app/features/admin/scanner/admin-scanner-page.component.html`, and `src/app/features/admin/scanner/admin-scanner-page.component.scss`
+- [x] T018 [US3] Implement `AdminScanService` with signals (`activeScan`, `scanHistory`, `historyMeta`, `loading`) and methods `startScan(libraryRootIds, mode)`, `getActiveScan()`, `cancelScan(id)`, `getScanHistory(page, pageSize)`, `getScanDetail(id, includeReview)`, plus `interval(4000)` + `switchMap` polling with `takeUntilDestroyed()` in `src/app/features/admin/scanner/admin-scan.service.ts`
+- [x] T019 [P] [US3] Create `ScanLauncherComponent` with PrimeNG `MultiSelect` for enabled library root selection (populated from `AdminLibraryRootService.getRoots` with `enabledOnly=true`), `Select` for scan mode (Full/Incremental), and "Start Scan" `Button` with loading state in `src/app/features/admin/scanner/scan-launcher.component.ts`
+- [x] T020 [P] [US3] Create `ScanStatusComponent` with PrimeNG `Tag` for scan status badge, `ProgressSpinner` for running state, scan counts display, and "Cancel Scan" `Button` in `src/app/features/admin/scanner/scan-status.component.ts`
+- [x] T021 [P] [US3] Create `ScanHistoryTableComponent` with PrimeNG `Table` (server-side pagination, 20 rows per page) displaying scan mode, status `Tag`, start/finish timestamps, and summary counts per row in `src/app/features/admin/scanner/scan-history-table.component.ts`
+- [x] T022 [US3] Create `AdminScannerPageComponent` orchestrating `ScanLauncherComponent`, `ScanStatusComponent`, and `ScanHistoryTableComponent` — show launcher when no scan is active, show status when scan is running, always show history table below in `src/app/features/admin/scanner/admin-scanner-page.component.ts`, `src/app/features/admin/scanner/admin-scanner-page.component.html`, and `src/app/features/admin/scanner/admin-scanner-page.component.scss`
 
 **Checkpoint**: User Story 3 fully functional — admin can start, monitor, cancel scans and browse history
 
