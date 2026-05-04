@@ -1,0 +1,85 @@
+<div class="tmdb-search-panel" *transloco="let t">
+  <div class="tmdb-search-panel__search-row">
+    <input
+      pInputText
+      type="text"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event)"
+      [placeholder]="t('admin.tmdbSearch.searchPlaceholder')"
+      (keydown)="onKeydown($event)"
+      class="tmdb-search-panel__input"
+    />
+    <p-button
+      [label]="t('admin.tmdbSearch.search')"
+      icon="pi pi-search"
+      [loading]="loading()"
+      (onClick)="search()"
+    />
+  </div>
+
+  @if (loading()) {
+    <div class="tmdb-search-panel__spinner">
+      <p-progressSpinner [style]="{ width: '2rem', height: '2rem' }" />
+    </div>
+  } @else if (filteredResults.length === 0 && allResults().length > 0) {
+    <p-message severity="info" [text]="t('admin.tmdbSearch.noFilteredResults')" />
+  } @else if (allResults().length === 0 && query().trim().length > 0) {
+    <p-message severity="info" [text]="t('admin.tmdbSearch.noResults')" />
+  }
+
+  @if (!loading() && filteredResults.length > 0) {
+    <p-dataView [value]="filteredResults">
+      <ng-template pTemplate="list" let-items>
+        @for (result of items; track result.tmdbId) {
+          <div
+            class="tmdb-search-panel__result"
+            (click)="onSelect(result)"
+            (keydown.enter)="onSelect(result)"
+            (keydown.space)="onSelect(result)"
+            tabindex="0"
+            role="button"
+          >
+            <div class="tmdb-search-panel__poster">
+              @if (result.posterPath) {
+                <img
+                  [src]="getPosterUrl(result.posterPath)"
+                  [alt]="result.title"
+                  class="tmdb-search-panel__poster-img"
+                />
+              } @else {
+                <div class="tmdb-search-panel__poster-placeholder">
+                  <i class="pi pi-image"></i>
+                </div>
+              }
+            </div>
+            <div class="tmdb-search-panel__info">
+              <span class="tmdb-search-panel__title">{{ result.title }}</span>
+              @if (getReleaseYear(result.releaseDate); as year) {
+                <span class="tmdb-search-panel__year">({{ year }})</span>
+              }
+              <p-tag
+                [value]="
+                  result.mediaType === 'movie'
+                    ? t('admin.tmdbSearch.typeMovie')
+                    : t('admin.tmdbSearch.typeTv')
+                "
+                severity="info"
+              />
+              @if (result.overview) {
+                <p class="tmdb-search-panel__overview">{{ result.overview }}</p>
+              }
+            </div>
+            <div class="tmdb-search-panel__action">
+              <p-button
+                [label]="t('admin.tmdbSearch.select')"
+                icon="pi pi-check"
+                size="small"
+                (onClick)="onSelect(result); $event.stopPropagation()"
+              />
+            </div>
+          </div>
+        }
+      </ng-template>
+    </p-dataView>
+  }
+</div>

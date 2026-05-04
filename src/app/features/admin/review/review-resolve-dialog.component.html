@@ -109,6 +109,19 @@
           {{ t('admin.review.resolveDialog.noCandidates') }}
         </p>
       }
+
+      <!-- TMDB Search Panel Dialog -->
+      @if (showTmdbSearch()) {
+        <div class="review-resolve-dialog__tmdb-search">
+          <h4 class="review-resolve-dialog__section-title">
+            {{ t('admin.review.resolveDialog.tmdbSearch') }}
+          </h4>
+          <app-tmdb-search-panel
+            [initialQuery]="item?.parsedTitle ?? ''"
+            (selected)="onTmdbSearchSelected($event, t)"
+          />
+        </div>
+      }
     </div>
   }
 
@@ -118,6 +131,12 @@
       icon="pi pi-check"
       [disabled]="!selectedCandidate()"
       (onClick)="onAssign(t)"
+    />
+    <p-button
+      [label]="t('admin.review.resolveDialog.searchTmdb')"
+      icon="pi pi-search"
+      severity="secondary"
+      (onClick)="showTmdbSearch.set(!showTmdbSearch())"
     />
     <p-button
       [label]="t('admin.review.resolveDialog.dismiss')"

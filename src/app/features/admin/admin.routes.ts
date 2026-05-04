@@ -39,6 +39,20 @@ export const adminRoutes: Routes = [
         loadComponent: () =>
           import('./review/admin-review-page.component').then((m) => m.AdminReviewPageComponent),
       },
+      {
+        path: 'scan-results',
+        loadComponent: () =>
+          import('./scan-results/admin-scan-results-page.component').then(
+            (m) => m.AdminScanResultsPageComponent,
+          ),
+      },
+      {
+        path: 'scan-results/:scanId',
+        loadComponent: () =>
+          import('./scan-results/admin-scan-results-page.component').then(
+            (m) => m.AdminScanResultsPageComponent,
+          ),
+      },
     ],
   },
 ];
