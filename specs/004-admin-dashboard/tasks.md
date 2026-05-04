@@ -102,7 +102,7 @@
 - [x] T019 [P] [US3] Create `ScanLauncherComponent` with PrimeNG `MultiSelect` for enabled library root selection (populated from `AdminLibraryRootService.getRoots` with `enabledOnly=true`), `Select` for scan mode (Full/Incremental), and "Start Scan" `Button` with loading state in `src/app/features/admin/scanner/scan-launcher.component.ts`
 - [x] T020 [P] [US3] Create `ScanStatusComponent` with PrimeNG `Tag` for scan status badge, `ProgressSpinner` for running state, scan counts display, and "Cancel Scan" `Button` in `src/app/features/admin/scanner/scan-status.component.ts`
 - [x] T021 [P] [US3] Create `ScanHistoryTableComponent` with PrimeNG `Table` (server-side pagination, 20 rows per page) displaying scan mode, status `Tag`, start/finish timestamps, and summary counts per row in `src/app/features/admin/scanner/scan-history-table.component.ts`
-- [x] T022 [US3] Create `AdminScannerPageComponent` orchestrating `ScanLauncherComponent`, `ScanStatusComponent`, and `ScanHistoryTableComponent` — show launcher when no scan is active, show status when scan is running, always show history table below in `src/app/features/admin/scanner/admin-scanner-page.component.ts`, `src/app/features/admin/scanner/admin-scanner-page.component.html`, and `src/app/features/admin/scanner/admin-scanner-page.component.scss`
+- [x] T022 [P] [US3] Create `AdminScannerPageComponent` orchestrating `ScanLauncherComponent`, `ScanStatusComponent`, and `ScanHistoryTableComponent` — show launcher when no scan is active, show status when scan is running, always show history table below in `src/app/features/admin/scanner/admin-scanner-page.component.ts`, `src/app/features/admin/scanner/admin-scanner-page.component.html`, and `src/app/features/admin/scanner/admin-scanner-page.component.scss`
 
 **Checkpoint**: User Story 3 fully functional — admin can start, monitor, cancel scans and browse history
 
@@ -277,3 +277,251 @@ With multiple developers after Phase 2 is complete:
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - ⚠️ Three backend endpoints are PENDING (see plan.md §Backend API Gaps): `PUT library-roots/{id}/enabled`, `GET scan?page&pageSize`, `Reopen` action — frontend is coded against expected contracts
+
+---
+
+## Phase 10: Setup for US7–US12 (Shared Infrastructure Extension)
+
+**Purpose**: Add new enums, model interfaces, and shared model files needed by user stories 7–12
+
+- [x] T037 Add `ScanDecisionType` and `EnrichmentStatus` enums to `src/app/shared/models/enums.ts`
+- [x] T038 [P] Create `ScanItemDecision` and `TvShowGroup` interfaces in `src/app/shared/models/scan-decision.model.ts`
+- [x] T039 [P] Create `EnrichmentRun`, `EnrichmentSummary`, and `EnrichmentError` interfaces in `src/app/shared/models/enrichment.model.ts`
+- [x] T040 [P] Create `RenamePreview`, `RenameResult`, `BatchRenamePreview`, and `BatchRenameResult` interfaces in `src/app/shared/models/rename.model.ts`
+
+---
+
+## Phase 11: User Story 12 — Legacy NAS Scanner Deprecation (Priority: P1)
+
+**Goal**: Remove the legacy `/nas-scanner` page and redirect to the admin Scanner section
+
+**Independent Test**: Navigate to `/nas-scanner` — verify redirect to `/admin/scanner`. Verify no "NAS Scanner" link in the sidebar. Verify `src/app/features/nas-scanner/` directory no longer exists.
+
+### Implementation for User Story 12
+
+- [x] T041 [US12] Delete the entire `src/app/features/nas-scanner/` directory (all components, routes, service files)
+- [x] T042 [US12] Replace the `nas-scanner` lazy-loaded route with `{ path: 'nas-scanner', redirectTo: '/admin/scanner' }` in `src/app/app.routes.ts`
+- [x] T043 [US12] Remove the "NAS Scanner" navigation item from `src/app/core/layout/sidebar.component.ts`
+- [x] T044 [US12] Remove `nasScanner.*` translation keys from `src/assets/i18n/en.json` and `src/assets/i18n/fr.json`
+
+**Checkpoint**: User Story 12 complete — legacy NAS Scanner page fully removed, URL redirects to admin scanner
+
+---
+
+## Phase 12: User Story 8 — Manual TMDB Search & Assignment (Priority: P2)
+
+**Goal**: Provide a reusable TMDB search panel component that can be embedded in the Review Queue (US4) and Scan Results Browser (US7)
+
+**Independent Test**: Open a review item with no TMDB candidates (NoTmdbResult), click "Search TMDB", enter a title, see TMDB results with poster/year/overview, select a result and click "Assign" — verify the item is resolved and linked
+
+### Implementation for User Story 8
+
+- [ ] T045 [US8] Create `TmdbSearchPanelComponent` (standalone, reusable) with PrimeNG `InputText` for query, `Button` for search, `DataView` for results display (title, year, poster via `Image`, overview, media type `Tag`), and `selected` output event emitting `TmdbSearchResult` — accepts `initialQuery` and `mediaTypeFilter` inputs — in `src/app/features/admin/shared/tmdb-search-panel.component.ts`, `src/app/features/admin/shared/tmdb-search-panel.component.html`, and `src/app/features/admin/shared/tmdb-search-panel.component.scss`
+- [ ] T046 [US8] Integrate `TmdbSearchPanelComponent` into `ReviewResolveDialogComponent` — add "Search TMDB" button that shows the panel in a `Dialog`, wire `(selected)` event to call `AdminReviewService.resolveItem()` with `Assign` action in `src/app/features/admin/review/review-resolve-dialog.component.ts` and `src/app/features/admin/review/review-resolve-dialog.component.html`
+
+**Checkpoint**: User Story 8 complete — manual TMDB search works from the Review Queue; panel is reusable for US7
+
+---
+
+## Phase 13: User Story 7 — Scan Results Browser (Priority: P2)
+
+**Goal**: Admins can browse ALL files from a scan (successful and problematic), filter by decision type/media type/library root/scan run, view TMDB candidates, and reassign TMDB entries
+
+**Independent Test**: Run a scan, navigate to `/admin/scan-results`, verify latest scan is pre-selected with "All" decision type filter, expand a matched file to see candidates, reassign to a different candidate, use "Search TMDB" to manually assign — verify reassignment success toast
+
+### Tests for User Story 7
+
+- [ ] T047 [P] [US7] Create unit tests for `AdminScanDecisionService` in `src/app/features/admin/scan-results/admin-scan-decision.service.spec.ts` — test `getDecisions()`, `reassign()`, `getTvGroups()`, `assignTvGroup()`, `renameFile()`, `renameTvGroup()` HTTP calls and signal state updates
+
+### Implementation for User Story 7
+
+- [ ] T048 [US7] Implement `AdminScanDecisionService` with signals (`decisions`, `tvGroups`, `loading`, `meta`) and methods `getDecisions(scanId, decisionType?, mediaType?, libraryRootId?, page?, pageSize?)`, `reassign(decisionId, tmdbId, kind)`, `getTvGroups(scanId)`, `assignTvGroup(groupId, tmdbId)`, `renameFile(fileId, preview?)`, `renameTvGroup(groupId, preview?)` in `src/app/features/admin/scan-results/admin-scan-decision.service.ts`
+- [ ] T049 [P] [US7] Create `ScanDecisionDetailComponent` (expanded row) showing TMDB candidates list with poster/title/year/score, "Reassign" button per candidate, and "Search TMDB" button opening `TmdbSearchPanelComponent` in a `Dialog` — in `src/app/features/admin/scan-results/scan-decision-detail.component.ts`, `src/app/features/admin/scan-results/scan-decision-detail.component.html`, and `src/app/features/admin/scan-results/scan-decision-detail.component.scss`
+- [ ] T050 [P] [US7] Create `ScanDecisionTableComponent` with PrimeNG `Table` (server-side pagination, row expansion), columns for file path, decision type `Tag`, assigned TMDB entry (title/year/poster), and timestamp — `Select` filters for decision type, media type, and library root — in `src/app/features/admin/scan-results/scan-decision-table.component.ts`, `src/app/features/admin/scan-results/scan-decision-table.component.html`, and `src/app/features/admin/scan-results/scan-decision-table.component.scss`
+- [ ] T051 [P] [US7] Create `AdminScanResultsPageComponent` orchestrating scan run `Select` (populated from `AdminScanService.getScanHistory()`, defaulting to most recent scan), filter controls, and `ScanDecisionTableComponent` — in `src/app/features/admin/scan-results/admin-scan-results-page.component.ts`, `src/app/features/admin/scan-results/admin-scan-results-page.component.html`, and `src/app/features/admin/scan-results/admin-scan-results-page.component.scss`
+- [ ] T052 [P] [US7] Add `scan-results` and `scan-results/:scanId` child routes to `src/app/features/admin/admin.routes.ts` lazy-loading `AdminScanResultsPageComponent`
+- [ ] T053 [P] [US7] Add "Scan Results" tab to the `tabs` array in `src/app/features/admin/admin-layout.component.ts`
+
+**Checkpoint**: User Story 7 complete — admin can browse all scan decisions, filter, and reassign TMDB entries
+
+---
+
+## Phase 14: User Story 9 — TV Show Parent-Level TMDB Assignment (Priority: P2)
+
+**Goal**: TV show episode files are grouped by parent show in the Scan Results Browser; admin assigns TMDB at show level and it propagates to all episodes
+
+**Independent Test**: Navigate to `/admin/scan-results`, switch to TV show group view, see episodes grouped by show name with episode count, click "Assign TMDB" on a group header, search and select a TV show, confirm — verify all episodes inherit the assignment
+
+**Depends on**: US7 (Scan Results Browser), US8 (TMDB Search Panel)
+
+### Implementation for User Story 9
+
+- [ ] T054 [US9] Create `TvShowGroupListComponent` with PrimeNG `Accordion` for show groups (header: show name, episode count `Chip`, TMDB assignment status `Tag`), expanded panel listing episodes, "Assign TMDB" / "Change TMDB" `Button` on group header opening `TmdbSearchPanelComponent` with `initialQuery` pre-filled and `mediaTypeFilter` set to TvShow — in `src/app/features/admin/scan-results/tv-show-group-list.component.ts`, `src/app/features/admin/scan-results/tv-show-group-list.component.html`, and `src/app/features/admin/scan-results/tv-show-group-list.component.scss`
+- [ ] T055 [US9] Integrate `TvShowGroupListComponent` into `AdminScanResultsPageComponent` — add toggle between flat table view and TV show group view, load groups via `AdminScanDecisionService.getTvGroups()` when group view is selected — modify `src/app/features/admin/scan-results/admin-scan-results-page.component.ts` and `src/app/features/admin/scan-results/admin-scan-results-page.component.html`
+
+**Checkpoint**: User Story 9 complete — TV show episodes grouped by parent show with show-level TMDB assignment
+
+---
+
+## Phase 15: User Story 10 — Batch TMDB Enrichment Scan (Priority: P2)
+
+**Goal**: Admins can launch a batch TMDB enrichment scan, monitor progress via polling, and view results summary
+
+**Independent Test**: Navigate to `/admin/enrichment`, see summary of entries ready for enrichment (new + changed counts, skipped count), click "Start TMDB Enrichment", confirm in dialog, observe progress bar updating via polling, view completion summary with enriched/failed counts
+
+### Tests for User Story 10
+
+- [ ] T056 [P] [US10] Create unit tests for `AdminEnrichmentService` in `src/app/features/admin/enrichment/admin-enrichment.service.spec.ts` — test `startEnrichment()`, `getStatus()`, polling lifecycle (start on launch, stop on terminal), signal state, discriminated response handling
+
+### Implementation for User Story 10
+
+- [ ] T057 [US10] Implement `AdminEnrichmentService` with signals (`enrichmentStatus`, `summary`, `loading`) and methods `startEnrichment()`, `getStatus()`, plus `interval(4000)` + `switchMap` polling with `takeUntilDestroyed()` and `stopPolling$` subject — in `src/app/features/admin/enrichment/admin-enrichment.service.ts`
+- [ ] T058 [US10] Create `AdminEnrichmentPageComponent` with enrichment summary panel (new/changed entries count, skipped count from `EnrichmentSummary`), "Start TMDB Enrichment" `Button` with `ConfirmDialog`, PrimeNG `ProgressBar` for running state, results summary panel (enriched/failed/error details), empty state `Message` when nothing to enrich, and prevention of duplicate runs — in `src/app/features/admin/enrichment/admin-enrichment-page.component.ts`, `src/app/features/admin/enrichment/admin-enrichment-page.component.html`, and `src/app/features/admin/enrichment/admin-enrichment-page.component.scss`
+- [ ] T059 [US10] Add `enrichment` child route to `src/app/features/admin/admin.routes.ts` lazy-loading `AdminEnrichmentPageComponent`
+- [ ] T060 [US10] Add "Enrichment" tab to the `tabs` array in `src/app/features/admin/admin-layout.component.ts`
+
+**Checkpoint**: User Story 10 complete — admin can launch, monitor, and review batch TMDB enrichment
+
+---
+
+## Phase 16: User Story 11 — Automatic File Renaming (Priority: P3)
+
+**Goal**: Admins can opt-in rename media files on the NAS to match TMDB naming conventions, with preview before confirmation, for both single files and batch TV show renames
+
+**Independent Test**: From Scan Results, expand a matched file, click "Rename File", see preview (current name → proposed name), confirm — verify success toast. From TV show group view, click "Rename All" on a group, see batch preview of all episodes, confirm — verify all renamed.
+
+**Depends on**: US7 (Scan Results — single file rename), US9 (TV Show Groups — batch rename)
+
+### Implementation for User Story 11
+
+- [ ] T061 [US11] Create `RenameDialogComponent` (standalone, reusable) with PrimeNG `Dialog` supporting two modes — single file (shows current/proposed name from `RenamePreview`) and batch TV show (shows all proposed renames from `BatchRenamePreview`) — `ConfirmDialog` for final confirmation, error `Message` display, accepts `fileId` or `groupId` + `mode` input — in `src/app/features/admin/shared/rename-dialog.component.ts`, `src/app/features/admin/shared/rename-dialog.component.html`, and `src/app/features/admin/shared/rename-dialog.component.scss`
+- [ ] T062 [US11] Integrate "Rename File" button into `ScanDecisionDetailComponent` — opens `RenameDialogComponent` in single-file mode after TMDB assignment, calls `AdminScanDecisionService.renameFile()` — modify `src/app/features/admin/scan-results/scan-decision-detail.component.ts` and `src/app/features/admin/scan-results/scan-decision-detail.component.html`
+- [ ] T063 [US11] Integrate "Rename All Episodes" button into `TvShowGroupListComponent` — opens `RenameDialogComponent` in batch mode, calls `AdminScanDecisionService.renameTvGroup()` — modify `src/app/features/admin/scan-results/tv-show-group-list.component.ts` and `src/app/features/admin/scan-results/tv-show-group-list.component.html`
+
+**Checkpoint**: User Story 11 complete — single file and batch TV show renaming with preview and confirmation
+
+---
+
+## Phase 17: Bilingual Support for US7–US12 (Priority: P3)
+
+**Goal**: All new admin section labels, buttons, messages, table headers, and status indicators for US7–US12 are translated in English and French
+
+**Independent Test**: Switch language to French, navigate to Scan Results, Enrichment, trigger rename dialog and TMDB search panel — verify all visible text appears in French with no untranslated keys
+
+### Implementation for Bilingual Support
+
+- [ ] T064 [P] [US6] Add English translation keys (`admin.scanResults.*`, `admin.tmdbSearch.*`, `admin.enrichment.*`, `admin.rename.*`) to `src/assets/i18n/en.json`
+- [ ] T065 [P] [US6] Add French translation keys (matching `admin.scanResults.*`, `admin.tmdbSearch.*`, `admin.enrichment.*`, `admin.rename.*` structure) to `src/assets/i18n/fr.json`
+- [ ] T066 [US6] Wire up `transloco` pipes in all new component templates — replace hardcoded strings with `{{ t('admin.*') }}` translation keys in all `.component.html` files under `src/app/features/admin/scan-results/`, `src/app/features/admin/enrichment/`, and `src/app/features/admin/shared/`
+
+**Checkpoint**: All new admin UI (US7–US12) fully bilingual — no untranslated keys in either language
+
+---
+
+## Phase 18: Polish & Cross-Cutting Concerns (US7–US12)
+
+**Purpose**: Final validation, loading states, empty states, error handling, and cleanup for all new admin sub-sections
+
+- [ ] T067 [P] Add loading states (`ProgressSpinner` or button `loading` property) to all async operations in scan-results, enrichment, and shared components
+- [ ] T068 [P] Add empty state `Message` components for empty scan decisions list, no TV show groups, no enrichment entries, and no TMDB search results across new components
+- [ ] T069 Verify error handling — ensure backend `404`, `409`, `422`, `500` errors from new endpoints (scan-decisions, reassign, tv-groups, enrichment, rename) display meaningful toast messages via existing error interceptor
+- [ ] T070 Add "View Scan Results" navigation link from `ScanHistoryTableComponent` (completed scan row click) and `ScanStatusComponent` (completed state) to `/admin/scan-results/:scanId` — modify `src/app/features/admin/scanner/scan-history-table.component.ts` and `src/app/features/admin/scanner/scan-status.component.ts`
+- [ ] T071 Run `quickstart.md` validation for US7–US12 — start app, navigate to `/admin/scan-results`, `/admin/enrichment`, exercise TMDB search panel, rename dialog, TV show groups, and verify `/nas-scanner` redirects to `/admin/scanner`
+
+---
+
+## Dependencies & Execution Order (US7–US12)
+
+### Phase Dependencies
+
+- **Setup Extension (Phase 10)**: No dependencies on new phases — can start immediately after existing T036
+- **US12 (Phase 11)**: Depends on Phase 10 — independent of other new stories
+- **US8 (Phase 12)**: Depends on Phase 10 — independent of other new stories; creates the shared `TmdbSearchPanelComponent` reused by US7 and US9
+- **US7 (Phase 13)**: Depends on US8 (needs `TmdbSearchPanelComponent` for reassignment dialog)
+- **US9 (Phase 14)**: Depends on US7 (extends the Scan Results page with TV show group view)
+- **US10 (Phase 15)**: Depends on Phase 10 — independent of US7/US8/US9/US11
+- **US11 (Phase 16)**: Depends on US7 and US9 (rename buttons are integrated into scan-decision-detail and tv-show-group-list)
+- **i18n (Phase 17)**: Depends on all new component templates being created (US7–US12)
+- **Polish (Phase 18)**: Depends on all new user stories and i18n being complete
+
+### User Story Dependencies (US7–US12)
+
+- **US12 (P1)**: Independent — start after Phase 10 (can parallel with US8, US10)
+- **US8 (P2)**: Independent — start after Phase 10 (can parallel with US12, US10)
+- **US7 (P2)**: Depends on US8 (`TmdbSearchPanelComponent` must exist)
+- **US9 (P2)**: Depends on US7 (extends scan results page)
+- **US10 (P2)**: Independent — start after Phase 10 (can parallel with US12, US8, US7)
+- **US11 (P3)**: Depends on US7 + US9 (rename buttons integrate into their components)
+
+### Within Each New User Story
+
+- Tests written FIRST (where included); should FAIL before implementation
+- Service before page component
+- Child/dialog components can be parallel [P] with service
+- Page component wires everything together last
+
+### Parallel Opportunities (US7–US12)
+
+- T038, T039, T040 (new model files) — all parallel
+- US12 (Phase 11) and US8 (Phase 12) and US10 (Phase 15) — all can run in parallel
+- T049, T050 (scan-decision child components) — parallel after T048 (service)
+- T064, T065 (translation files) — parallel
+- T067, T068 (polish loading/empty states) — parallel
+
+---
+
+## Parallel Example: US7 (Scan Results Browser)
+
+```bash
+# After T048 (service), launch child components in parallel:
+Task T049: "Create ScanDecisionDetailComponent (expanded row with candidates + reassign)"
+Task T050: "Create ScanDecisionTableComponent (paginated table with filters)"
+
+# Then sequentially:
+Task T051: "Create AdminScanResultsPageComponent (orchestrates selector + filters + table)"
+Task T052: "Add scan-results routes to admin.routes.ts"
+Task T053: "Add Scan Results tab to admin-layout"
+```
+
+## Parallel Example: US10/US12/US8
+
+```bash
+# After Phase 10 (setup), these three stories can run fully in parallel:
+# Developer A: US12 (T041-T044) — NAS Scanner removal
+# Developer B: US8 (T045-T046) — TMDB Search Panel
+# Developer C: US10 (T056-T060) — Enrichment
+
+# After US8 completes, US7 can begin (T047-T053)
+# After US7 completes, US9 can begin (T054-T055)
+# After US9 completes, US11 can begin (T061-T063)
+```
+
+---
+
+## Implementation Strategy (US7–US12)
+
+### Priority Order
+
+1. Complete Phase 10: Setup Extension (T037–T040)
+2. Complete Phase 11: US12 — NAS Scanner Deprecation (T041–T044) — P1
+3. Complete Phase 12: US8 — TMDB Search Panel (T045–T046) — P2, prerequisite for US7
+4. Complete Phase 13: US7 — Scan Results Browser (T047–T053) — P2
+5. Complete Phase 14: US9 — TV Show Groups (T054–T055) — P2
+6. Complete Phase 15: US10 — Enrichment (T056–T060) — P2 (can parallel with US8/US7)
+7. Complete Phase 16: US11 — File Renaming (T061–T063) — P3
+8. Complete Phase 17: i18n for US7–US12 (T064–T066)
+9. Complete Phase 18: Polish (T067–T071)
+
+### Suggested MVP Scope (US7–US12 Extension)
+
+- **MVP**: US12 (remove legacy page) + US8 (TMDB search panel) + US7 (scan results browser)
+- **STOP and VALIDATE**: Admin can browse all scan files and reassign TMDB entries
+- Then incrementally add US9 → US10 → US11 → i18n → Polish
+
+### Parallel Team Strategy (US7–US12)
+
+With multiple developers after Phase 10 is complete:
+
+- **Developer A**: US12 (NAS Scanner removal) → then US7 (Scan Results)
+- **Developer B**: US8 (TMDB Search Panel) → then US9 (TV Show Groups) → then US11 (Renaming)
+- **Developer C**: US10 (Enrichment) → then i18n (Phase 17) → then Polish (Phase 18)

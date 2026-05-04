@@ -31,11 +31,7 @@ export class SidebarComponent {
 
   readonly navItems = computed<NavItem[]>(() => {
     if (this.auth.isAdmin()) {
-      return [
-        ...this.baseNavItems,
-        { labelKey: 'nav.nasScanner', icon: 'pi pi-server', route: '/nas-scanner' },
-        { labelKey: 'nav.admin', icon: 'pi pi-cog', route: '/admin' },
-      ];
+      return [...this.baseNavItems, { labelKey: 'nav.admin', icon: 'pi pi-cog', route: '/admin' }];
     }
     return this.baseNavItems;
   });

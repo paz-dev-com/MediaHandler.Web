@@ -4,7 +4,6 @@
     "search": "Search",
     "wishlist": "Wishlist",
     "profile": "Profile",
-    "nasScanner": "NAS Scanner",
     "admin": "Administration"
   },
   "common": {
@@ -137,61 +136,6 @@
     "tooManyRequests": "Too Many Requests",
     "serverError": "Server Error",
     "unknown": "Error"
-  },
-  "nasScanner": {
-    "title": "NAS Scanner",
-    "description": "Scan your NAS to discover new media files.",
-    "basePath": "Base Path",
-    "basePathPlaceholder": "Leave empty to scan all configured paths...",
-    "scan": "Scan",
-    "scanning": "Scanning...",
-    "locations": {
-      "label": "Quick scan by location",
-      "tooltip": "Click to scan this location",
-      "scanAll": "Scan All",
-      "selectTooltip": "Click to select this location"
-    },
-    "results": {
-      "title": "Scan Results",
-      "foldersFound": "Folders Found",
-      "newFiles": "New Files",
-      "existingFiles": "Existing Files",
-      "totalScanned": "Total Scanned"
-    },
-    "scanAndImport": {
-      "button": "Scan & Import",
-      "loading": "Scanning & Importing...",
-      "error": "Scan & Import failed. Please try again.",
-      "results": {
-        "title": "Import Results",
-        "matched": "Matched",
-        "skipped": "Skipped",
-        "failed": "Failed"
-      },
-      "errors": {
-        "title": "Error Details"
-      }
-    },
-    "autoImport": {
-      "title": "Auto Import",
-      "description": "Retry TMDB matching for all previously scanned but unlinked media files.",
-      "button": "Auto Import",
-      "loading": "Importing...",
-      "error": "Auto Import failed. Please try again.",
-      "results": {
-        "title": "Auto Import Results",
-        "totalUnlinked": "Total Unlinked",
-        "matched": "Matched",
-        "skipped": "Skipped",
-        "failed": "Failed"
-      },
-      "errors": {
-        "title": "Error Details"
-      }
-    },
-    "empty": "No scan has been run yet. Click \"Scan\" to start discovering files on your NAS.",
-    "error": "Scan failed. Please try again.",
-    "forbidden": "You do not have permission to scan NAS files."
   },
   "admin": {
     "nav": {

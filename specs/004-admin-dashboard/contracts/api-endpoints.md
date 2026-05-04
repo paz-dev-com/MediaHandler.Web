@@ -2,6 +2,7 @@
 
 **Feature**: 004-admin-dashboard  
 **Date**: 2025-07-17  
+**Updated**: 2025-07-18 (US7–US12 extension)
 **Base URL**: `{apiBaseUrl}` (from `environment.apiBaseUrl`)
 
 All endpoints require `Authorization: Bearer {token}` (added by `authInterceptor`).  
@@ -148,22 +149,148 @@ Returns `200` when healthy, `503` when unhealthy (both with valid response body)
 
 ---
 
-## Frontend Service → Endpoint Mapping
+## Scan Results Browser (US7)
 
-| Frontend Service                       | Method   | API Endpoint                       |
-| -------------------------------------- | -------- | ---------------------------------- |
-| `AdminUserService.getUsers()`          | `GET`    | `admin/users`                      |
-| `AdminUserService.setRole()`           | `PUT`    | `admin/users/{id}/role`            |
-| `AdminUserService.setActive()`         | `PUT`    | `admin/users/{id}/active`          |
-| `AdminLibraryRootService.getRoots()`   | `GET`    | `admin/library-roots`              |
-| `AdminLibraryRootService.addRoot()`    | `POST`   | `admin/library-roots`              |
-| `AdminLibraryRootService.removeRoot()` | `DELETE` | `admin/library-roots/{id}`         |
-| `AdminLibraryRootService.setEnabled()` | `PUT`    | `admin/library-roots/{id}/enabled` |
-| `AdminScanService.startScan()`         | `POST`   | `admin/scan`                       |
-| `AdminScanService.getActiveScan()`     | `GET`    | `admin/scan/active`                |
-| `AdminScanService.getScanDetail()`     | `GET`    | `admin/scan/{id}`                  |
-| `AdminScanService.cancelScan()`        | `POST`   | `admin/scan/{id}/cancel`           |
-| `AdminScanService.getScanHistory()`    | `GET`    | `admin/scan`                       |
-| `AdminReviewService.getItems()`        | `GET`    | `admin/review-items`               |
-| `AdminReviewService.resolveItem()`     | `POST`   | `admin/review-items/{id}/resolve`  |
-| `AdminHealthService.getHealth()`       | `GET`    | `health`                           |
+### GET `admin/scan/{scanId}/decisions` ⚠️ PENDING BACKEND
+
+Browse all scan item decisions for a given scan run.
+
+| Param           | Type                | Default | Description                        |
+| --------------- | ------------------- | ------- | ---------------------------------- |
+| `decisionType`  | `ScanDecisionType?` | `null`  | Filter by decision type            |
+| `mediaType`     | `MediaType?`        | `null`  | Filter by media type (Film/TvShow) |
+| `libraryRootId` | `string?`           | `null`  | Filter by library root             |
+| `page`          | `number`            | `1`     | Page number                        |
+| `pageSize`      | `number`            | `20`    | Items per page                     |
+
+**Response**: `ApiResponse<ScanItemDecision[]>` with `PaginationMeta`  
+**Errors**: `404` scan not found
+
+### PUT `admin/scan-decisions/{id}/reassign` ⚠️ PENDING BACKEND
+
+Change the TMDB assignment for a scan item decision.
+
+**Body**: `{ tmdbId: number, kind: MediaType }`  
+**Response**: `200 OK` → `ApiResponse<ScanItemDecision>`  
+**Errors**: `404` decision not found; `422 TMDB_ID_NOT_FOUND`; `400 VALIDATION_ERROR`
+
+---
+
+## TV Show Groups (US9)
+
+### GET `admin/scan-decisions/tv-groups` ⚠️ PENDING BACKEND
+
+Get TV show file groupings for a scan run. Groups are computed on-the-fly — no DB table.
+
+| Param    | Type     | Default    | Description   |
+| -------- | -------- | ---------- | ------------- |
+| `scanId` | `string` | _required_ | Scan run UUID |
+
+**Response**: `ApiResponse<TvShowGroup[]>`  
+**Errors**: `404` scan not found
+
+### PUT `admin/tv-groups/{groupId}/assign` ⚠️ PENDING BACKEND
+
+Assign TMDB source at the TV show group level. Propagates to all episodes.
+
+**Body**: `{ tmdbId: number }`  
+**Response**: `200 OK` → `ApiResponse<TvShowGroup>` (updated group with episode count)  
+**Errors**: `404` group not found; `422 TMDB_ID_NOT_FOUND`
+
+---
+
+## Enrichment (US10)
+
+### POST `admin/enrichment/start` ⚠️ PENDING BACKEND
+
+Launch a batch TMDB enrichment scan for validated media entries.
+
+**Body**: (none)  
+**Response**: `202 Accepted` → `ApiResponse<EnrichmentRun>`  
+**Errors**: `409 ENRICHMENT_IN_PROGRESS` enrichment already running
+
+### GET `admin/enrichment/status` ⚠️ PENDING BACKEND
+
+Get current enrichment status/progress. When no enrichment has ever run, returns a summary of entries ready for enrichment.
+
+**Response**: `ApiResponse<EnrichmentRun | EnrichmentSummary>`
+
+> The response type is discriminated by structure: if `status` field is present, it's an `EnrichmentRun`; if `newEntries` field is present, it's an `EnrichmentSummary` (pre-enrichment state).
+
+---
+
+## File Rename (US11)
+
+### POST `admin/files/{id}/rename` ⚠️ PENDING BACKEND
+
+Rename a physical file on the NAS. Supports preview mode.
+
+| Param     | Type      | Default | Description                                     |
+| --------- | --------- | ------- | ----------------------------------------------- |
+| `preview` | `boolean` | `false` | If true, return proposed name without executing |
+
+**Body**: (none)  
+**Response (preview=true)**: `200 OK` → `ApiResponse<RenamePreview>`  
+**Response (preview=false)**: `200 OK` → `ApiResponse<RenameResult>`  
+**Errors**: `404` file not found; `409 FILE_NAME_CONFLICT` target name exists; `500 RENAME_FAILED` filesystem error
+
+### POST `admin/tv-groups/{groupId}/rename` ⚠️ PENDING BACKEND
+
+Batch rename all episode files under a TV show group.
+
+| Param     | Type      | Default | Description                                        |
+| --------- | --------- | ------- | -------------------------------------------------- |
+| `preview` | `boolean` | `false` | If true, return proposed renames without executing |
+
+**Body**: (none)  
+**Response (preview=true)**: `200 OK` → `ApiResponse<BatchRenamePreview>`  
+**Response (preview=false)**: `200 OK` → `ApiResponse<BatchRenameResult>`  
+**Errors**: `404` group not found; `409 FILE_NAME_CONFLICT`
+
+---
+
+## TMDB Search (reused — US8)
+
+### GET `tmdb/search` (existing endpoint)
+
+Search TMDB by title. Already implemented and used by `TmdbSearchService`.
+
+| Param      | Type     | Default     | Description           |
+| ---------- | -------- | ----------- | --------------------- |
+| `query`    | `string` | _required_  | Search text           |
+| `language` | `string` | active lang | Language code (en/fr) |
+
+**Response**: `ApiResponse<TmdbSearchResult[]>`
+
+> No new endpoint needed. The existing `TmdbSearchService` is reused by the `TmdbSearchPanelComponent`.
+
+---
+
+## Frontend Service → Endpoint Mapping (Updated)
+
+| Frontend Service                               | Method     | API Endpoint                             |
+| ---------------------------------------------- | ---------- | ---------------------------------------- |
+| `AdminUserService.getUsers()`                  | `GET`      | `admin/users`                            |
+| `AdminUserService.setRole()`                   | `PUT`      | `admin/users/{id}/role`                  |
+| `AdminUserService.setActive()`                 | `PUT`      | `admin/users/{id}/active`                |
+| `AdminLibraryRootService.getRoots()`           | `GET`      | `admin/library-roots`                    |
+| `AdminLibraryRootService.addRoot()`            | `POST`     | `admin/library-roots`                    |
+| `AdminLibraryRootService.removeRoot()`         | `DELETE`   | `admin/library-roots/{id}`               |
+| `AdminLibraryRootService.setEnabled()`         | `PUT`      | `admin/library-roots/{id}/enabled`       |
+| `AdminScanService.startScan()`                 | `POST`     | `admin/scan`                             |
+| `AdminScanService.getActiveScan()`             | `GET`      | `admin/scan/active`                      |
+| `AdminScanService.getScanDetail()`             | `GET`      | `admin/scan/{id}`                        |
+| `AdminScanService.cancelScan()`                | `POST`     | `admin/scan/{id}/cancel`                 |
+| `AdminScanService.getScanHistory()`            | `GET`      | `admin/scan`                             |
+| `AdminReviewService.getItems()`                | `GET`      | `admin/review-items`                     |
+| `AdminReviewService.resolveItem()`             | `POST`     | `admin/review-items/{id}/resolve`        |
+| `AdminHealthService.getHealth()`               | `GET`      | `health`                                 |
+| **`AdminScanDecisionService.getDecisions()`**  | **`GET`**  | **`admin/scan/{scanId}/decisions`**      |
+| **`AdminScanDecisionService.reassign()`**      | **`PUT`**  | **`admin/scan-decisions/{id}/reassign`** |
+| **`AdminScanDecisionService.getTvGroups()`**   | **`GET`**  | **`admin/scan-decisions/tv-groups`**     |
+| **`AdminScanDecisionService.assignTvGroup()`** | **`PUT`**  | **`admin/tv-groups/{groupId}/assign`**   |
+| **`AdminScanDecisionService.renameFile()`**    | **`POST`** | **`admin/files/{id}/rename`**            |
+| **`AdminScanDecisionService.renameTvGroup()`** | **`POST`** | **`admin/tv-groups/{groupId}/rename`**   |
+| **`AdminEnrichmentService.start()`**           | **`POST`** | **`admin/enrichment/start`**             |
+| **`AdminEnrichmentService.getStatus()`**       | **`GET`**  | **`admin/enrichment/status`**            |
+| `TmdbSearchService.search()` _(existing)_      | `GET`      | `tmdb/search`                            |

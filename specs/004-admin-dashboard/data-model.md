@@ -1,7 +1,8 @@
 # Data Model: Administration Dashboard
 
 **Feature**: 004-admin-dashboard  
-**Date**: 2025-07-17
+**Date**: 2025-07-17  
+**Updated**: 2025-07-18 (US7–US12 extension)
 
 ## Frontend TypeScript Interfaces
 
@@ -54,6 +55,22 @@ export enum ReviewResolutionAction {
   Dismiss = 'Dismiss',
   Delete = 'Delete',
   Reopen = 'Reopen',
+}
+
+export enum ScanDecisionType {
+  Added = 'Added',
+  Updated = 'Updated',
+  Unchanged = 'Unchanged',
+  Removed = 'Removed',
+  Excluded = 'Excluded',
+  NeedsReview = 'NeedsReview',
+}
+
+export enum EnrichmentStatus {
+  Pending = 'Pending',
+  Running = 'Running',
+  Completed = 'Completed',
+  Failed = 'Failed',
 }
 ```
 
@@ -265,6 +282,25 @@ export interface HealthStatus {
 // POST /admin/review-items/{id}/resolve
 ```
 
+#### ReassignTmdbRequest
+
+```typescript
+{
+  tmdbId: number;
+  kind: MediaType;
+}
+// PUT /admin/scan-decisions/{id}/reassign
+```
+
+#### AssignTvGroupRequest
+
+```typescript
+{
+  tmdbId: number;
+}
+// PUT /admin/tv-groups/{groupId}/assign
+```
+
 ## Relationships
 
 ```
@@ -277,9 +313,21 @@ LibraryRoot ──── scan targets
 
 ScanRun
   └──< ReviewItem (via scanRunId filter param)
+  └──< ScanItemDecision (via scanRunId — many decisions per scan)
 
 ReviewItem
   └──< TmdbCandidate[] (embedded in response)
+
+ScanItemDecision
+  └──< TmdbCandidate[] (embedded in response)
+  └── libraryRootId → LibraryRoot
+
+TvShowGroup (transient, computed)
+  └── groupId = hash(scanRunId + parsedShowName)
+  └──< ScanItemDecision[] episodes (grouped by parsedShowName)
+
+EnrichmentRun
+  └──< EnrichmentError[] (embedded in response)
 
 HealthStatus ──── standalone, no relationships
 ```
@@ -306,14 +354,36 @@ Resolved → Open (via Reopen action)
 Dismissed → Open (via Reopen action)
 ```
 
+### EnrichmentRun Lifecycle
+
+```
+Pending → Running → Completed
+                   → Failed
+```
+
+Terminal states: `Completed`, `Failed`. Polling stops on terminal.
+
+### ScanItemDecision TMDB Reassignment
+
+```
+Auto-matched (assignedTmdbId set) → Reassigned (new assignedTmdbId via PUT reassign)
+No match (assignedTmdbId null) → Assigned (via manual TMDB search + PUT reassign)
+```
+
 ## Validation Rules
 
-| Entity        | Field            | Rule                            | Source              |
-| ------------- | ---------------- | ------------------------------- | ------------------- |
-| LibraryRoot   | `path`           | Required, non-empty             | Frontend validation |
-| LibraryRoot   | `path`           | Unique (duplicate detection)    | Backend 409         |
-| LibraryRoot   | `kind`           | Must be valid enum value        | Frontend dropdown   |
-| StartScan     | `libraryRootIds` | Empty array = all enabled roots | Spec FR-011a        |
-| StartScan     | `mode`           | Must be `Full` or `Incremental` | Frontend dropdown   |
-| ResolveReview | `tmdbId`         | Required when action = `Assign` | Frontend validation |
-| ResolveReview | `kind`           | Required when action = `Assign` | Frontend validation |
+| Entity          | Field            | Rule                                | Source              |
+| --------------- | ---------------- | ----------------------------------- | ------------------- |
+| LibraryRoot     | `path`           | Required, non-empty                 | Frontend validation |
+| LibraryRoot     | `path`           | Unique (duplicate detection)        | Backend 409         |
+| LibraryRoot     | `kind`           | Must be valid enum value            | Frontend dropdown   |
+| StartScan       | `libraryRootIds` | Empty array = all enabled roots     | Spec FR-011a        |
+| StartScan       | `mode`           | Must be `Full` or `Incremental`     | Frontend dropdown   |
+| ResolveReview   | `tmdbId`         | Required when action = `Assign`     | Frontend validation |
+| ResolveReview   | `kind`           | Required when action = `Assign`     | Frontend validation |
+| ReassignTmdb    | `tmdbId`         | Required, positive integer          | Frontend validation |
+| ReassignTmdb    | `kind`           | Must be valid MediaType             | Frontend validation |
+| AssignTvGroup   | `tmdbId`         | Required, positive integer          | Frontend validation |
+| RenameFile      | `fileId`         | Must reference existing file        | Backend 404         |
+| RenameFile      | target name      | Must not collide with existing file | Backend 409         |
+| StartEnrichment | (none)           | No enrichment already running       | Backend 409         |

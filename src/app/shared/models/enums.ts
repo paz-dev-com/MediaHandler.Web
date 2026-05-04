@@ -49,3 +49,19 @@ export enum ReviewResolutionAction {
   Delete = 'Delete',
   Reopen = 'Reopen',
 }
+
+export enum ScanDecisionType {
+  Added = 'Added',
+  Updated = 'Updated',
+  Unchanged = 'Unchanged',
+  Removed = 'Removed',
+  Excluded = 'Excluded',
+  NeedsReview = 'NeedsReview',
+}
+
+export enum EnrichmentStatus {
+  Pending = 'Pending',
+  Running = 'Running',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
