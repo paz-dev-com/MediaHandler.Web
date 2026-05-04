@@ -17,13 +17,22 @@ import { TagModule } from 'primeng/tag';
 import { AdminReviewService } from './admin-review.service';
 import { ReviewItem, TmdbCandidate } from '@shared/models/review.model';
 import { MediaType, ReviewResolutionAction } from '@shared/models/enums';
+import { TmdbSearchPanelComponent } from '../shared/tmdb-search-panel.component';
+import { TmdbSearchResult } from '@features/tmdb-search/tmdb-search.service';
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w92';
 
 @Component({
   selector: 'app-review-resolve-dialog',
   standalone: true,
-  imports: [DecimalPipe, TranslocoModule, DialogModule, ButtonModule, TagModule],
+  imports: [
+    DecimalPipe,
+    TranslocoModule,
+    DialogModule,
+    ButtonModule,
+    TagModule,
+    TmdbSearchPanelComponent,
+  ],
   templateUrl: './review-resolve-dialog.component.html',
   styleUrl: './review-resolve-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,17 +46,20 @@ export class ReviewResolveDialogComponent implements OnChanges {
   @Output() closed = new EventEmitter<void>();
 
   readonly selectedCandidate = signal<TmdbCandidate | null>(null);
+  readonly showTmdbSearch = signal(false);
 
   readonly ReviewResolutionAction = ReviewResolutionAction;
 
   ngOnChanges(): void {
     // Reset selection when item changes
     this.selectedCandidate.set(null);
+    this.showTmdbSearch.set(false);
   }
 
   onVisibleChange(visible: boolean): void {
     if (!visible) {
       this.selectedCandidate.set(null);
+      this.showTmdbSearch.set(false);
       this.closed.emit();
     }
   }
@@ -97,6 +109,32 @@ export class ReviewResolveDialogComponent implements OnChanges {
     });
 
     this.selectedCandidate.set(null);
+    this.showTmdbSearch.set(false);
+    this.resolved.emit();
+  }
+
+  onTmdbSearchSelected(
+    result: TmdbSearchResult,
+    t: (key: string, params?: Record<string, unknown>) => string,
+  ): void {
+    if (!this.item) return;
+
+    const kind: MediaType = result.mediaType === 'movie' ? MediaType.Film : MediaType.TvShow;
+
+    this.reviewService.resolveItem(
+      this.item.id,
+      ReviewResolutionAction.Assign,
+      result.tmdbId,
+      kind,
+    );
+
+    this.messageService.add({
+      severity: 'success',
+      summary: t('admin.review.resolveDialog.assignedSuccess'),
+      life: 3000,
+    });
+
+    this.showTmdbSearch.set(false);
     this.resolved.emit();
   }
 

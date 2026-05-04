@@ -143,7 +143,8 @@
       "users": "Users",
       "libraryRoots": "Library Roots",
       "scanner": "Scanner",
-      "review": "Review"
+      "review": "Review",
+      "scanResults": "Scan Results"
     },
     "users": {
       "title": "User Management",
@@ -299,8 +300,10 @@
         "status": "Status",
         "candidates": "TMDB Candidates",
         "noCandidates": "No TMDB candidates available.",
+        "tmdbSearch": "Search TMDB",
         "score": "Score",
         "assign": "Assign",
+        "searchTmdb": "Search TMDB",
         "dismiss": "Dismiss",
         "delete": "Delete",
         "reopen": "Reopen",
@@ -309,6 +312,54 @@
         "deletedSuccess": "Item deleted.",
         "reopenedSuccess": "Item reopened."
       }
+    },
+    "scanResults": {
+      "title": "Scan Results",
+      "selectScan": "Scan Run",
+      "selectScanPlaceholder": "Select a scan run…",
+      "noScanSelected": "Select a scan run to view its results.",
+      "empty": "No scan decisions found.",
+      "filterDecisionType": "Filter by decision type",
+      "filterMediaType": "Filter by media type",
+      "filterLibraryRoot": "Filter by library root",
+      "parsedTitle": "Parsed Title",
+      "parsedYear": "Parsed Year",
+      "season": "Season",
+      "episode": "Episode",
+      "candidates": "TMDB Candidates",
+      "noCandidates": "No TMDB candidates available.",
+      "score": "Score",
+      "reassign": "Reassign",
+      "reassignSuccess": "TMDB entry reassigned successfully.",
+      "searchTmdb": "Search TMDB",
+      "searchTmdbTitle": "Search TMDB",
+      "decisionType": {
+        "Added": "Added",
+        "Updated": "Updated",
+        "Unchanged": "Unchanged",
+        "Removed": "Removed",
+        "Excluded": "Excluded",
+        "NeedsReview": "Needs Review"
+      },
+      "mediaType": {
+        "Film": "Film",
+        "TvShow": "TV Show"
+      },
+      "columns": {
+        "filePath": "File Path",
+        "decisionType": "Decision",
+        "assignedEntry": "Assigned TMDB",
+        "decidedAt": "Decided At"
+      }
+    },
+    "tmdbSearch": {
+      "search": "Search",
+      "searchPlaceholder": "Search for a film or TV show…",
+      "noResults": "No results found.",
+      "noFilteredResults": "No results match the current media type filter.",
+      "select": "Select",
+      "typeMovie": "Movie",
+      "typeTv": "TV Show"
     }
   }
 }

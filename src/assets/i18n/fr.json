@@ -143,7 +143,8 @@
       "users": "Utilisateurs",
       "libraryRoots": "Racines de bibliothèque",
       "scanner": "Scanner",
-      "review": "Révision"
+      "review": "Révision",
+      "scanResults": "Résultats de scan"
     },
     "users": {
       "title": "Gestion des utilisateurs",
@@ -299,8 +300,10 @@
         "status": "Statut",
         "candidates": "Candidats TMDB",
         "noCandidates": "Aucun candidat TMDB disponible.",
+        "tmdbSearch": "Rechercher TMDB",
         "score": "Score",
         "assign": "Assigner",
+        "searchTmdb": "Rechercher TMDB",
         "dismiss": "Ignorer",
         "delete": "Supprimer",
         "reopen": "Rouvrir",
@@ -309,6 +312,54 @@
         "deletedSuccess": "Élément supprimé.",
         "reopenedSuccess": "Élément rouvert."
       }
+    },
+    "scanResults": {
+      "title": "Résultats de scan",
+      "selectScan": "Scan",
+      "selectScanPlaceholder": "Sélectionner un scan…",
+      "noScanSelected": "Sélectionnez un scan pour voir ses résultats.",
+      "empty": "Aucune décision de scan trouvée.",
+      "filterDecisionType": "Filtrer par type de décision",
+      "filterMediaType": "Filtrer par type de média",
+      "filterLibraryRoot": "Filtrer par racine de bibliothèque",
+      "parsedTitle": "Titre parsé",
+      "parsedYear": "Année parsée",
+      "season": "Saison",
+      "episode": "Épisode",
+      "candidates": "Candidats TMDB",
+      "noCandidates": "Aucun candidat TMDB disponible.",
+      "score": "Score",
+      "reassign": "Réassigner",
+      "reassignSuccess": "Entrée TMDB réassignée avec succès.",
+      "searchTmdb": "Rechercher TMDB",
+      "searchTmdbTitle": "Rechercher TMDB",
+      "decisionType": {
+        "Added": "Ajouté",
+        "Updated": "Mis à jour",
+        "Unchanged": "Inchangé",
+        "Removed": "Supprimé",
+        "Excluded": "Exclu",
+        "NeedsReview": "À réviser"
+      },
+      "mediaType": {
+        "Film": "Film",
+        "TvShow": "Série TV"
+      },
+      "columns": {
+        "filePath": "Chemin du fichier",
+        "decisionType": "Décision",
+        "assignedEntry": "TMDB assigné",
+        "decidedAt": "Décidé le"
+      }
+    },
+    "tmdbSearch": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher un film ou une série TV…",
+      "noResults": "Aucun résultat trouvé.",
+      "noFilteredResults": "Aucun résultat ne correspond au filtre de type de média.",
+      "select": "Sélectionner",
+      "typeMovie": "Film",
+      "typeTv": "Série TV"
     }
   }
 }

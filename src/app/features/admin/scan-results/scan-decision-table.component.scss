@@ -1,0 +1,53 @@
+.scan-decision-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__filter {
+    min-width: 180px;
+  }
+
+  &__path {
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-family: monospace;
+  }
+
+  &__assigned {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__poster {
+    width: 32px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  &__assigned-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  &__assigned-year {
+    color: var(--p-text-muted-color);
+    font-weight: normal;
+    margin-left: 0.25rem;
+  }
+
+  &__unassigned {
+    color: var(--p-text-muted-color);
+  }
+}
