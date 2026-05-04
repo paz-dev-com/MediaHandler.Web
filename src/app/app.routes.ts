@@ -38,9 +38,7 @@ export const routes: Routes = [
   },
   {
     path: 'nas-scanner',
-    canActivate: [authGuard, adminGuard],
-    loadChildren: () =>
-      import('./features/nas-scanner/nas-scanner.routes').then((m) => m.nasScannerRoutes),
+    redirectTo: '/admin/scanner',
   },
   {
     path: 'admin',

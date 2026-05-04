@@ -1,7 +1,8 @@
 # Research: Administration Dashboard
 
 **Feature**: 004-admin-dashboard  
-**Date**: 2025-07-17
+**Date**: 2025-07-17  
+**Updated**: 2025-07-18 (US7–US12 extension)
 
 ## 1. API Endpoint Availability
 
@@ -144,3 +145,143 @@ The project already uses PrimeNG v21, PrimeFlex v4, and the Aura theme. PrimeNG 
   - `admin-library-roots-page` → `library-root-table`, `add-library-root-dialog`
   - `admin-scanner-page` → `scan-launcher`, `scan-status`, `scan-history-table`
   - `admin-review-page` → `review-item-table`, `review-resolve-dialog`
+
+## 8. Scan Results Browser — Data Loading Strategy (US7)
+
+### Decision: Server-side filtering and pagination; default to most recent scan with all decision types
+
+### Rationale
+
+The `GET /api/v1/admin/scan/{scanId}/decisions` endpoint handles filtering by decision type, media type, and library root server-side. The frontend sends filter params as query parameters. This avoids loading potentially thousands of scan decisions into the browser for client-side filtering.
+
+The page loads the scan history (already available via `GET /admin/scan`) to populate the scan run selector, then defaults to the most recent completed scan. The decision type filter defaults to "All" (no filter param sent).
+
+Row expansion for candidate details uses inline data — `ScanItemDecision.candidates` is included in the response. No additional API call is needed when expanding a row.
+
+### Alternatives Considered
+
+- **Client-side filtering**: Loading all decisions for a scan and filtering in-memory. Rejected — a scan could produce thousands of decisions, exceeding reasonable browser memory for large libraries.
+- **Separate endpoint per filter**: One endpoint for by-type, another for by-root. Rejected — a single endpoint with query params is simpler and matches the existing review-items pattern.
+
+## 9. Reusable TMDB Search Panel Architecture (US8)
+
+### Decision: Create a shared `TmdbSearchPanelComponent` under `admin/shared/` that wraps `TmdbSearchService`
+
+### Rationale
+
+Manual TMDB search is needed in three contexts: Review Queue (US4 scenarios 3–4), Scan Results Browser (US7 scenario 7), and TV Show Groups (US9 scenario 2). A reusable panel component:
+
+- Accepts an optional `initialQuery` input (pre-filled from parsed title)
+- Accepts an optional `mediaTypeFilter` input (to filter results to TV shows only for US9)
+- Emits `(selected)` with the chosen `TmdbSearchResult`
+- Uses the existing `TmdbSearchService.search()` method (calls `GET /api/v1/tmdb/search`)
+- Displays results in a `DataView` with poster, title, year, overview, media type
+- Is embedded inside a `p-dialog` in the parent component
+
+The existing `TmdbSearchService` from `src/app/features/tmdb-search/` is reused directly — no need to duplicate or create a new service. The `TmdbSearchResult` interface is already exported.
+
+### Alternatives Considered
+
+- **Duplicate search logic in each consuming component**: Violates Single Responsibility and DRY. Rejected.
+- **Move `TmdbSearchService` to shared**: The service is already `providedIn: 'root'`, so it's available everywhere. Moving the file would be a refactor with no functional benefit. Use as-is.
+- **Use the existing `tmdb-result-card` component**: It has import/wishlist buttons specific to the TMDB Search page. The admin panel needs an "Assign" action instead. Creating a simpler panel component avoids contaminating the existing component with admin-specific logic.
+
+## 10. TV Show Grouping Strategy (US9)
+
+### Decision: API-driven grouping via `GET /api/v1/admin/scan-decisions/tv-groups?scanId`; frontend renders groups as accordion panels
+
+### Rationale
+
+Per spec clarification (2026-05-03), `TvShowGroup` is transient/computed — the backend groups `ScanItemDecision` rows by `parsedShowName + scanId` and returns group summaries with a derived hash key (`groupId`). The frontend:
+
+1. Calls the tv-groups endpoint to get group summaries (show name, episode count, TMDB assignment status)
+2. Renders each group as an `Accordion` panel with show name header + episode count chip
+3. On expand, shows the episode files within the group (already included or fetched lazily)
+4. Show-level TMDB assignment uses `PUT /api/v1/admin/tv-groups/{groupId}/assign`
+
+The separate TV show view is integrated as a toggle/tab within the Scan Results page — when viewing TV content, the admin switches between "flat list" and "grouped by show" views.
+
+### Alternatives Considered
+
+- **Client-side grouping**: Fetch all decisions and group in the browser. Rejected — the backend computes the hash-based group identity, and client-side grouping would need to replicate this logic exactly.
+- **Dedicated TV Shows page**: A separate route for TV show management. Rejected — the spec describes TV grouping as a view within Scan Results, not a standalone section.
+
+## 11. Enrichment Service Pattern (US10)
+
+### Decision: `AdminEnrichmentService` mirrors `AdminScanService` — signal state, polling, terminal state detection
+
+### Rationale
+
+The enrichment workflow has the same lifecycle as scanning:
+
+- Start action (`POST /admin/enrichment/start`) → returns initial status
+- Poll for progress (`GET /admin/enrichment/status`) every 4 seconds
+- Stop on terminal state (Completed, Failed)
+- Display summary on completion (enriched count, failed count, errors)
+
+The service exposes:
+
+- `enrichmentStatus: signal<EnrichmentRun | null>` — current/last enrichment state
+- `loading: signal<boolean>` — for the start action
+- `startEnrichment(): void` — triggers the backend process + starts polling
+- `getStatus(): void` — fetches current status (used on page load)
+
+The pre-enrichment summary (new vs. changed vs. skipped counts) comes from the enrichment status endpoint itself (returns counts even before starting).
+
+### Alternatives Considered
+
+- **SSE for enrichment progress**: Spec says polling. Rejected.
+- **Unified service with scan service**: Scanning and enrichment have different endpoints and semantics. Rejected — separate service follows Single Responsibility.
+
+## 12. File Rename Approach (US11)
+
+### Decision: Preview-then-confirm two-step flow using `POST /admin/files/{id}/rename?preview=true` then `POST /admin/files/{id}/rename`
+
+### Rationale
+
+The rename dialog:
+
+1. Opens with file ID → calls the rename endpoint with `?preview=true` to get proposed new name
+2. Displays current name + proposed new name side-by-side
+3. On confirm → calls the same endpoint without `?preview=true` to execute the rename
+4. On success → refreshes the parent list (scan results or review queue)
+
+For batch TV show renames (US9/US11 overlap), the flow uses `POST /admin/tv-groups/{groupId}/rename` which renames all episodes under the group. The preview shows all proposed renames as a scrollable list.
+
+The `RenameDialogComponent` accepts inputs:
+
+- `mode: 'single' | 'batch'`
+- `fileId?: string` (for single mode)
+- `groupId?: string` (for batch mode)
+
+### Alternatives Considered
+
+- **Client-side name construction**: Build the new filename in the frontend from TMDB metadata + naming conventions. Rejected — the backend owns the naming logic and must validate against filesystem constraints (path length, illegal characters, collisions).
+- **Inline rename without dialog**: Less safe — user needs to see preview before committing to filesystem changes. Rejected.
+
+## 13. NAS Scanner Deprecation Strategy (US12)
+
+### Decision: Route redirect + file deletion + sidebar cleanup + translation key cleanup
+
+### Rationale
+
+The legacy `/nas-scanner` route in `app.routes.ts` is replaced with:
+
+```typescript
+{ path: 'nas-scanner', redirectTo: '/admin/scanner', pathMatch: 'full' }
+```
+
+Cleanup checklist:
+
+1. Delete `src/app/features/nas-scanner/` directory (5 files)
+2. Remove `nasScannerRoutes` import/lazy-load from `app.routes.ts`
+3. Remove `{ labelKey: 'nav.nasScanner', ... }` from sidebar
+4. Remove `nasScanner.*` keys from `en.json` and `fr.json`
+5. Remove any test files referencing nas-scanner components
+
+The redirect uses `redirectTo` with an absolute path, which Angular handles natively — no custom redirect logic needed.
+
+### Alternatives Considered
+
+- **Keep the route with a deprecation notice**: Users could still accidentally use the old page. Rejected — clean removal is safer.
+- **Redirect via a guard**: Unnecessary complexity when Angular's built-in `redirectTo` handles this case.
