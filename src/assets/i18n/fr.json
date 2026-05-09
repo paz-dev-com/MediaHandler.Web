@@ -333,7 +333,19 @@
       "reassignSuccess": "Entrée TMDB réassignée avec succès.",
       "searchTmdb": "Rechercher TMDB",
       "searchTmdbTitle": "Rechercher TMDB",
-      "decisionType": {
+      "viewMode": "Mode d'affichage",
+      "tableView": "Vue tableau",
+      "groupView": "Groupes de séries",
+      "filters": "Filtres",
+      "decisionType": "Type de décision",
+      "mediaType": "Type de média",
+      "libraryRoot": "Racine de bibliothèque",
+      "allDecisions": "Toutes",
+      "filePath": "Chemin du fichier",
+      "decision": "Décision",
+      "assignedEntry": "Entrée assignée",
+      "noGroups": "Aucun groupe de séries trouvé",
+      "decisionTypes": {
         "Added": "Ajouté",
         "Updated": "Mis à jour",
         "Unchanged": "Inchangé",
@@ -341,7 +353,7 @@
         "Excluded": "Exclu",
         "NeedsReview": "À réviser"
       },
-      "mediaType": {
+      "mediaTypes": {
         "Film": "Film",
         "TvShow": "Série TV"
       },
@@ -359,7 +371,55 @@
       "noFilteredResults": "Aucun résultat ne correspond au filtre de type de média.",
       "select": "Sélectionner",
       "typeMovie": "Film",
-      "typeTv": "Série TV"
+      "typeTv": "Série TV",
+      "title": "Rechercher sur TMDB",
+      "placeholder": "Saisir un titre...",
+      "searching": "Recherche en cours...",
+      "results": "Résultats",
+      "assign": "Assigner",
+      "year": "Année",
+      "overview": "Description",
+      "movie": "Film",
+      "tvShow": "Série"
+    },
+    "enrichment": {
+      "title": "Enrichissement TMDB",
+      "subtitle": "Enrichir les entrées média avec les métadonnées TMDB en lot",
+      "start": "Démarrer l'enrichissement TMDB",
+      "confirmTitle": "Démarrer l'enrichissement",
+      "confirmMessage": "Êtes-vous sûr de vouloir lancer un enrichissement TMDB en lot ?",
+      "status": "Statut de l'enrichissement",
+      "running": "En cours",
+      "completed": "Terminé",
+      "failed": "Échoué",
+      "cancelled": "Annulé",
+      "summary": "Résumé de l'enrichissement",
+      "newEntries": "Nouvelles entrées",
+      "changedEntries": "Entrées modifiées",
+      "skipped": "Ignorées",
+      "enriched": "Enrichies",
+      "failedEntries": "Échouées",
+      "errors": "Erreurs",
+      "nothingToEnrich": "Rien à enrichir — toutes les entrées sont à jour",
+      "empty": "Aucune donnée d'enrichissement disponible"
+    },
+    "rename": {
+      "singleTitle": "Renommer le fichier",
+      "batchTitle": "Renommer tous les épisodes",
+      "currentPath": "Chemin actuel",
+      "proposedPath": "Nom proposé",
+      "currentName": "Actuel",
+      "proposedName": "Proposé",
+      "loadPreview": "Charger l'aperçu",
+      "confirm": "Confirmer le renommage",
+      "cancel": "Annuler",
+      "success": "Fichier renommé avec succès",
+      "batchSuccess": "Tous les épisodes ont été renommés",
+      "error": "Échec du renommage",
+      "noChanges": "Aucun renommage proposé",
+      "loading": "Chargement de l'aperçu...",
+      "button": "Renommer le fichier",
+      "batchButton": "Renommer tous les épisodes"
     }
   }
 }

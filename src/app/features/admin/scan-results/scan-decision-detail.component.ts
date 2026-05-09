@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  signal,
+} from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
@@ -8,6 +16,7 @@ import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AdminScanDecisionService } from './admin-scan-decision.service';
 import { TmdbSearchPanelComponent } from '../shared/tmdb-search-panel.component';
+import { RenameDialogComponent } from '../shared/rename-dialog.component';
 import { TmdbSearchResult } from '@features/tmdb-search/tmdb-search.service';
 import { ScanItemDecision } from '@shared/models/scan-decision.model';
 import { MediaType } from '@shared/models/enums';
@@ -25,6 +34,7 @@ const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w92';
     TagModule,
     ProgressSpinnerModule,
     TmdbSearchPanelComponent,
+    RenameDialogComponent,
   ],
   templateUrl: './scan-decision-detail.component.html',
   styleUrl: './scan-decision-detail.component.scss',
@@ -35,12 +45,23 @@ export class ScanDecisionDetailComponent {
   private readonly messageService = inject(MessageService);
 
   @Input({ required: true }) decision!: ScanItemDecision;
+  @Output() fileRenamed = new EventEmitter<void>();
 
   readonly reassigning = signal(false);
   readonly showTmdbSearch = signal(false);
+  readonly renameDialogVisible = signal(false);
 
   getPosterUrl(posterPath: string): string {
     return `${TMDB_IMAGE_BASE}${posterPath}`;
+  }
+
+  openRenameDialog(): void {
+    this.renameDialogVisible.set(true);
+  }
+
+  onFileRenamed(): void {
+    this.fileRenamed.emit();
+    this.decisionService.refreshDecisions();
   }
 
   onReassign(tmdbId: number, kind: MediaType, t: (key: string) => string): void {

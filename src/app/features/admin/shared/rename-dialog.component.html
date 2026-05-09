@@ -1,0 +1,93 @@
+<p-dialog
+  *transloco="let t"
+  [header]="mode === 'single' ? t('admin.rename.singleTitle') : t('admin.rename.batchTitle')"
+  [visible]="visible"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '48rem' }"
+  [closable]="true"
+  [draggable]="false"
+>
+  <div class="rename-dialog__content">
+    <!-- Error message -->
+    @if (error()) {
+      <p-message severity="error" [text]="error()!" styleClass="rename-dialog__error" />
+    }
+
+    <!-- Loading spinner -->
+    @if (loading()) {
+      <div class="rename-dialog__loading">
+        <p-progress-spinner [style]="{ width: '2rem', height: '2rem' }" />
+        <span>{{ t('admin.rename.loading') }}</span>
+      </div>
+    }
+
+    <!-- Single mode preview -->
+    @if (mode === 'single' && confirming() && preview()) {
+      <div class="rename-dialog__preview">
+        <div class="rename-dialog__preview-row">
+          <span class="rename-dialog__preview-label">{{ t('admin.rename.currentPath') }}</span>
+          <span class="rename-dialog__preview-value">{{ preview()!.currentPath }}</span>
+        </div>
+        <div class="rename-dialog__preview-row">
+          <span class="rename-dialog__preview-label">{{ t('admin.rename.proposedPath') }}</span>
+          <span class="rename-dialog__preview-value rename-dialog__preview-value--proposed">{{
+            preview()!.proposedPath
+          }}</span>
+        </div>
+      </div>
+    }
+
+    <!-- Batch mode preview -->
+    @if (mode === 'batch' && confirming() && batchPreview()) {
+      @if (batchPreview()!.previews.length === 0) {
+        <p class="rename-dialog__no-changes">{{ t('admin.rename.noChanges') }}</p>
+      } @else {
+        <div class="rename-dialog__batch-preview">
+          <div class="rename-dialog__batch-header">
+            <span>{{ t('admin.rename.currentName') }}</span>
+            <span>{{ t('admin.rename.proposedName') }}</span>
+          </div>
+          @for (item of batchPreview()!.previews; track item.fileId) {
+            <div class="rename-dialog__batch-row">
+              <span class="rename-dialog__batch-current">{{ item.currentPath }}</span>
+              <span class="rename-dialog__batch-proposed">{{ item.proposedPath }}</span>
+            </div>
+          }
+        </div>
+      }
+    }
+
+    <!-- Initial state (no preview loaded yet) -->
+    @if (!confirming() && !loading()) {
+      <p class="rename-dialog__hint">
+        {{ mode === 'single' ? t('admin.rename.singleTitle') : t('admin.rename.batchTitle') }}
+      </p>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    @if (!confirming()) {
+      <p-button
+        [label]="t('admin.rename.loadPreview')"
+        icon="pi pi-eye"
+        [loading]="loading()"
+        (onClick)="loadPreview(t)"
+      />
+    } @else {
+      <p-button
+        [label]="t('admin.rename.confirm')"
+        icon="pi pi-check"
+        [loading]="loading()"
+        [disabled]="mode === 'batch' && batchPreview()?.previews?.length === 0"
+        (onClick)="confirmRename(t)"
+      />
+    }
+    <p-button
+      [label]="t('admin.rename.cancel')"
+      icon="pi pi-times"
+      severity="secondary"
+      (onClick)="close()"
+    />
+  </ng-template>
+</p-dialog>

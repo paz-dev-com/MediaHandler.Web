@@ -19,6 +19,7 @@ import { TvShowGroup } from '@shared/models/scan-decision.model';
 import { MediaType } from '@shared/models/enums';
 import { AdminScanDecisionService } from './admin-scan-decision.service';
 import { TmdbSearchPanelComponent, TmdbSearchResult } from '../shared/tmdb-search-panel.component';
+import { RenameDialogComponent } from '../shared/rename-dialog.component';
 
 @Component({
   selector: 'app-tv-show-group-list',
@@ -35,6 +36,7 @@ import { TmdbSearchPanelComponent, TmdbSearchResult } from '../shared/tmdb-searc
     MessageModule,
     TagModule,
     TmdbSearchPanelComponent,
+    RenameDialogComponent,
   ],
   templateUrl: './tv-show-group-list.component.html',
   styleUrl: './tv-show-group-list.component.scss',
@@ -51,6 +53,9 @@ export class TvShowGroupListComponent {
   readonly dialogVisible = signal(false);
   readonly activeGroup = signal<TvShowGroup | null>(null);
 
+  readonly renameDialogVisible = signal(false);
+  readonly selectedGroupForRename = signal<TvShowGroup | null>(null);
+
   readonly MediaType = MediaType;
 
   openAssignDialog(group: TvShowGroup): void {
@@ -61,6 +66,15 @@ export class TvShowGroupListComponent {
   closeDialog(): void {
     this.dialogVisible.set(false);
     this.activeGroup.set(null);
+  }
+
+  openBatchRenameDialog(group: TvShowGroup): void {
+    this.selectedGroupForRename.set(group);
+    this.renameDialogVisible.set(true);
+  }
+
+  onGroupRenamed(): void {
+    this.scanDecisionService.getTvGroups(this.scanId);
   }
 
   onTmdbSelected(result: TmdbSearchResult): void {

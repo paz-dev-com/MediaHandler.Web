@@ -23,6 +23,13 @@
                     size="small"
                     (onClick)="openAssignDialog(group)"
                   />
+                  <p-button
+                    [label]="t('admin.rename.batchButton')"
+                    icon="pi pi-pencil"
+                    severity="secondary"
+                    size="small"
+                    (onClick)="openBatchRenameDialog(group)"
+                  />
                 } @else {
                   <p-button
                     [label]="t('admin.scanResults.assignTmdb')"
@@ -57,6 +64,7 @@
     </p-accordion>
   }
 
+  <!-- TMDB Assign Dialog -->
   <p-dialog
     [header]="
       activeGroup()?.assignedTmdbId
@@ -77,4 +85,13 @@
       />
     }
   </p-dialog>
+
+  <!-- Batch Rename Dialog -->
+  <app-rename-dialog
+    [mode]="'batch'"
+    [groupId]="selectedGroupForRename()?.groupId ?? null"
+    [visible]="renameDialogVisible()"
+    (visibleChange)="renameDialogVisible.set($event)"
+    (renamed)="onGroupRenamed()"
+  />
 </div>

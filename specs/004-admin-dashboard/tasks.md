@@ -394,9 +394,9 @@ With multiple developers after Phase 2 is complete:
 
 ### Implementation for User Story 11
 
-- [ ] T061 [US11] Create `RenameDialogComponent` (standalone, reusable) with PrimeNG `Dialog` supporting two modes — single file (shows current/proposed name from `RenamePreview`) and batch TV show (shows all proposed renames from `BatchRenamePreview`) — `ConfirmDialog` for final confirmation, error `Message` display, accepts `fileId` or `groupId` + `mode` input — in `src/app/features/admin/shared/rename-dialog.component.ts`, `src/app/features/admin/shared/rename-dialog.component.html`, and `src/app/features/admin/shared/rename-dialog.component.scss`
-- [ ] T062 [US11] Integrate "Rename File" button into `ScanDecisionDetailComponent` — opens `RenameDialogComponent` in single-file mode after TMDB assignment, calls `AdminScanDecisionService.renameFile()` — modify `src/app/features/admin/scan-results/scan-decision-detail.component.ts` and `src/app/features/admin/scan-results/scan-decision-detail.component.html`
-- [ ] T063 [US11] Integrate "Rename All Episodes" button into `TvShowGroupListComponent` — opens `RenameDialogComponent` in batch mode, calls `AdminScanDecisionService.renameTvGroup()` — modify `src/app/features/admin/scan-results/tv-show-group-list.component.ts` and `src/app/features/admin/scan-results/tv-show-group-list.component.html`
+- [x] T061 [US11] Create `RenameDialogComponent` (standalone, reusable) with PrimeNG `Dialog` supporting two modes — single file (shows current/proposed name from `RenamePreview`) and batch TV show (shows all proposed renames from `BatchRenamePreview`) — `ConfirmDialog` for final confirmation, error `Message` display, accepts `fileId` or `groupId` + `mode` input — in `src/app/features/admin/shared/rename-dialog.component.ts`, `src/app/features/admin/shared/rename-dialog.component.html`, and `src/app/features/admin/shared/rename-dialog.component.scss`
+- [x] T062 [US11] Integrate "Rename File" button into `ScanDecisionDetailComponent` — opens `RenameDialogComponent` in single-file mode after TMDB assignment, calls `AdminScanDecisionService.renameFile()` — modify `src/app/features/admin/scan-results/scan-decision-detail.component.ts` and `src/app/features/admin/scan-results/scan-decision-detail.component.html`
+- [x] T063 [US11] Integrate "Rename All Episodes" button into `TvShowGroupListComponent` — opens `RenameDialogComponent` in batch mode, calls `AdminScanDecisionService.renameTvGroup()` — modify `src/app/features/admin/scan-results/tv-show-group-list.component.ts` and `src/app/features/admin/scan-results/tv-show-group-list.component.html`
 
 **Checkpoint**: User Story 11 complete — single file and batch TV show renaming with preview and confirmation
 
@@ -410,9 +410,9 @@ With multiple developers after Phase 2 is complete:
 
 ### Implementation for Bilingual Support
 
-- [ ] T064 [P] [US6] Add English translation keys (`admin.scanResults.*`, `admin.tmdbSearch.*`, `admin.enrichment.*`, `admin.rename.*`) to `src/assets/i18n/en.json`
-- [ ] T065 [P] [US6] Add French translation keys (matching `admin.scanResults.*`, `admin.tmdbSearch.*`, `admin.enrichment.*`, `admin.rename.*` structure) to `src/assets/i18n/fr.json`
-- [ ] T066 [US6] Wire up `transloco` pipes in all new component templates — replace hardcoded strings with `{{ t('admin.*') }}` translation keys in all `.component.html` files under `src/app/features/admin/scan-results/`, `src/app/features/admin/enrichment/`, and `src/app/features/admin/shared/`
+- [x] T064 [P] [US6] Add English translation keys (`admin.scanResults.*`, `admin.tmdbSearch.*`, `admin.enrichment.*`, `admin.rename.*`) to `src/assets/i18n/en.json`
+- [x] T065 [P] [US6] Add French translation keys (matching `admin.scanResults.*`, `admin.tmdbSearch.*`, `admin.enrichment.*`, `admin.rename.*` structure) to `src/assets/i18n/fr.json`
+- [x] T066 [US6] Wire up `transloco` pipes in all new component templates — replace hardcoded strings with `{{ t('admin.*') }}` translation keys in all `.component.html` files under `src/app/features/admin/scan-results/`, `src/app/features/admin/enrichment/`, and `src/app/features/admin/shared/`
 
 **Checkpoint**: All new admin UI (US7–US12) fully bilingual — no untranslated keys in either language
 
