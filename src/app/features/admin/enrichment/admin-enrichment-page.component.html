@@ -1,0 +1,108 @@
+<div class="admin-enrichment-page" *transloco="let t">
+  <p-confirmDialog />
+
+  <div class="admin-enrichment-page__header">
+    <h2 class="admin-enrichment-page__title">{{ t('admin.enrichment.title') }}</h2>
+    <p-button
+      [label]="t('admin.enrichment.startButton')"
+      icon="pi pi-sync"
+      [disabled]="isRunning || loading()"
+      [loading]="loading()"
+      (onClick)="startEnrichment()"
+    />
+  </div>
+
+  <!-- Summary Panel -->
+  @if (summary()) {
+    @if (hasSummaryData) {
+      <p-card
+        [header]="t('admin.enrichment.summaryTitle')"
+        styleClass="admin-enrichment-page__summary-card"
+      >
+        <div class="admin-enrichment-page__summary-grid">
+          <div class="admin-enrichment-page__stat">
+            <span class="admin-enrichment-page__stat-value">{{ summary()!.newEntries }}</span>
+            <span class="admin-enrichment-page__stat-label">{{
+              t('admin.enrichment.newEntries')
+            }}</span>
+          </div>
+          <div class="admin-enrichment-page__stat">
+            <span class="admin-enrichment-page__stat-value">{{ summary()!.changedEntries }}</span>
+            <span class="admin-enrichment-page__stat-label">{{
+              t('admin.enrichment.changedEntries')
+            }}</span>
+          </div>
+          <div class="admin-enrichment-page__stat">
+            <span class="admin-enrichment-page__stat-value">{{ summary()!.skippedEntries }}</span>
+            <span class="admin-enrichment-page__stat-label">{{
+              t('admin.enrichment.skippedEntries')
+            }}</span>
+          </div>
+        </div>
+      </p-card>
+    } @else {
+      <p-message severity="info" [text]="t('admin.enrichment.nothingToEnrich')" />
+    }
+  }
+
+  <!-- Running State -->
+  @if (isRunning) {
+    <p-card styleClass="admin-enrichment-page__status-card">
+      <div class="admin-enrichment-page__running">
+        <div class="admin-enrichment-page__status-header">
+          <span class="admin-enrichment-page__status-label">{{
+            t('admin.enrichment.statusLabel')
+          }}</span>
+          <p-tag
+            severity="warn"
+            [value]="t('admin.enrichment.statusRunning')"
+            icon="pi pi-spin pi-sync"
+          />
+        </div>
+        <p-progressBar mode="indeterminate" [style]="{ height: '6px' }" />
+      </div>
+    </p-card>
+  }
+
+  <!-- Completed State -->
+  @if (isCompleted && enrichmentStatus()) {
+    <p-card
+      [header]="t('admin.enrichment.resultsTitle')"
+      styleClass="admin-enrichment-page__results-card"
+    >
+      <div class="admin-enrichment-page__status-header">
+        <p-tag severity="success" [value]="t('admin.enrichment.statusCompleted')" />
+      </div>
+      <div class="admin-enrichment-page__results-grid">
+        <div class="admin-enrichment-page__stat">
+          <span class="admin-enrichment-page__stat-value">{{ enrichmentStatus()!.enriched }}</span>
+          <span class="admin-enrichment-page__stat-label">{{
+            t('admin.enrichment.enriched')
+          }}</span>
+        </div>
+        <div class="admin-enrichment-page__stat">
+          <span class="admin-enrichment-page__stat-value">{{ enrichmentStatus()!.failed }}</span>
+          <span class="admin-enrichment-page__stat-label">{{ t('admin.enrichment.failed') }}</span>
+        </div>
+        <div class="admin-enrichment-page__stat">
+          <span class="admin-enrichment-page__stat-value">{{ enrichmentStatus()!.skipped }}</span>
+          <span class="admin-enrichment-page__stat-label">{{ t('admin.enrichment.skipped') }}</span>
+        </div>
+      </div>
+
+      @if (enrichmentStatus()!.errors.length > 0) {
+        <div class="admin-enrichment-page__errors">
+          <h4>{{ t('admin.enrichment.errors') }}</h4>
+          @for (error of enrichmentStatus()!.errors; track error.fileId) {
+            <p-message severity="error" [text]="error.filePath + ': ' + error.reason" />
+          }
+        </div>
+      }
+    </p-card>
+  }
+
+  <!-- Failed State -->
+  @if (enrichmentStatus()?.status === EnrichmentStatus.Failed) {
+    <p-message severity="error" [text]="t('admin.enrichment.statusFailed')" />
+  }
+</div>

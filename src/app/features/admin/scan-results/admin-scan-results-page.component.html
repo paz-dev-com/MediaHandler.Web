@@ -4,22 +4,33 @@
       <h2 class="admin-scan-results-page__title">{{ t('admin.scanResults.title') }}</h2>
     </ng-template>
     <ng-template pTemplate="end">
-      <div class="admin-scan-results-page__scan-selector">
-        <label class="admin-scan-results-page__selector-label">
-          {{ t('admin.scanResults.selectScan') }}
-        </label>
-        @if (historyLoading()) {
-          <p-progressSpinner [style]="{ width: '1.5rem', height: '1.5rem' }" />
-        }
-        <p-select
-          [options]="scanRunOptions()"
-          optionLabel="label"
-          optionValue="value"
-          [ngModel]="selectedScanId()"
-          (ngModelChange)="onScanRunChange($event)"
-          [placeholder]="t('admin.scanResults.selectScanPlaceholder')"
-          [style]="{ minWidth: '280px' }"
-        />
+      <div class="admin-scan-results-page__toolbar-end">
+        <div class="admin-scan-results-page__view-toggle">
+          <p-selectButton
+            [options]="viewModeOptions"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="viewMode()"
+            (ngModelChange)="onViewModeChange($event)"
+          />
+        </div>
+        <div class="admin-scan-results-page__scan-selector">
+          <label class="admin-scan-results-page__selector-label">
+            {{ t('admin.scanResults.selectScan') }}
+          </label>
+          @if (historyLoading()) {
+            <p-progressSpinner [style]="{ width: '1.5rem', height: '1.5rem' }" />
+          }
+          <p-select
+            [options]="scanRunOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="selectedScanId()"
+            (ngModelChange)="onScanRunChange($event)"
+            [placeholder]="t('admin.scanResults.selectScanPlaceholder')"
+            [style]="{ minWidth: '280px' }"
+          />
+        </div>
       </div>
     </ng-template>
   </p-toolbar>
@@ -29,6 +40,14 @@
       <p-message severity="info" [text]="t('admin.scanResults.noScanSelected')" />
     </div>
   } @else {
-    <app-scan-decision-table [scanId]="scanIdForTable()" [libraryRoots]="libraryRoots()" />
+    @if (viewMode() === 'table') {
+      <app-scan-decision-table [scanId]="scanIdForTable()" [libraryRoots]="libraryRoots()" />
+    } @else {
+      <app-tv-show-group-list
+        [groups]="tvGroups()"
+        [scanId]="scanIdForTable()"
+        (groupAssigned)="onGroupAssigned()"
+      />
+    }
   }
 </div>

@@ -53,6 +53,13 @@ export const adminRoutes: Routes = [
             (m) => m.AdminScanResultsPageComponent,
           ),
       },
+      {
+        path: 'enrichment',
+        loadComponent: () =>
+          import('./enrichment/admin-enrichment-page.component').then(
+            (m) => m.AdminEnrichmentPageComponent,
+          ),
+      },
     ],
   },
 ];
