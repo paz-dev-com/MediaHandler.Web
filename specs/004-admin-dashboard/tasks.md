@@ -356,8 +356,8 @@ With multiple developers after Phase 2 is complete:
 
 ### Implementation for User Story 9
 
-- [ ] T054 [US9] Create `TvShowGroupListComponent` with PrimeNG `Accordion` for show groups (header: show name, episode count `Chip`, TMDB assignment status `Tag`), expanded panel listing episodes, "Assign TMDB" / "Change TMDB" `Button` on group header opening `TmdbSearchPanelComponent` with `initialQuery` pre-filled and `mediaTypeFilter` set to TvShow — in `src/app/features/admin/scan-results/tv-show-group-list.component.ts`, `src/app/features/admin/scan-results/tv-show-group-list.component.html`, and `src/app/features/admin/scan-results/tv-show-group-list.component.scss`
-- [ ] T055 [US9] Integrate `TvShowGroupListComponent` into `AdminScanResultsPageComponent` — add toggle between flat table view and TV show group view, load groups via `AdminScanDecisionService.getTvGroups()` when group view is selected — modify `src/app/features/admin/scan-results/admin-scan-results-page.component.ts` and `src/app/features/admin/scan-results/admin-scan-results-page.component.html`
+- [x] T054 [US9] Create `TvShowGroupListComponent` with PrimeNG `Accordion` for show groups (header: show name, episode count `Chip`, TMDB assignment status `Tag`), expanded panel listing episodes, "Assign TMDB" / "Change TMDB" `Button` on group header opening `TmdbSearchPanelComponent` with `initialQuery` pre-filled and `mediaTypeFilter` set to TvShow — in `src/app/features/admin/scan-results/tv-show-group-list.component.ts`, `src/app/features/admin/scan-results/tv-show-group-list.component.html`, and `src/app/features/admin/scan-results/tv-show-group-list.component.scss`
+- [x] T055 [US9] Integrate `TvShowGroupListComponent` into `AdminScanResultsPageComponent` — add toggle between flat table view and TV show group view, load groups via `AdminScanDecisionService.getTvGroups()` when group view is selected — modify `src/app/features/admin/scan-results/admin-scan-results-page.component.ts` and `src/app/features/admin/scan-results/admin-scan-results-page.component.html`
 
 **Checkpoint**: User Story 9 complete — TV show episodes grouped by parent show with show-level TMDB assignment
 
@@ -371,14 +371,14 @@ With multiple developers after Phase 2 is complete:
 
 ### Tests for User Story 10
 
-- [ ] T056 [P] [US10] Create unit tests for `AdminEnrichmentService` in `src/app/features/admin/enrichment/admin-enrichment.service.spec.ts` — test `startEnrichment()`, `getStatus()`, polling lifecycle (start on launch, stop on terminal), signal state, discriminated response handling
+- [x] T056 [P] [US10] Create unit tests for `AdminEnrichmentService` in `src/app/features/admin/enrichment/admin-enrichment.service.spec.ts` — test `startEnrichment()`, `getStatus()`, polling lifecycle (start on launch, stop on terminal), signal state, discriminated response handling
 
 ### Implementation for User Story 10
 
-- [ ] T057 [US10] Implement `AdminEnrichmentService` with signals (`enrichmentStatus`, `summary`, `loading`) and methods `startEnrichment()`, `getStatus()`, plus `interval(4000)` + `switchMap` polling with `takeUntilDestroyed()` and `stopPolling$` subject — in `src/app/features/admin/enrichment/admin-enrichment.service.ts`
-- [ ] T058 [US10] Create `AdminEnrichmentPageComponent` with enrichment summary panel (new/changed entries count, skipped count from `EnrichmentSummary`), "Start TMDB Enrichment" `Button` with `ConfirmDialog`, PrimeNG `ProgressBar` for running state, results summary panel (enriched/failed/error details), empty state `Message` when nothing to enrich, and prevention of duplicate runs — in `src/app/features/admin/enrichment/admin-enrichment-page.component.ts`, `src/app/features/admin/enrichment/admin-enrichment-page.component.html`, and `src/app/features/admin/enrichment/admin-enrichment-page.component.scss`
-- [ ] T059 [US10] Add `enrichment` child route to `src/app/features/admin/admin.routes.ts` lazy-loading `AdminEnrichmentPageComponent`
-- [ ] T060 [US10] Add "Enrichment" tab to the `tabs` array in `src/app/features/admin/admin-layout.component.ts`
+- [x] T057 [US10] Implement `AdminEnrichmentService` with signals (`enrichmentStatus`, `summary`, `loading`) and methods `startEnrichment()`, `getStatus()`, plus `interval(4000)` + `switchMap` polling with `takeUntilDestroyed()` and `stopPolling$` subject — in `src/app/features/admin/enrichment/admin-enrichment.service.ts`
+- [x] T058 [US10] Create `AdminEnrichmentPageComponent` with enrichment summary panel (new/changed entries count, skipped count from `EnrichmentSummary`), "Start TMDB Enrichment" `Button` with `ConfirmDialog`, PrimeNG `ProgressBar` for running state, results summary panel (enriched/failed/error details), empty state `Message` when nothing to enrich, and prevention of duplicate runs — in `src/app/features/admin/enrichment/admin-enrichment-page.component.ts`, `src/app/features/admin/enrichment/admin-enrichment-page.component.html`, and `src/app/features/admin/enrichment/admin-enrichment-page.component.scss`
+- [x] T059 [US10] Add `enrichment` child route to `src/app/features/admin/admin.routes.ts` lazy-loading `AdminEnrichmentPageComponent`
+- [x] T060 [US10] Add "Enrichment" tab to the `tabs` array in `src/app/features/admin/admin-layout.component.ts`
 
 **Checkpoint**: User Story 10 complete — admin can launch, monitor, and review batch TMDB enrichment
 

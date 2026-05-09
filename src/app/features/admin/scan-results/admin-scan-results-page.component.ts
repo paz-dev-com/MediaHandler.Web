@@ -16,14 +16,24 @@ import { SelectModule } from 'primeng/select';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
+import { ButtonModule } from 'primeng/button';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { AdminScanService } from '../scanner/admin-scan.service';
 import { AdminLibraryRootService } from '../library-roots/admin-library-root.service';
+import { AdminScanDecisionService } from './admin-scan-decision.service';
 import { ScanDecisionTableComponent } from './scan-decision-table.component';
+import { TvShowGroupListComponent } from './tv-show-group-list.component';
 import { ScanRunSummary } from '@shared/models/admin-scan.model';
 
 interface ScanRunOption {
   label: string;
   value: string;
+}
+
+interface ViewModeOption {
+  label: string;
+  value: 'table' | 'groups';
+  icon: string;
 }
 
 @Component({
@@ -36,7 +46,10 @@ interface ScanRunOption {
     ToolbarModule,
     ProgressSpinnerModule,
     MessageModule,
+    ButtonModule,
+    SelectButtonModule,
     ScanDecisionTableComponent,
+    TvShowGroupListComponent,
   ],
   templateUrl: './admin-scan-results-page.component.html',
   styleUrl: './admin-scan-results-page.component.scss',
@@ -45,14 +58,22 @@ interface ScanRunOption {
 export class AdminScanResultsPageComponent implements OnInit {
   private readonly scanService = inject(AdminScanService);
   private readonly libraryRootService = inject(AdminLibraryRootService);
+  private readonly scanDecisionService = inject(AdminScanDecisionService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly selectedScanId = signal<string | null>(null);
   readonly scanRunOptions = signal<ScanRunOption[]>([]);
   readonly historyLoading = this.scanService.historyLoading;
+  readonly viewMode = signal<'table' | 'groups'>('table');
+
+  readonly viewModeOptions: ViewModeOption[] = [
+    { label: 'Table View', value: 'table', icon: 'pi pi-table' },
+    { label: 'TV Show Groups', value: 'groups', icon: 'pi pi-list' },
+  ];
 
   readonly libraryRoots = this.libraryRootService.roots;
+  readonly tvGroups = this.scanDecisionService.tvGroups;
 
   readonly scanIdForTable = computed(() => this.selectedScanId() ?? '');
 
@@ -93,5 +114,19 @@ export class AdminScanResultsPageComponent implements OnInit {
 
   onScanRunChange(scanId: string | null): void {
     this.selectedScanId.set(scanId);
+  }
+
+  onGroupAssigned(): void {
+    const scanId = this.selectedScanId();
+    if (scanId) {
+      this.scanDecisionService.getTvGroups(scanId);
+    }
+  }
+
+  onViewModeChange(mode: 'table' | 'groups'): void {
+    this.viewMode.set(mode);
+    if (mode === 'groups' && this.selectedScanId()) {
+      this.scanDecisionService.getTvGroups(this.selectedScanId()!);
+    }
   }
 }

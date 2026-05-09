@@ -1,0 +1,80 @@
+<div class="tv-show-group-list" *transloco="let t">
+  @if (groups.length === 0) {
+    <p-message severity="info" [text]="t('admin.scanResults.noTvGroups')" />
+  } @else {
+    <p-accordion [multiple]="true">
+      @for (group of groups; track group.groupId) {
+        <p-accordion-panel [value]="group.groupId">
+          <p-accordion-header>
+            <div class="tv-show-group-list__header">
+              <span class="tv-show-group-list__show-name">{{ group.parsedShowName }}</span>
+              <p-chip [label]="group.episodeCount + ' ' + t('admin.scanResults.episodes')" />
+              @if (group.assignedTmdbId) {
+                <p-tag severity="success" [value]="t('admin.scanResults.tmdbAssigned')" />
+              } @else {
+                <p-tag severity="warn" [value]="t('admin.scanResults.tmdbNotAssigned')" />
+              }
+              <div class="tv-show-group-list__actions" (click)="$event.stopPropagation()">
+                @if (group.assignedTmdbId) {
+                  <p-button
+                    [label]="t('admin.scanResults.changeTmdb')"
+                    icon="pi pi-pencil"
+                    severity="secondary"
+                    size="small"
+                    (onClick)="openAssignDialog(group)"
+                  />
+                } @else {
+                  <p-button
+                    [label]="t('admin.scanResults.assignTmdb')"
+                    icon="pi pi-search"
+                    size="small"
+                    (onClick)="openAssignDialog(group)"
+                  />
+                }
+              </div>
+            </div>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="tv-show-group-list__body">
+              @if (group.assignedTitle) {
+                <div class="tv-show-group-list__assigned-info">
+                  <strong>{{ t('admin.scanResults.assignedTitle') }}:</strong>
+                  {{ group.assignedTitle }}
+                  @if (group.assignedTmdbId) {
+                    <span class="tv-show-group-list__tmdb-id"
+                      >(TMDB: {{ group.assignedTmdbId }})</span
+                    >
+                  }
+                </div>
+              }
+              <p class="tv-show-group-list__episode-count">
+                {{ t('admin.scanResults.episodeCount', { count: group.episodeCount }) }}
+              </p>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+      }
+    </p-accordion>
+  }
+
+  <p-dialog
+    [header]="
+      activeGroup()?.assignedTmdbId
+        ? t('admin.scanResults.changeTmdb')
+        : t('admin.scanResults.assignTmdb')
+    "
+    [visible]="dialogVisible()"
+    (visibleChange)="!$event && closeDialog()"
+    [modal]="true"
+    [style]="{ width: '640px' }"
+    [draggable]="false"
+  >
+    @if (activeGroup()) {
+      <app-tmdb-search-panel
+        [initialQuery]="activeGroup()!.parsedShowName"
+        [mediaTypeFilter]="MediaType.TvShow"
+        (selected)="onTmdbSelected($event)"
+      />
+    }
+  </p-dialog>
+</div>
