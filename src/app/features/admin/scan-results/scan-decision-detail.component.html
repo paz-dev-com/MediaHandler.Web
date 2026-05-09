@@ -79,7 +79,7 @@
     </p>
   }
 
-  <!-- Search TMDB Button -->
+  <!-- Actions -->
   <div class="scan-decision-detail__actions">
     <p-button
       [label]="t('admin.scanResults.searchTmdb')"
@@ -87,6 +87,15 @@
       severity="secondary"
       (onClick)="showTmdbSearch.set(!showTmdbSearch())"
     />
+    @if (decision.assignedTmdbId) {
+      <p-button
+        [label]="t('admin.rename.button')"
+        icon="pi pi-pencil"
+        severity="secondary"
+        size="small"
+        (onClick)="openRenameDialog()"
+      />
+    }
   </div>
 
   <!-- TMDB Search Panel Dialog -->
@@ -105,4 +114,13 @@
       (selected)="onTmdbSearchSelected($event, t)"
     />
   </p-dialog>
+
+  <!-- Rename File Dialog -->
+  <app-rename-dialog
+    [mode]="'single'"
+    [fileId]="decision.id"
+    [visible]="renameDialogVisible()"
+    (visibleChange)="renameDialogVisible.set($event)"
+    (renamed)="onFileRenamed()"
+  />
 </div>

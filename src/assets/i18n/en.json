@@ -333,7 +333,19 @@
       "reassignSuccess": "TMDB entry reassigned successfully.",
       "searchTmdb": "Search TMDB",
       "searchTmdbTitle": "Search TMDB",
-      "decisionType": {
+      "viewMode": "View Mode",
+      "tableView": "Table View",
+      "groupView": "TV Show Groups",
+      "filters": "Filters",
+      "decisionType": "Decision Type",
+      "mediaType": "Media Type",
+      "libraryRoot": "Library Root",
+      "allDecisions": "All",
+      "filePath": "File Path",
+      "decision": "Decision",
+      "assignedEntry": "Assigned Entry",
+      "noGroups": "No TV show groups found",
+      "decisionTypes": {
         "Added": "Added",
         "Updated": "Updated",
         "Unchanged": "Unchanged",
@@ -341,7 +353,7 @@
         "Excluded": "Excluded",
         "NeedsReview": "Needs Review"
       },
-      "mediaType": {
+      "mediaTypes": {
         "Film": "Film",
         "TvShow": "TV Show"
       },
@@ -359,7 +371,55 @@
       "noFilteredResults": "No results match the current media type filter.",
       "select": "Select",
       "typeMovie": "Movie",
-      "typeTv": "TV Show"
+      "typeTv": "TV Show",
+      "title": "Search TMDB",
+      "placeholder": "Enter title...",
+      "searching": "Searching...",
+      "results": "Results",
+      "assign": "Assign",
+      "year": "Year",
+      "overview": "Overview",
+      "movie": "Movie",
+      "tvShow": "TV Show"
+    },
+    "enrichment": {
+      "title": "TMDB Enrichment",
+      "subtitle": "Batch enrich media entries with TMDB metadata",
+      "start": "Start TMDB Enrichment",
+      "confirmTitle": "Start Enrichment",
+      "confirmMessage": "Are you sure you want to start a batch TMDB enrichment scan?",
+      "status": "Enrichment Status",
+      "running": "Running",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "summary": "Enrichment Summary",
+      "newEntries": "New Entries",
+      "changedEntries": "Changed Entries",
+      "skipped": "Skipped",
+      "enriched": "Enriched",
+      "failedEntries": "Failed",
+      "errors": "Errors",
+      "nothingToEnrich": "Nothing to enrich — all entries are up to date",
+      "empty": "No enrichment data available"
+    },
+    "rename": {
+      "singleTitle": "Rename File",
+      "batchTitle": "Rename All Episodes",
+      "currentPath": "Current Path",
+      "proposedPath": "Proposed Name",
+      "currentName": "Current",
+      "proposedName": "Proposed",
+      "loadPreview": "Load Preview",
+      "confirm": "Confirm Rename",
+      "cancel": "Cancel",
+      "success": "File renamed successfully",
+      "batchSuccess": "All episodes renamed successfully",
+      "error": "Failed to rename",
+      "noChanges": "No rename changes proposed",
+      "loading": "Loading preview...",
+      "button": "Rename File",
+      "batchButton": "Rename All Episodes"
     }
   }
 }
