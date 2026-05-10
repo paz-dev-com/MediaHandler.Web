@@ -64,9 +64,14 @@ export class ScanDecisionDetailComponent {
     this.decisionService.refreshDecisions();
   }
 
-  onReassign(tmdbId: number, kind: MediaType, t: (key: string) => string): void {
+  onReassign(tmdbId: number, candidateMediaType: MediaType, t: (key: string) => string): void {
+    // Derive the authoritative kind from multiple reliable signals (in priority order):
+    // 1. decision.mediaType (set by the scanner from ParsedMediaType)
+    // 2. Presence of parsedSeason / parsedEpisode → definitely a TV episode
+    // 3. candidateKind as last resort — may be wrong for pre-fix scan data
+    const mediaType = this.inferDecisionKind(candidateMediaType);
     this.reassigning.set(true);
-    this.decisionService.reassign(this.decision.id, tmdbId, kind).subscribe({
+    this.decisionService.reassign(this.decision.id, tmdbId, mediaType).subscribe({
       next: () => {
         this.reassigning.set(false);
         this.messageService.add({
@@ -83,8 +88,30 @@ export class ScanDecisionDetailComponent {
   }
 
   onTmdbSearchSelected(result: TmdbSearchResult, t: (key: string) => string): void {
+    // result.mediaType from /search/multi is always reliable ("tv" or "movie").
+    // The user explicitly chose this result, so respect exactly what they selected.
     const kind: MediaType = result.mediaType === 'movie' ? MediaType.Film : MediaType.TvShow;
     this.showTmdbSearch.set(false);
-    this.onReassign(result.tmdbId, kind, t);
+    this.onReassign(result.id, kind, t);
+  }
+
+  /**
+   * Infers the authoritative MediaType for this decision using multiple signals.
+   * Avoids trusting `candidate.kind` alone, which was incorrectly stored as Film
+   * for all TV candidates in scans run before the SearchCandidatesAsync kind fix.
+   *
+   * Priority:
+   *  1. parsedSeason / parsedEpisode present → always a TV episode (infallible)
+   *  2. `decision.mediaType`  — set by scanner from ParsedMediaType (reliable when not null)
+   *  3. `fallback` — passed-in candidate.kind, last resort (may be wrong for old data)
+   */
+  private inferDecisionKind(fallback: MediaType): MediaType {
+    if (this.decision.parsedSeason !== null || this.decision.parsedEpisode !== null) {
+      return MediaType.TvShow;
+    }
+    if (this.decision.kind !== null && this.decision.kind !== undefined) {
+      return this.decision.kind;
+    }
+    return fallback;
   }
 }

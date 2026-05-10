@@ -22,6 +22,7 @@
         <th>{{ t('admin.scanner.columns.added') }}</th>
         <th>{{ t('admin.scanner.columns.updated') }}</th>
         <th>{{ t('admin.scanner.columns.needsReview') }}</th>
+        <th></th>
       </tr>
     </ng-template>
 
@@ -37,12 +38,24 @@
         <td>{{ scan.counts.added }}</td>
         <td>{{ scan.counts.updated }}</td>
         <td>{{ scan.counts.needsReview }}</td>
+        <td>
+          @if (scan.status === ScanStatus.Completed) {
+            <p-button
+              [label]="t('admin.scanner.viewResults')"
+              icon="pi pi-arrow-right"
+              styleClass="p-button-text p-button-sm"
+              size="small"
+              [text]="true"
+              (onClick)="navigateToResults(scan.id)"
+            />
+          }
+        </td>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="8" class="text-center p-4">
+        <td colspan="9" class="text-center p-4">
           {{ t('admin.scanner.historyEmpty') }}
         </td>
       </tr>

@@ -29,8 +29,8 @@
 
   @if (!loading() && filteredResults.length > 0) {
     <p-dataView [value]="filteredResults">
-      <ng-template pTemplate="list" let-items>
-        @for (result of items; track result.tmdbId) {
+      <ng-template #list let-items>
+        @for (result of items; track result.id) {
           <div
             class="tmdb-search-panel__result"
             (click)="onSelect(result)"

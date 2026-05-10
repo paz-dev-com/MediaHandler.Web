@@ -1,7 +1,9 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ApiService } from '@core/api/api.service';
 import { PaginationMeta } from '@core/api/api-response.model';
-import { ReviewItem } from '@shared/models/review.model';
+import { ReviewItem, BulkResolveResult } from '@shared/models/review.model';
 import {
   MediaType,
   ReviewReason,
@@ -89,6 +91,26 @@ export class AdminReviewService {
         /* handled by error interceptor */
       },
     });
+  }
+
+  bulkResolveByFolder(
+    parentFolderPath: string,
+    action: ReviewResolutionAction,
+    tmdbId?: number,
+    kind?: string,
+  ): Observable<BulkResolveResult> {
+    const body: Record<string, unknown> = { parentFolderPath, action };
+    if (tmdbId !== undefined) {
+      body['tmdbId'] = tmdbId;
+    }
+    if (kind !== undefined) {
+      body['kind'] = kind;
+    }
+
+    return this.api.post<BulkResolveResult>('admin/review-items/bulk-resolve', body).pipe(
+      tap(() => this.refresh()),
+      map((response) => response.data),
+    );
   }
 
   private refresh(): void {

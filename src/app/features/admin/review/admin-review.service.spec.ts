@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { AdminReviewService } from './admin-review.service';
 import {
   MediaType,
@@ -228,6 +229,92 @@ describe('AdminReviewService', () => {
       meta: { page: 1, pageSize: 20, totalCount: 0, totalPages: 0 },
       errors: [],
     });
+
+    expect(service.items()).toEqual([]);
+  });
+
+  // ── bulkResolveByFolder ──────────────────────────────────────────────────────
+
+  it('should POST admin/review-items/bulk-resolve with parentFolderPath and action', () => {
+    service.getItems();
+    httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
+
+    service.bulkResolveByFolder('/nas/shows/SVU', ReviewResolutionAction.Dismiss).subscribe();
+
+    const req = httpTesting.expectOne(`${base}/admin/review-items/bulk-resolve`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      parentFolderPath: '/nas/shows/SVU',
+      action: ReviewResolutionAction.Dismiss,
+    });
+    req.flush({ data: { resolvedCount: 3, failedCount: 0 }, meta: null, errors: [] });
+
+    // refresh call
+    httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
+  });
+
+  it('should POST bulk-resolve with tmdbId and kind when provided', () => {
+    service.getItems();
+    httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
+
+    service
+      .bulkResolveByFolder('/nas/shows/SVU', ReviewResolutionAction.Assign, 12345, 'TvShow')
+      .subscribe();
+
+    const req = httpTesting.expectOne(`${base}/admin/review-items/bulk-resolve`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      parentFolderPath: '/nas/shows/SVU',
+      action: ReviewResolutionAction.Assign,
+      tmdbId: 12345,
+      kind: 'TvShow',
+    });
+    req.flush({ data: { resolvedCount: 5, failedCount: 1 }, meta: null, errors: [] });
+
+    httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
+  });
+
+  it('should return an Observable<BulkResolveResult> from bulkResolveByFolder', async () => {
+    service.getItems();
+    httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
+
+    const resultPromise = firstValueFrom(
+      service.bulkResolveByFolder('/nas/shows/SVU', ReviewResolutionAction.Assign, 99, 'TvShow'),
+    );
+
+    const req = httpTesting.expectOne(`${base}/admin/review-items/bulk-resolve`);
+    req.flush({ data: { resolvedCount: 7, failedCount: 0 }, meta: null, errors: [] });
+
+    httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
+
+    const result = await resultPromise;
+    expect(result.resolvedCount).toBe(7);
+    expect(result.failedCount).toBe(0);
+  });
+
+  it('should refresh items signal after bulkResolveByFolder completes', () => {
+    service.getItems(ReviewStatus.Open);
+    httpTesting
+      .expectOne((r) => r.url === `${base}/admin/review-items`)
+      .flush({
+        data: [mockItem],
+        meta: { page: 1, pageSize: 20, totalCount: 1, totalPages: 1 },
+        errors: [],
+      });
+
+    expect(service.items()).toEqual([mockItem]);
+
+    service.bulkResolveByFolder('/nas/shows/SVU', ReviewResolutionAction.Dismiss).subscribe();
+    httpTesting
+      .expectOne(`${base}/admin/review-items/bulk-resolve`)
+      .flush({ data: { resolvedCount: 1, failedCount: 0 }, meta: null, errors: [] });
+
+    httpTesting
+      .expectOne(
+        (r) =>
+          r.url === `${base}/admin/review-items` && r.params.get('status') === ReviewStatus.Open,
+      )
+      .flush(emptyResponse);
 
     expect(service.items()).toEqual([]);
   });

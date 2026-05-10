@@ -1,8 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 import { ApiService } from '@core/api/api.service';
 import { PaginationMeta } from '@core/api/api-response.model';
-import { ScanItemDecision, TvShowGroup } from '@shared/models/scan-decision.model';
+import {
+  ScanDecisionShowGroup,
+  ScanItemDecision,
+  TvShowGroup,
+} from '@shared/models/scan-decision.model';
 import {
   RenamePreview,
   RenameResult,
@@ -22,6 +26,7 @@ export class AdminScanDecisionService {
   private readonly api = inject(ApiService);
 
   readonly decisions = signal<ScanItemDecision[]>([]);
+  readonly groupedDecisions = signal<ScanDecisionShowGroup[]>([]);
   readonly tvGroups = signal<TvShowGroup[]>([]);
   readonly loading = signal<boolean>(false);
   readonly meta = signal<ScanDecisionMeta>({ page: 1, pageSize: 20, total: 0 });
@@ -74,9 +79,12 @@ export class AdminScanDecisionService {
     });
   }
 
-  reassign(decisionId: string, tmdbId: number, kind: MediaType): Observable<ScanItemDecision> {
+  reassign(decisionId: string, tmdbId: number, mediaType: MediaType): Observable<ScanItemDecision> {
     return this.api
-      .put<ScanItemDecision>(`admin/scan-decisions/${decisionId}/reassign`, { tmdbId, kind })
+      .put<ScanItemDecision>(`admin/scan-decisions/${decisionId}/reassign`, {
+        tmdbId,
+        kind: mediaType,
+      })
       .pipe(map((response) => response.data));
   }
 
@@ -111,6 +119,16 @@ export class AdminScanDecisionService {
       .pipe(map((response) => response.data));
   }
 
+  /** Assigns all decisions in an ad-hoc group to the same TMDB entry by calling reassign for each. */
+  assignGroupDecisions(
+    decisions: ScanItemDecision[],
+    tmdbId: number,
+    kind: MediaType,
+  ): Observable<void> {
+    const calls = decisions.map((d) => this.reassign(d.id, tmdbId, kind));
+    return forkJoin(calls).pipe(map(() => void 0));
+  }
+
   refreshDecisions(): void {
     if (this.currentScanId) {
       this.getDecisions(
@@ -122,5 +140,30 @@ export class AdminScanDecisionService {
         this.currentPageSize,
       );
     }
+  }
+
+  getGroupedDecisions(
+    scanId: string,
+    decisionType?: ScanDecisionType,
+    mediaType?: MediaType,
+    libraryRootId?: string,
+  ): void {
+    this.loading.set(true);
+    const params: Record<string, string | number | null | undefined> = {};
+    if (decisionType !== undefined) params['decisionType'] = decisionType;
+    if (mediaType !== undefined) params['mediaType'] = mediaType;
+    if (libraryRootId !== undefined) params['libraryRootId'] = libraryRootId;
+
+    this.api
+      .get<ScanDecisionShowGroup[]>(`admin/scan/${scanId}/decisions/grouped`, params)
+      .subscribe({
+        next: (response) => {
+          this.groupedDecisions.set(response.data ?? []);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+        },
+      });
   }
 }

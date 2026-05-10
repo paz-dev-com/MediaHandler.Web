@@ -1,4 +1,4 @@
-import { MediaType, ReviewReason, ReviewStatus } from './enums';
+import { MediaType, ReviewReason, ReviewResolutionAction, ReviewStatus } from './enums';
 
 export interface TmdbCandidate {
   tmdbId: number;
@@ -23,4 +23,16 @@ export interface ReviewItem {
   resolvedKind: MediaType | null;
   resolvedAt: string | null;
   createdAt: string;
+}
+
+export interface BulkResolveRequest {
+  parentFolderPath: string;
+  action: ReviewResolutionAction;
+  tmdbId?: number;
+  kind?: string;
+}
+
+export interface BulkResolveResult {
+  resolvedCount: number;
+  failedCount: number;
 }

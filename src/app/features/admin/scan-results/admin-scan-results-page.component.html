@@ -5,15 +5,6 @@
     </ng-template>
     <ng-template pTemplate="end">
       <div class="admin-scan-results-page__toolbar-end">
-        <div class="admin-scan-results-page__view-toggle">
-          <p-selectButton
-            [options]="viewModeOptions"
-            optionLabel="label"
-            optionValue="value"
-            [ngModel]="viewMode()"
-            (ngModelChange)="onViewModeChange($event)"
-          />
-        </div>
         <div class="admin-scan-results-page__scan-selector">
           <label class="admin-scan-results-page__selector-label">
             {{ t('admin.scanResults.selectScan') }}
@@ -40,14 +31,6 @@
       <p-message severity="info" [text]="t('admin.scanResults.noScanSelected')" />
     </div>
   } @else {
-    @if (viewMode() === 'table') {
-      <app-scan-decision-table [scanId]="scanIdForTable()" [libraryRoots]="libraryRoots()" />
-    } @else {
-      <app-tv-show-group-list
-        [groups]="tvGroups()"
-        [scanId]="scanIdForTable()"
-        (groupAssigned)="onGroupAssigned()"
-      />
-    }
+    <app-scan-decision-table [scanId]="scanIdForTable()" [libraryRoots]="libraryRoots()" />
   }
 </div>

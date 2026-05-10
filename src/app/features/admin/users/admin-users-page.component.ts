@@ -59,8 +59,8 @@ export class AdminUsersPageComponent implements OnInit, OnDestroy {
 
   private buildRoleOptions(): void {
     this.roleOptions = [
-      { label: this.transloco.translate('profile.roles.Admin'), value: 'admin' },
-      { label: this.transloco.translate('profile.roles.User'), value: 'user' },
+      { label: this.transloco.translate('profile.roles.Admin'), value: 'Admin' },
+      { label: this.transloco.translate('profile.roles.User'), value: 'User' },
     ];
   }
 

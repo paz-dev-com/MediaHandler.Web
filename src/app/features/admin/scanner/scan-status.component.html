@@ -43,8 +43,8 @@
       </div>
     </div>
 
-    @if (isRunning(scan)) {
-      <div class="scan-status__actions">
+    <div class="scan-status__actions">
+      @if (isRunning(scan)) {
         <p-button
           [label]="t('admin.scanner.cancelScan')"
           icon="pi pi-times"
@@ -52,7 +52,16 @@
           [outlined]="true"
           (onClick)="onCancel(scan)"
         />
-      </div>
-    }
+      }
+      @if (isCompleted(scan)) {
+        <p-button
+          [label]="t('admin.scanner.viewResults')"
+          icon="pi pi-arrow-right"
+          severity="secondary"
+          [text]="true"
+          (onClick)="navigateToResults(scan.id)"
+        />
+      }
+    </div>
   }
 </div>

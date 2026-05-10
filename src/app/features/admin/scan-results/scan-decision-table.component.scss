@@ -50,4 +50,79 @@
   &__unassigned {
     color: var(--p-text-muted-color);
   }
+
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  &__groups {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__group {
+    border: 1px solid var(--p-surface-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  &__group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    background: var(--p-surface-50);
+    user-select: none;
+
+    &:hover {
+      background: var(--p-surface-100);
+    }
+  }
+
+  &__group-poster {
+    width: 28px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  &__group-name {
+    font-weight: 600;
+    flex: 1;
+  }
+
+  &__group-episodes {
+    border-top: 1px solid var(--p-surface-border);
+  }
+
+  &__episode-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--p-surface-100);
+    font-size: 0.875rem;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__episode-detail {
+    padding: 0 1rem 0.5rem;
+    border-bottom: 1px solid var(--p-surface-100);
+  }
 }

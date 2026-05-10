@@ -336,11 +336,11 @@ With multiple developers after Phase 2 is complete:
 ### Implementation for User Story 7
 
 - [x] T048 [US7] Implement `AdminScanDecisionService` with signals (`decisions`, `tvGroups`, `loading`, `meta`) and methods `getDecisions(scanId, decisionType?, mediaType?, libraryRootId?, page?, pageSize?)`, `reassign(decisionId, tmdbId, kind)`, `getTvGroups(scanId)`, `assignTvGroup(groupId, tmdbId)`, `renameFile(fileId, preview?)`, `renameTvGroup(groupId, preview?)` in `src/app/features/admin/scan-results/admin-scan-decision.service.ts`
-- [x] T049 [P] [US7] Create `ScanDecisionDetailComponent` (expanded row) showing TMDB candidates list with poster/title/year/score, "Reassign" button per candidate, and "Search TMDB" button opening `TmdbSearchPanelComponent` in a `Dialog` — in `src/app/features/admin/scan-results/scan-decision-detail.component.ts`, `src/app/features/admin/scan-results/scan-decision-detail.component.html`, and `src/app/features/admin/scan-results/scan-decision-detail.component.scss`
-- [x] T050 [P] [US7] Create `ScanDecisionTableComponent` with PrimeNG `Table` (server-side pagination, row expansion), columns for file path, decision type `Tag`, assigned TMDB entry (title/year/poster), and timestamp — `Select` filters for decision type, media type, and library root — in `src/app/features/admin/scan-results/scan-decision-table.component.ts`, `src/app/features/admin/scan-results/scan-decision-table.component.html`, and `src/app/features/admin/scan-results/scan-decision-table.component.scss`
-- [x] T051 [P] [US7] Create `AdminScanResultsPageComponent` orchestrating scan run `Select` (populated from `AdminScanService.getScanHistory()`, defaulting to most recent scan), filter controls, and `ScanDecisionTableComponent` — in `src/app/features/admin/scan-results/admin-scan-results-page.component.ts`, `src/app/features/admin/scan-results/admin-scan-results-page.component.html`, and `src/app/features/admin/scan-results/admin-scan-results-page.component.scss`
-- [x] T052 [P] [US7] Add `scan-results` and `scan-results/:scanId` child routes to `src/app/features/admin/admin.routes.ts` lazy-loading `AdminScanResultsPageComponent`
-- [x] T053 [P] [US7] Add "Scan Results" tab to the `tabs` array in `src/app/features/admin/admin-layout.component.ts`
+- [x] T049 [P] Create `ScanDecisionDetailComponent` (expanded row) showing TMDB candidates list with poster/title/year/score, "Reassign" button per candidate, and "Search TMDB" button opening `TmdbSearchPanelComponent` in a `Dialog` — in `src/app/features/admin/scan-results/scan-decision-detail.component.ts`, `src/app/features/admin/scan-results/scan-decision-detail.component.html`, and `src/app/features/admin/scan-results/scan-decision-detail.component.scss`
+- [x] T050 [P] Create `ScanDecisionTableComponent` with PrimeNG `Table` (server-side pagination, row expansion), columns for file path, decision type `Tag`, assigned TMDB entry (title/year/poster), and timestamp — `Select` filters for decision type, media type, and library root — in `src/app/features/admin/scan-results/scan-decision-table.component.ts`, `src/app/features/admin/scan-results/scan-decision-table.component.html`, and `src/app/features/admin/scan-results/scan-decision-table.component.scss`
+- [x] T051 [P] Create `AdminScanResultsPageComponent` orchestrating scan run `Select` (populated from `AdminScanService.getScanHistory()`, defaulting to most recent scan), filter controls, and `ScanDecisionTableComponent` — in `src/app/features/admin/scan-results/admin-scan-results-page.component.ts`, `src/app/features/admin/scan-results/admin-scan-results-page.component.html`, and `src/app/features/admin/scan-results/admin-scan-results-page.component.scss`
+- [x] T052 [P] Add `scan-results` and `scan-results/:scanId` child routes to `src/app/features/admin/admin.routes.ts` lazy-loading `AdminScanResultsPageComponent`
+- [x] T053 [P] Add "Scan Results" tab to the `tabs` array in `src/app/features/admin/admin-layout.component.ts`
 
 **Checkpoint**: User Story 7 complete — admin can browse all scan decisions, filter, and reassign TMDB entries
 
@@ -422,11 +422,11 @@ With multiple developers after Phase 2 is complete:
 
 **Purpose**: Final validation, loading states, empty states, error handling, and cleanup for all new admin sub-sections
 
-- [ ] T067 [P] Add loading states (`ProgressSpinner` or button `loading` property) to all async operations in scan-results, enrichment, and shared components
-- [ ] T068 [P] Add empty state `Message` components for empty scan decisions list, no TV show groups, no enrichment entries, and no TMDB search results across new components
-- [ ] T069 Verify error handling — ensure backend `404`, `409`, `422`, `500` errors from new endpoints (scan-decisions, reassign, tv-groups, enrichment, rename) display meaningful toast messages via existing error interceptor
-- [ ] T070 Add "View Scan Results" navigation link from `ScanHistoryTableComponent` (completed scan row click) and `ScanStatusComponent` (completed state) to `/admin/scan-results/:scanId` — modify `src/app/features/admin/scanner/scan-history-table.component.ts` and `src/app/features/admin/scanner/scan-status.component.ts`
-- [ ] T071 Run `quickstart.md` validation for US7–US12 — start app, navigate to `/admin/scan-results`, `/admin/enrichment`, exercise TMDB search panel, rename dialog, TV show groups, and verify `/nas-scanner` redirects to `/admin/scanner`
+- [x] T067 [P] Add loading states (`ProgressSpinner` or button `loading` property) to all async operations in scan-results, enrichment, and shared components
+- [x] T068 [P] Add empty state `Message` components for empty scan decisions list, no TV show groups, no enrichment entries, and no TMDB search results across new components
+- [x] T069 Verify error handling — ensure backend `404`, `409`, `422`, `500` errors from new endpoints (scan-decisions, reassign, tv-groups, enrichment, rename) display meaningful toast messages via existing error interceptor
+- [x] T070 Add "View Scan Results" navigation link from `ScanHistoryTableComponent` (completed scan row click) and `ScanStatusComponent` (completed state) to `/admin/scan-results/:scanId` — modify `src/app/features/admin/scanner/scan-history-table.component.ts` and `src/app/features/admin/scanner/scan-status.component.ts`
+- [x] T071 Run `quickstart.md` validation for US7–US12 — Build verified ✓, manual browser validation pending. `ng build --configuration development` passes clean with zero errors.
 
 ---
 
@@ -479,7 +479,7 @@ Task T050: "Create ScanDecisionTableComponent (paginated table with filters)"
 
 # Then sequentially:
 Task T051: "Create AdminScanResultsPageComponent (orchestrates selector + filters + table)"
-Task T052: "Add scan-results routes to admin.routes.ts"
+Task T052: "Add scan-results route to admin.routes.ts"
 Task T053: "Add Scan Results tab to admin-layout"
 ```
 
@@ -525,3 +525,333 @@ With multiple developers after Phase 10 is complete:
 - **Developer A**: US12 (NAS Scanner removal) → then US7 (Scan Results)
 - **Developer B**: US8 (TMDB Search Panel) → then US9 (TV Show Groups) → then US11 (Renaming)
 - **Developer C**: US10 (Enrichment) → then i18n (Phase 17) → then Polish (Phase 18)
+
+---
+
+## Phase 19: User Story 13 — Bulk Review Item Resolution by Shared Parent Folder (Priority: P1)
+
+**Goal**: When resolving a review item, the admin can optionally apply the same TMDB assignment to all other open review items sharing the same parent folder path in a single bulk operation
+
+**Independent Test**: Open a review item resolve dialog for a TV show episode, select a TMDB entry — verify a checkbox appears showing the count of sibling items in the same folder. Check the checkbox and confirm — verify a single `POST /api/v1/admin/review-items/bulk-resolve` call is made and a success toast shows "X review items resolved". Uncheck the checkbox and confirm — verify only the single-item resolve endpoint is called (existing behaviour unchanged).
+
+**Depends on**: Phase 6 (US4 — Review Queue, `AdminReviewService`, `ReviewResolveDialogComponent`) must be complete
+
+### Tests for User Story 13
+
+- [x] T072 [P] [US13] Add unit tests for `bulkResolveByFolder()` to `src/app/features/admin/review/admin-review.service.spec.ts` — test HTTP `POST /api/v1/admin/review-items/bulk-resolve` call with `{ parentFolderPath, action, tmdbId, kind }` payload, verify signal state update and returned resolved count
+
+### Implementation for User Story 13
+
+- [x] T073 [P] [US13] Add `BulkResolveRequest` interface (`parentFolderPath: string; action: string; tmdbId?: number; kind?: string`) and `BulkResolveResult` interface (`resolvedCount: number`) to `src/app/shared/models/review.model.ts`
+- [x] T074 [P] [US13] Add `bulkResolveByFolder(parentFolderPath: string, action: string, tmdbId?: number, kind?: string): Observable<BulkResolveResult>` method to `AdminReviewService` calling `POST /api/v1/admin/review-items/bulk-resolve` — in `src/app/features/admin/review/admin-review.service.ts`
+- [x] T075 [P] Update `ReviewResolveDialogComponent` to: (1) derive `parentFolderPath` from the review item's `filePath` using client-side path parsing, (2) query the count of open sibling items sharing that parent folder from `AdminReviewService.getItems()` filtered by `parentFolderPath`, (3) show a PrimeNG `Checkbox` labelled "Apply to all X episodes in the same folder" (with sibling count) when siblings exist, (4) on confirm, call `AdminReviewService.bulkResolveByFolder()` when checkbox is checked or `AdminReviewService.resolveItem()` when unchecked, (5) show a success toast "X review items resolved" after bulk resolve, (6) emit a refresh event so `AdminReviewPageComponent` reloads the queue — modify `src/app/features/admin/review/review-resolve-dialog.component.ts` and `src/app/features/admin/review/review-resolve-dialog.component.html`
+- [x] T076 [P] Add English translation keys (`admin.review.bulkResolve.checkboxLabel`, `admin.review.bulkResolve.successToast`, `admin.review.bulkResolve.confirmHeader`, `admin.review.bulkResolve.confirmMessage`) to `src/assets/i18n/en.json`
+- [x] T077 [P] Add French translation keys (matching `admin.review.bulkResolve.*` structure) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: User Story 13 fully functional — admin can bulk-resolve all sibling review items in one folder/confirm step; single-item resolve path is unchanged when checkbox is unchecked
+
+---
+
+## Phase 20: User Story 14 — Parent Folder TMDB Validation Page (Priority: P2)
+
+**Goal**: Admins can browse all unique TV show parent folders discovered during scans, assign them to TMDB TV show entries, and track their collection import status from a dedicated `/admin/parent-folders` page
+
+**Independent Test**: Navigate to `/admin/parent-folders`, verify paginated table with columns: folder path, episode count, detected show name, and TMDB assignment status `Tag` (Not Assigned / Assigned / In Collection). Filter by status "Not Assigned" — verify only unassigned folders appear. Click "Assign TMDB" on a row — verify `TmdbSearchPanelComponent` opens pre-filled with the parsed show name filtered to TV show results. Select a result and confirm — verify status updates to "Assigned" and a success toast appears. Verify folders already in the media collection show "In Collection" with no assign button.
+
+**Depends on**: Phase 12 (US8 — `TmdbSearchPanelComponent`) must be complete
+
+### Tests for User Story 14
+
+- [x] T078 [P] [US14] Create unit tests for `AdminParentFolderService` in `src/app/features/admin/parent-folders/admin-parent-folder.service.spec.ts` — test `getFolders(page, pageSize, status?)` HTTP `GET /api/v1/admin/parent-folders` call with query params, `assignFolder(folderId, tmdbId, kind)` HTTP `PUT /api/v1/admin/parent-folders/{folderId}/assign` call, signal state updates (`folders`, `loading`, `meta`)
+
+### Implementation for User Story 14
+
+- [x] T079 [P] [US14] Create `ParentFolderGroup` interface (`id: string; folderPath: string; detectedShowName: string; episodeCount: number; status: 'NotAssigned' | 'Assigned' | 'InCollection'; tmdbId?: number; tmdbTitle?: string`) in `src/app/shared/models/parent-folder.model.ts`
+- [x] T080 [P] Implement `AdminParentFolderService` with signals (`folders`, `loading`, `meta`) and methods `getFolders(page: number, pageSize: number, status?: string): Observable<PagedResult<ParentFolderGroup>>` calling `GET /api/v1/admin/parent-folders`, and `assignFolder(folderId: string, tmdbId: number, kind: string): Observable<ParentFolderGroup>` calling `PUT /api/v1/admin/parent-folders/{folderId}/assign` — in `src/app/features/admin/parent-folders/admin-parent-folder.service.ts`
+- [x] T081 [US14] Create `AdminParentFoldersPageComponent` with PrimeNG `Table` (server-side pagination via `onLazyLoad`, 20 rows per page), columns for folder path, detected show name, episode count, and status `Tag` (severity: `warn` for NotAssigned, `success` for Assigned, `info` for InCollection), `Select` filter for status (All / Not Assigned / Assigned / In Collection), "Assign TMDB" `Button` per row (hidden for InCollection rows) opening `TmdbSearchPanelComponent` in a PrimeNG `Dialog` pre-filled with `detectedShowName` and `mediaTypeFilter` set to TvShow, wiring `(selected)` event to call `AdminParentFolderService.assignFolder()` and refreshing the table — in `src/app/features/admin/parent-folders/admin-parent-folders-page.component.ts`, `src/app/features/admin/parent-folders/admin-parent-folders-page.component.html`, and `src/app/features/admin/parent-folders/admin-parent-folders-page.component.scss`
+- [x] T082 [US14] Add `parent-folders` child route to `src/app/features/admin/admin.routes.ts` lazy-loading `AdminParentFoldersPageComponent`
+- [x] T083 [US14] Add "Parent Folders" tab (`{ labelKey: 'admin.parentFolders.tab', icon: 'pi pi-folder', route: '/admin/parent-folders' }`) to the `tabs` array in `src/app/features/admin/admin-layout.component.ts`
+- [x] T084 [P] Add English translation keys (`admin.parentFolders.tab`, `admin.parentFolders.title`, `admin.parentFolders.columns.*`, `admin.parentFolders.status.*`, `admin.parentFolders.assignButton`, `admin.parentFolders.assignDialog.*`, `admin.parentFolders.assignSuccess`, `admin.parentFolders.filterStatus.*`, `admin.parentFolders.empty`) to `src/assets/i18n/en.json`
+- [x] T085 [P] Add French translation keys (matching `admin.parentFolders.*` structure) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: User Story 14 fully functional — admin can view all discovered TV show parent folders, filter by assignment status, assign TMDB entries, and see collection import status
+
+---
+
+## Dependencies & Execution Order (US13–US14)
+
+### Phase Dependencies
+
+- **Phase 19 (US13 — Bulk Review)**: Depends on Phase 6 (US4 — Review Queue must exist; `AdminReviewService` and `ReviewResolveDialogComponent` must be complete). Can start as soon as Phase 6 is done. Independent of Phases 10–18.
+- **Phase 20 (US14 — Parent Folders)**: Depends on Phase 12 (US8 — `TmdbSearchPanelComponent` must exist for TMDB assignment dialog). Can start after Phase 12 is done. Independent of Phase 19 (US13).
+
+### User Story Dependencies (US13–US14)
+
+- **US13 (P1)**: Soft dependency on US4 — `AdminReviewService` and `ReviewResolveDialogComponent` must exist. Independent of US14.
+- **US14 (P2)**: Soft dependency on US8 — `TmdbSearchPanelComponent` must exist for the assign TMDB dialog. Independent of US13.
+
+### Within Each New User Story
+
+- Tests written FIRST; should FAIL before implementation
+- Model interface ([P] with service) before service
+- Service before page component / dialog integration
+- Translation tasks ([P]) can be written in parallel with any implementation task
+
+### Parallel Opportunities (US13–US14)
+
+- T072 (US13 service test) and T073 (US13 model) — parallel
+- T076, T077 (US13 translation files) — parallel with each other and with T075 (dialog update)
+- T078 (US14 service test) and T079 (US14 model) — parallel
+- T084, T085 (US14 translation files) — parallel with each other and with T081 (page component)
+- Phase 19 (US13) and Phase 20 (US14) — the two phases can run fully in parallel once their respective prerequisites (US4 and US8) are met
+
+---
+
+## Phase 21: Adjustment — Scan Results TV Show Episode Deduplication & Grouping (Priority: P2)
+
+**Goal**: In the scan results, TV show episodes from the same show (even across languages or with duplicate file paths) are deduplicated and visually grouped/collapsed by show, so the admin can quickly scan unique shows rather than wading through hundreds of duplicate episode rows
+
+**Independent Test**: Navigate to `/admin/scan-results`, verify the default view uses server-side grouped data from `GET /api/v1/admin/scan/{scanId}/decisions/grouped`. Verify episodes from the same TV show are grouped under a collapsible show header showing: normalized show name, episode count, TMDB assignment status `Tag`, and poster. Verify no duplicate file paths appear within a group. Verify expand/collapse works for each group. Verify movie decisions appear as single-item groups. Verify filters (decisionType, mediaType, libraryRootId) are passed through to the grouped endpoint.
+
+**Depends on**: Phase 13 (US7 — Scan Results Browser) must be complete
+
+**✅ Backend Ready**: `GET /api/v1/admin/scan/{scanId}/decisions/grouped` endpoint exists in `AdminScanController`. Returns `List<ScanDecisionShowGroupDto>` — server-side deduplication by file path (keeps latest `decidedAt`), grouping by normalized `parsedTitle` for TV shows (strips language suffixes like VF/VOSTFR/Multi), movies remain as single-item groups. Supports `decisionType`, `mediaType`, `libraryRootId` query params.
+
+**Response shape** (`ScanDecisionShowGroupDto`):
+
+```
+{ showName, episodeCount, assignedTmdbId?, assignedKind?, assignedTitle?, assignedYear?, assignedPosterPath?, episodes: ScanItemDecisionDto[] }
+```
+
+### Implementation for TV Show Deduplication
+
+- [x] T086 [P] Add `ScanDecisionShowGroup` interface to `src/app/shared/models/scan-decision.model.ts` matching the backend `ScanDecisionShowGroupDto` shape: `showName: string; episodeCount: number; assignedTmdbId?: number; assignedKind?: string; assignedTitle?: string; assignedYear?: number; assignedPosterPath?: string; episodes: ScanItemDecision[]`
+- [x] T087 [P] Add `getGroupedDecisions(scanId: string, decisionType?: string, mediaType?: string, libraryRootId?: string): void` method and `groupedDecisions` signal (`ScanDecisionShowGroup[]`) to `AdminScanDecisionService` — calls `GET /api/v1/admin/scan/{scanId}/decisions/grouped` with optional query params — modify `src/app/features/admin/scan-results/admin-scan-decision.service.ts`
+- [x] T088 Update `ScanDecisionTableComponent` to use server-side grouped data: (1) call `AdminScanDecisionService.getGroupedDecisions()` instead of `getDecisions()` as the default view, (2) render groups using collapsible show-level headers showing `showName`, `episodeCount` `Chip`, TMDB assignment status `Tag` + poster thumbnail, (3) expanded episodes listed as sub-rows within each group, (4) single-item groups (movies) rendered as regular rows without collapsible header, (5) pass `decisionType`, `mediaType`, `libraryRootId` filter values through to `getGroupedDecisions()` — modify `src/app/features/admin/scan-results/scan-decision-table.component.ts`, `src/app/features/admin/scan-results/scan-decision-table.component.html`, and `src/app/features/admin/scan-results/scan-decision-table.component.scss`
+- [x] T089 [P] Add English translation keys (`admin.scanResults.groupHeader`, `admin.scanResults.showName`, `admin.scanResults.groupedView`, `admin.scanResults.flatView`) to `src/assets/i18n/en.json`
+- [x] T090 [P] Add French translation keys (matching `admin.scanResults.groupHeader`, `admin.scanResults.showName`, `admin.scanResults.groupedView`, `admin.scanResults.flatView` structure) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: Scan results use server-side grouped endpoint — TV show episodes are deduplicated and collapsed under show headers; movies appear as regular rows
+
+---
+
+## Phase 22: Adjustment — Review Queue Batch Assign Siblings by Root Parent Folder (Priority: P1)
+
+**Goal**: When the admin assigns a TV show TMDB entry to a review item, they can optionally apply the same assignment to ALL other open review items sharing the same **root parent folder** (not just the immediate parent), enabling bulk resolution of entire TV show folder trees in one action
+
+**Independent Test**: Open a review item resolve dialog for a TV show episode nested in a deep folder (e.g., `/nas/tv/ShowName/Season 1/episode.mkv`). Select a TMDB TV show and click Assign — verify a checkbox appears showing the count of sibling items under the same root parent folder (e.g., `/nas/tv/ShowName`). Check the checkbox and confirm — verify `bulkResolveByFolder()` is called with the root parent folder path and all sibling items are resolved. Test with items in different subfolders (Season 1, Season 2) under the same root parent — verify they are all included.
+
+**Depends on**: Phase 19 (US13 — Bulk Review by folder) must be complete
+
+**✅ Backend Ready**: `POST /api/v1/admin/review-items/bulk-resolve` already uses **prefix match** (`FilePath.StartsWith(folder + "/")`) — passing a root parent folder path like `/nas/tv/ShowName` will match all items under all subfolders (Season 1, Season 2, etc.). No backend changes needed.
+
+**Request body** (`BulkResolveReviewRequest`):
+
+```
+{ parentFolderPath: string, action: ReviewResolutionAction, tmdbId?: number, kind?: MediaType }
+```
+
+**Response** (`BulkResolveResult`): `{ resolvedCount: number }`
+
+### Implementation for Batch Assign Siblings
+
+- [x] T091 [P] Add `deriveRootParentFolder(filePath: string, items: ReviewItem[]): string` function to derive the deepest common ancestor folder path among all open review items — add to `src/app/features/admin/review/review-path.util.ts` as a new utility file. The function should: (1) extract the parent folder from the given filePath, (2) walk up the path segments, (3) find the shortest prefix that still contains at least one other open sibling item, (4) return that root parent folder path. The backend already does prefix matching (`startsWith`) so this path will match all nested subfolders.
+- [x] T092 [P] Create unit tests for `deriveRootParentFolder()` in `src/app/features/admin/review/review-path.util.spec.ts` — test with deep nested paths (e.g., `/nas/tv/ShowName/Season 1/ep.mkv` and `/nas/tv/ShowName/Season 2/ep.mkv` → root parent `/nas/tv/ShowName`), test with items only in same immediate folder, test with no siblings
+- [x] T093 Update `ReviewResolveDialogComponent` to use root parent folder for sibling detection: (1) replace `parentFolderPath` computed with `rootParentFolderPath` using `deriveRootParentFolder()`, (2) update `siblingCount` computed to count ALL open items whose filePath starts with the root parent folder path (prefix match instead of exact parent match), (3) update the bulk resolve checkbox label to show the root parent folder path for clarity, (4) pass the root parent folder path to `bulkResolveByFolder()` when checkbox is checked — modify `src/app/features/admin/review/review-resolve-dialog.component.ts` and `src/app/features/admin/review/review-resolve-dialog.component.html`
+- [x] T094 [P] Add English translation keys (`admin.review.bulkResolve.rootFolderLabel`, `admin.review.bulkResolve.rootFolderHint`) to `src/assets/i18n/en.json`
+- [x] T095 [P] Add French translation keys (matching `admin.review.bulkResolve.rootFolderLabel`, `admin.review.bulkResolve.rootFolderHint` structure) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: Review resolve dialog detects sibling review items across the entire TV show folder tree (all seasons/subfolders) and bulk-assigns them all in one operation
+
+---
+
+## Phase 23: Adjustment — Enrichment Page Clarification & Useful Information (Priority: P2)
+
+**Goal**: The enrichment page clearly explains what enrichment does, shows a pre-flight summary of pending work, displays a paginated history of past enrichment runs with status/details, and shows error details for failed enrichments with proper empty states
+
+**Independent Test**: Navigate to `/admin/enrichment`. Verify a description section explains that enrichment fetches detailed TMDB metadata (cast, crew, genres, ratings) for already-matched media entries. Verify a summary card shows counts: "New" (never enriched), "Changed" (updated since last run), "Skipped" (already up-to-date), and "Total Eligible". Verify past enrichment runs are displayed in a paginated history table with status `Tag`, started/finished timestamps, enrichedCount/failedCount/skippedCount columns. Verify expanding a failed run shows per-entry error details (mediaId, title, error message). Verify empty states show explanatory text when no runs exist or nothing needs enrichment.
+
+**Depends on**: Phase 15 (US10 — Enrichment) must be complete
+
+**✅ Backend Ready**: Three endpoints are available:
+
+- `GET /api/v1/admin/enrichment/summary` → `EnrichmentSummaryDto { newCount, changedCount, skippedCount, totalEligible }`
+- `GET /api/v1/admin/enrichment/history?page&pageSize` → paginated `List<EnrichmentRunDto>` with `ApiResponseMeta`
+- `GET /api/v1/admin/enrichment/status` → latest `EnrichmentRunDto` or `null`
+
+**`EnrichmentRunDto` shape**:
+
+```
+{ enrichmentRunId, status (EnrichmentStatus), startedAt, finishedAt?, totalItems, enrichedCount, failedCount, skippedCount, currentItem?, errorDetails: EnrichmentErrorDetailDto[] }
+```
+
+### Implementation for Enrichment Page Improvements
+
+- [x] T096 [P] Update `EnrichmentRun` interface in `src/app/shared/models/enrichment.model.ts` to match exact backend `EnrichmentRunDto` shape: add `enrichmentRunId: string; totalItems: number; enrichedCount: number; failedCount: number; skippedCount: number; currentItem: string | null; errorDetails: EnrichmentErrorDetail[]`. Add `EnrichmentErrorDetail` interface: `{ mediaId: string; tmdbId: number | null; title: string | null; error: string }`. Add `EnrichmentSummaryDetail` interface: `{ newCount: number; changedCount: number; skippedCount: number; totalEligible: number }` (if not already matching `EnrichmentSummary`).
+- [x] T097 [P] Add `getHistory(page: number, pageSize: number): void` method with `enrichmentHistory` signal (`EnrichmentRun[]`) and `historyMeta` signal, and `getSummary(): void` method with `enrichmentSummary` signal (`EnrichmentSummaryDetail | null`) to `AdminEnrichmentService` — `getHistory()` calls `GET /api/v1/admin/enrichment/history`, `getSummary()` calls `GET /api/v1/admin/enrichment/summary` — modify `src/app/features/admin/enrichment/admin-enrichment.service.ts`
+- [x] T098 [P] Add unit tests for `getHistory()` and `getSummary()` to `src/app/features/admin/enrichment/admin-enrichment.service.spec.ts` — test HTTP `GET /api/v1/admin/enrichment/history?page=1&pageSize=20` call with pagination params and signal updates, test HTTP `GET /api/v1/admin/enrichment/summary` call and signal update
+- [x] T099 Update `AdminEnrichmentPageComponent` to add: (1) a description section at the top explaining enrichment purpose (fetches detailed TMDB metadata — cast, crew, genres, ratings, images — for media entries that have been matched to TMDB during scanning), (2) enhanced summary card using `getSummary()` showing "New" count (`newCount`), "Changed" count (`changedCount`), "Already up-to-date" count (`skippedCount`), and "Total eligible" count (`totalEligible`), (3) enrichment history table using PrimeNG `Table` with server-side pagination via `getHistory()` showing past runs (status `Tag` with severity mapping: `success` for Completed, `danger` for Failed, `warn` for Running, `info` for Queued; started/finished timestamps; enrichedCount/failedCount/skippedCount columns; row expansion for error details), (4) expanded error details panel showing `EnrichmentErrorDetail[]` per run with `p-message` severity="error" listing mediaId, title, and error message, (5) proper empty states with `p-message` severity="info" for: no enrichment history ("No enrichment runs have been recorded yet"), nothing to enrich ("All matched media entries are already enriched and up-to-date") — modify `src/app/features/admin/enrichment/admin-enrichment-page.component.ts`, `src/app/features/admin/enrichment/admin-enrichment-page.component.html`, and `src/app/features/admin/enrichment/admin-enrichment-page.component.scss`
+- [x] T100 [P] Add English translation keys (`admin.enrichment.description`, `admin.enrichment.descriptionDetail`, `admin.enrichment.summary.newCount`, `admin.enrichment.summary.changedCount`, `admin.enrichment.summary.skippedCount`, `admin.enrichment.summary.totalEligible`, `admin.enrichment.historyTitle`, `admin.enrichment.historyColumns.status`, `admin.enrichment.historyColumns.startedAt`, `admin.enrichment.historyColumns.finishedAt`, `admin.enrichment.historyColumns.enriched`, `admin.enrichment.historyColumns.failed`, `admin.enrichment.historyColumns.skipped`, `admin.enrichment.historyEmpty`, `admin.enrichment.errorDetails`, `admin.enrichment.errorMediaId`, `admin.enrichment.errorTitle`, `admin.enrichment.errorMessage`, `admin.enrichment.nothingToEnrich`) to `src/assets/i18n/en.json`
+- [x] T101 [P] Add French translation keys (matching all `admin.enrichment.*` keys from T100) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: Enrichment page clearly explains its purpose, shows pre-flight summary from `/summary` endpoint, displays paginated history from `/history` endpoint with expandable error details per run, and provides descriptive empty states
+
+---
+
+## Phase 24: Polish & Cross-Cutting Concerns (Adjustments)
+
+**Purpose**: Final validation, loading states, error handling for all three adjustments
+
+- [x] T102 [P] Verify loading states for new async operations: `TvShowDeduplicationUtil` processing indicator, enrichment history table loading, root parent folder sibling count loading
+- [x] T103 [P] Verify error handling for enrichment history endpoint failures and bulk resolve with root parent folder path — ensure meaningful toast messages via existing error interceptor
+- [x] T104 Run manual validation of all three adjustments: (1) scan results deduplication with a multi-language TV show library, (2) review queue bulk assign with nested Season folders, (3) enrichment page description + history + empty states
+
+**Checkpoint**: All adjustments validated end-to-end
+
+---
+
+## Dependencies & Execution Order (Adjustments — Phases 21–24)
+
+### Phase Dependencies
+
+- **Phase 21 (Scan Results Deduplication)**: Depends on Phase 13 (US7 — Scan Results Browser must be complete). Independent of Phases 22 and 23.
+- **Phase 22 (Review Batch Assign Siblings)**: Depends on Phase 19 (US13 — Bulk Review must be complete). Independent of Phases 21 and 23.
+- **Phase 23 (Enrichment Page Improvements)**: Depends on Phase 15 (US10 — Enrichment must be complete). Independent of Phases 21 and 22.
+- **Phase 24 (Polish)**: Depends on Phases 21, 22, and 23 being complete.
+
+### Parallel Opportunities (Adjustments)
+
+- **Phases 21, 22, and 23 can all run fully in parallel** — they touch different subsystems (scan-results, review, enrichment)
+- T086, T087 (model + service method) — parallel
+- T089, T090 (Phase 21 translations) — parallel with each other and with T088
+- T091, T092 (Phase 22 translations) — parallel with each other and with T093
+- T096, T097, T098 (enrichment model + service + tests) — parallel (backend endpoints ready)
+- T100, T101 (Phase 23 translations) — parallel with each other and with T099
+- T102, T103 (Phase 24 polish) — parallel
+
+### Within Each Adjustment Phase
+
+- Utility/model tasks can run in parallel with test tasks
+- Service changes before component changes
+- Translation tasks [P] can run parallel with any implementation task
+- Component updates are sequential after service/utility dependencies
+
+### Parallel Example: All Three Adjustments
+
+```bash
+# All three phases can start simultaneously:
+# Developer A: Phase 21 — Scan Results Deduplication (T086-T090)
+# Developer B: Phase 22 — Review Batch Assign Siblings (T091-T095)
+# Developer C: Phase 23 — Enrichment Page Improvements (T096-T101)
+
+# After all three complete:
+# Any developer: Phase 24 — Polish & Validation (T102-T104)
+```
+
+### Parallel Example: Phase 21 (Deduplication)
+
+```bash
+# Parallel: model and service method simultaneously
+Task T086: "Add ScanDecisionShowGroup interface to scan-decision.model.ts"
+Task T087: "Add getGroupedDecisions() to AdminScanDecisionService"
+
+# Then sequentially (T087 must be complete):
+Task T088: "Update ScanDecisionTableComponent to use grouped endpoint"
+
+# Parallel with T088 (different files):
+Task T089: "Add grouping i18n keys to en.json"
+Task T090: "Add grouping i18n keys to fr.json"
+```
+
+### Parallel Example: Phase 22 (Batch Assign Siblings)
+
+```bash
+# Parallel: utility and tests simultaneously
+Task T091: "Create deriveRootParentFolder() in review-path.util.ts"
+Task T092: "Create unit tests in review-path.util.spec.ts"
+
+# Then sequentially (T091 must be complete):
+Task T093: "Update ReviewResolveDialogComponent with root parent folder logic"
+
+# Parallel with T093 (different files):
+Task T094: "Add root folder i18n keys to en.json"
+Task T095: "Add root folder i18n keys to fr.json"
+```
+
+---
+
+## Phase 25: Issue Fix — Scan Results Show-Level Navigation & Reassign Bug (Priority: P1)
+
+**Goal**: Make the TV show group view the default/primary view on scan results, display TMDB candidates at the show level (not per-file), and fix the reassign bug for already-enriched media entries
+
+**Independent Test**: Navigate to `/admin/scan-results`, verify the grouped view is the only default view (no separate "TV Show Groups" toggle at page level). Verify each show group header displays TMDB candidates (poster, title, year, score) from the grouped episodes. Verify selecting a candidate assigns it to ALL files in the group. Verify reassigning an already-enriched media entry to a different TMDB show/movie works without errors.
+
+**Depends on**: Phase 21 (Scan Results Deduplication), Phase 14 (US9 — TV Show Groups)
+
+### Implementation for Scan Results Show-Level Navigation
+
+- [x] T105 [P] Investigate and document reassign bug for already-enriched media — test `PUT /api/v1/admin/scan-decisions/{id}/reassign` with a decision whose linked `MediaFile` already has an enriched `Media` entry. Check if the issue is (a) frontend not sending correct payload, (b) backend `ReassignTmdbCommandHandler` not handling existing Media links, or (c) UI disabling the reassign button incorrectly. Document findings in a code comment in `src/app/features/admin/scan-results/scan-decision-detail.component.ts`
+- [x] T106 Update `AdminScanResultsPageComponent` to remove the page-level `viewMode` toggle between "table" and "groups" — the grouped view (`ScanDecisionTableComponent` with `useGroupedView=true`) is now the only default view. Remove `TvShowGroupListComponent` import and its template usage from the page since the grouped table already handles show grouping. Keep the flat table toggle button inside `ScanDecisionTableComponent` for users who need it — modify `src/app/features/admin/scan-results/admin-scan-results-page.component.ts` and `src/app/features/admin/scan-results/admin-scan-results-page.component.html`
+- [x] T107 [P] Update `ScanDecisionShowGroup` interface in `src/app/shared/models/scan-decision.model.ts` to add `candidates: TmdbCandidate[]` field aggregated from group episodes (backend should provide this; if not, frontend aggregates from `episodes[0].candidates`)
+- [x] T108 Update `ScanDecisionTableComponent` group header to display show-level TMDB candidates — when a group is expanded, show a candidates section with poster thumbnails, title, year, score, and "Assign to All" button per candidate. When "Assign to All" is clicked, call `AdminScanDecisionService.assignTvGroup()` to assign the selected TMDB entry to all episodes in the group. Add a "Search TMDB" button that opens `TmdbSearchPanelComponent` in a dialog for manual assignment at show level — modify `src/app/features/admin/scan-results/scan-decision-table.component.ts`, `src/app/features/admin/scan-results/scan-decision-table.component.html`, and `src/app/features/admin/scan-results/scan-decision-table.component.scss`
+- [x] T109 [P] Fix reassign for already-enriched media — based on T105 findings, update `ScanDecisionDetailComponent` to ensure the reassign button is always enabled regardless of enrichment status, and ensure the `reassign()` API call sends the correct payload. If the issue is backend, add a task to the API tasks.md — modify `src/app/features/admin/scan-results/scan-decision-detail.component.ts` and `src/app/features/admin/scan-results/scan-decision-detail.component.html`
+- [x] T110 [P] Add English translation keys (`admin.scanResults.assignToAll`, `admin.scanResults.showCandidates`, `admin.scanResults.reassignEnriched`) to `src/assets/i18n/en.json`
+- [x] T111 [P] Add French translation keys (matching `admin.scanResults.assignToAll`, `admin.scanResults.showCandidates`, `admin.scanResults.reassignEnriched` structure) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: Scan results page defaults to show-level grouped view with TMDB candidates displayed per show group; reassign works for both new and already-enriched media entries
+
+---
+
+## Phase 26: Issue Fix — Enrichment Page Per-Media Details (Priority: P2)
+
+**Goal**: Each enrichment run in the history table shows detailed per-media results: which TV show/movie was added/enriched, how many files were affected, and their file names
+
+**Independent Test**: Navigate to `/admin/enrichment`, run an enrichment, wait for completion. Expand the completed run in the history table — verify a detailed breakdown showing each media entry (title, TMDB ID, type) with a list of affected file names and a count. Verify both successful and failed entries are shown with appropriate severity indicators.
+
+**Depends on**: Phase 23 (Enrichment Page Improvements), Backend Phase 16 (new endpoint for per-media details)
+
+### Implementation for Enrichment Per-Media Details
+
+- [x] T112 [P] Create `EnrichmentMediaDetail` interface in `src/app/shared/models/enrichment.model.ts` — fields: `mediaId: string; tmdbId: number; title: string; type: string; status: 'Enriched' | 'Failed' | 'Skipped'; fileCount: number; fileNames: string[]; error: string | null`
+- [x] T113 [P] Add `getRunDetails(runId: string): void` method with `runDetails` signal (`EnrichmentMediaDetail[]`) and `runDetailsLoading` signal to `AdminEnrichmentService` — calls `GET /api/v1/admin/enrichment/{runId}/details` — modify `src/app/features/admin/enrichment/admin-enrichment.service.ts`
+- [x] T114 Update `AdminEnrichmentPageComponent` enrichment history table row expansion to show per-media details: (1) on row expand, call `AdminEnrichmentService.getRunDetails(runId)` to fetch detailed breakdown, (2) display a sub-table with columns: media title, TMDB ID, type `Tag`, status `Tag` (success for Enriched, danger for Failed, secondary for Skipped), file count, (3) add a nested expansion for each media row showing the list of affected file names, (4) keep existing error details display as a fallback when per-media details are not available — modify `src/app/features/admin/enrichment/admin-enrichment-page.component.ts`, `src/app/features/admin/enrichment/admin-enrichment-page.component.html`, and `src/app/features/admin/enrichment/admin-enrichment-page.component.scss`
+- [x] T115 [P] Add English translation keys (`admin.enrichment.mediaDetails`, `admin.enrichment.mediaDetails.title`, `admin.enrichment.mediaDetails.tmdbId`, `admin.enrichment.mediaDetails.type`, `admin.enrichment.mediaDetails.status`, `admin.enrichment.mediaDetails.fileCount`, `admin.enrichment.mediaDetails.files`, `admin.enrichment.mediaDetails.statusEnriched`, `admin.enrichment.mediaDetails.statusFailed`, `admin.enrichment.mediaDetails.statusSkipped`) to `src/assets/i18n/en.json`
+- [x] T116 [P] Add French translation keys (matching `admin.enrichment.mediaDetails.*` structure) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: Enrichment run history shows detailed per-media breakdown with affected file names for each enrichment run
+
+---
+
+## Phase 27: Issue Fix — Media Details Page Files & Seasons Loading Errors (Priority: P1)
+
+**Goal**: Fix loading errors on the media details page for files and seasons data, add proper error handling and graceful degradation
+
+**Independent Test**: Navigate to a TV show media detail page — verify seasons load without errors and episode list renders correctly. Navigate to a movie media detail page — verify media files list loads without errors. Verify that when the API returns unexpected data shapes (null arrays, missing fields), the page gracefully degrades with empty state messages instead of throwing errors.
+
+**Depends on**: No admin dashboard dependencies — this is in the media-detail feature
+
+### Implementation for Media Details Error Fixes
+
+- [x] T117 [P] Add null-safety guards to `MediaDetailService.loadMedia()` — ensure `response.data.mediaFiles` defaults to `[]` if null/undefined, ensure `response.data.genres` defaults to `[]` if null/undefined, ensure `response.data.tvSeasons` defaults to `[]` if null/undefined. Add error handler to `loadSeasons()` subscriber that sets a `seasonsError` signal instead of silently failing — modify `src/app/features/media-detail/media-detail.service.ts`
+- [x] T118 [P] Add `seasonsError` and `filesError` signals to `MediaDetailService` — `seasonsError` is set when `GET media/{id}/seasons` fails, `filesError` is set when media files data is malformed — modify `src/app/features/media-detail/media-detail.service.ts`
+- [x] T119 Update `MediaDetailPageComponent` template to add error states for files and seasons sections — show `app-error-message` with retry button when `service.seasonsError()` is set, show empty state message when `media.mediaFiles` is empty instead of potentially erroring on null access. Add `seasonsLoading` indicator using `ProgressSpinner` while seasons are loading — modify `src/app/features/media-detail/media-detail-page.component.html`
+- [x] T120 [P] Add null-safety to `MediaFilesComponent` — ensure `files()` input handles null/undefined gracefully by defaulting to empty array, add optional chaining for `file.format` and `file.resolution` access — modify `src/app/features/media-detail/media-files.component.ts`
+- [x] T121 [P] Add null-safety to `SeasonListComponent` — ensure `seasons()` input handles null/undefined gracefully, add defensive checks for `season.tvEpisodes` being null/undefined (default to `[]`), add optional chaining for `season.episodeCount` and `season.watchedCount` — modify `src/app/features/media-detail/season-list.component.ts`
+- [x] T122 [P] Add null-safety to `EpisodeItemComponent` — ensure `episode().userEpisode` optional chaining is used consistently for all property accesses, handle case where `episode()` input could have null fields — modify `src/app/features/media-detail/episode-item.component.ts`
+- [x] T123 Verify `Media` interface in `src/app/shared/models/media.model.ts` matches the actual API response — check if `mediaFiles`, `genres`, and `tvSeasons` should be optional (`?`) or nullable (`| null`) to match the backend DTO. Update interface if needed to prevent type errors at runtime — modify `src/app/shared/models/media.model.ts`
+- [x] T124 [P] Add English translation keys (`media.seasonsError`, `media.filesError`, `media.seasonsLoading`) to `src/assets/i18n/en.json`
+- [x] T125 [P] Add French translation keys (matching `media.seasonsError`, `media.filesError`, `media.seasonsLoading`) to `src/assets/i18n/fr.json`
+
+**Checkpoint**: Media details page loads files and seasons without errors; graceful degradation when data is missing or malformed
+
+---
+
+## Phase 28: Polish & Validation (Issue Fixes)
+
+**Purpose**: Final validation of all three issue fixes
+
+- [x] T126 [P] Verify loading states for new async operations: show-level candidate assignment loading, enrichment per-media details loading, seasons loading spinner
+- [x] T127 [P] Verify error handling for reassign on enriched media, enrichment details endpoint failures, and media detail page API failures — ensure meaningful toast messages or error states
+- [x] T128 Run manual validation of all three issue fixes: (1) scan results show-level navigation with TV show library, (2) enrichment run details showing per-media breakdown, (3) media detail page loading files and seasons without errors
+
+**Checkpoint**: All issue fixes validated end-to-end

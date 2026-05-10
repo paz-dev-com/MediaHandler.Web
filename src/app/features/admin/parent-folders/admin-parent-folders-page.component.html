@@ -1,0 +1,116 @@
+<div *transloco="let t" class="parent-folders-page">
+  <div class="parent-folders-page__header">
+    <h2 class="parent-folders-page__title">{{ t('admin.parentFolders.title') }}</h2>
+    <p class="parent-folders-page__subtitle">{{ t('admin.parentFolders.subtitle') }}</p>
+  </div>
+
+  <!-- Status filter -->
+  <div class="parent-folders-page__filters">
+    <p-select
+      [options]="statusFilterOptions"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="selectedStatusFilter()"
+      (ngModelChange)="onStatusFilterChange($event)"
+      [placeholder]="t('admin.parentFolders.filterByStatus')"
+      [showClear]="true"
+    />
+  </div>
+
+  <!-- Table -->
+  <p-table
+    [value]="folders()"
+    [loading]="loading()"
+    [lazy]="true"
+    (onLazyLoad)="onLazyLoad($event)"
+    [paginator]="true"
+    [rows]="20"
+    [totalRecords]="meta().total"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    styleClass="p-datatable-sm"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ t('admin.parentFolders.folderPath') }}</th>
+        <th>{{ t('admin.parentFolders.detectedShowName') }}</th>
+        <th>{{ t('admin.parentFolders.episodeCount') }}</th>
+        <th>{{ t('admin.parentFolders.status') }}</th>
+        <th>{{ t('admin.parentFolders.tmdbAssignment') }}</th>
+        <th>{{ t('admin.parentFolders.actions') }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-folder>
+      <tr>
+        <td>
+          <span
+            class="parent-folders-page__path"
+            [pTooltip]="folder.folderPath"
+            tooltipPosition="top"
+          >
+            {{ folder.folderPath }}
+          </span>
+        </td>
+        <td>{{ folder.detectedShowName }}</td>
+        <td>
+          <span class="parent-folders-page__badge">{{ folder.episodeCount }}</span>
+        </td>
+        <td>
+          <p-tag
+            [value]="t('admin.parentFolders.status' + folder.status)"
+            [severity]="getStatusSeverity(folder.status)"
+          />
+        </td>
+        <td>{{ folder.tmdbTitle ?? '-' }}</td>
+        <td>
+          @if (folder.status !== 'InCollection') {
+            <p-button
+              [label]="t('admin.parentFolders.assignTmdb')"
+              icon="pi pi-link"
+              size="small"
+              severity="secondary"
+              (onClick)="onAssignTmdb(folder)"
+            />
+          }
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loadingbody">
+      <tr>
+        <td colspan="6" class="parent-folders-page__loading">
+          <p-progressSpinner [style]="{ width: '2rem', height: '2rem' }" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">{{ t('admin.parentFolders.emptyMessage') }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Assign TMDB Dialog -->
+  <p-dialog
+    [visible]="assignDialogVisible()"
+    [modal]="true"
+    [draggable]="false"
+    [closable]="true"
+    [style]="{ width: '48rem' }"
+    [header]="
+      t('admin.parentFolders.assignDialogTitle', {
+        folderName: selectedFolder()?.detectedShowName ?? '',
+      })
+    "
+    (visibleChange)="!$event && onAssignDialogClose()"
+  >
+    @if (selectedFolder()) {
+      <app-tmdb-search-panel
+        [initialQuery]="selectedFolder()!.detectedShowName"
+        [mediaTypeFilter]="null"
+        (selected)="onTmdbSelected($event)"
+      />
+    }
+  </p-dialog>
+</div>

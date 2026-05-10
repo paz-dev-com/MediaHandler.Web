@@ -1,0 +1,24 @@
+<div class="episode-item" [class.episode-item--watched]="episode().isWatched">
+  <label class="episode-item__check">
+    <input
+      type="checkbox"
+      [checked]="episode().isWatched"
+      (change)="onToggle($event)"
+      [attr.aria-label]="
+        'S' + season() + 'E' + (episode().episodeNumber ?? '') + ' ' + (episode().name ?? '')
+      "
+    />
+  </label>
+  <div class="episode-item__info">
+    <span class="episode-item__number">E{{ episode().episodeNumber ?? '?' }}</span>
+    <span class="episode-item__name">{{ episode().name ?? '' }}</span>
+    @if (episode().airDate) {
+      <span class="episode-item__date">{{ episode().airDate | slice: 0 : 10 }}</span>
+    }
+    @if (episode().runtime) {
+      <span class="episode-item__runtime"
+        >{{ episode().runtime }} {{ 'media.minutes' | transloco }}</span
+      >
+    }
+  </div>
+</div>

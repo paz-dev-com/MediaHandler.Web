@@ -108,17 +108,19 @@
     [closable]="true"
     [draggable]="false"
   >
-    <app-tmdb-search-panel
-      [initialQuery]="decision.parsedTitle ?? ''"
-      [mediaTypeFilter]="decision.mediaType"
-      (selected)="onTmdbSearchSelected($event, t)"
-    />
+    @if (showTmdbSearch()) {
+      <app-tmdb-search-panel
+        [initialQuery]="decision.parsedTitle ?? ''"
+        [mediaTypeFilter]="decision.kind"
+        (selected)="onTmdbSearchSelected($event, t)"
+      />
+    }
   </p-dialog>
 
   <!-- Rename File Dialog -->
   <app-rename-dialog
     [mode]="'single'"
-    [fileId]="decision.id"
+    [fileId]="decision.mediaFileId"
     [visible]="renameDialogVisible()"
     (visibleChange)="renameDialogVisible.set($event)"
     (renamed)="onFileRenamed()"

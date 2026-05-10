@@ -5,7 +5,7 @@ import { PaginationMeta } from '@core/api/api-response.model';
 export interface AdminUser {
   id: string;
   email: string;
-  name: string;
+  displayName: string | null;
   role: string;
   isActive: boolean;
   createdAt: string;

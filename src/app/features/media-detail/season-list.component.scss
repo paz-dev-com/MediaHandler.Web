@@ -1,0 +1,37 @@
+.season-list {
+  h3 {
+    margin: 0 0 1rem;
+    color: var(--p-text-color);
+  }
+}
+
+.season-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  &__name {
+    font-weight: 600;
+    color: var(--p-text-color);
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__progress,
+  &__date {
+    font-size: 0.8rem;
+    color: var(--p-text-color-secondary);
+  }
+}
+
+:host ::ng-deep .season-progress {
+  height: 4px;
+  margin-top: 0.4rem;
+}
