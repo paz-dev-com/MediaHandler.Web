@@ -1,0 +1,62 @@
+<div class="season-list">
+  <h3>{{ 'media.seasons' | transloco }}</h3>
+
+  @if (!seasons().length) {
+    <p class="text-color-secondary">{{ 'media.noSeasons' | transloco }}</p>
+  } @else {
+    <p-accordion [multiple]="true">
+      @for (season of seasons(); track season.id) {
+        <p-accordion-panel [value]="season.id">
+          <p-accordion-header>
+            <div class="season-header">
+              <span class="season-header__name">{{ season.name }}</span>
+              <div class="season-header__meta">
+                <span class="season-header__progress">
+                  {{ season.watchedCount }}/{{
+                    season.episodeCount ?? (season.episodes ?? []).length
+                  }}
+                  {{
+                    'season.watchedCount'
+                      | transloco
+                        : {
+                            watched: season.watchedCount,
+                            total: season.episodeCount ?? (season.episodes ?? []).length,
+                          }
+                  }}
+                </span>
+                @if (season.airDate) {
+                  <span class="season-header__date">{{ season.airDate | slice: 0 : 4 }}</span>
+                }
+                <p-button
+                  [icon]="isSeasonFullyWatched(season) ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                  [label]="
+                    (isSeasonFullyWatched(season)
+                      ? 'season.markAllUnwatched'
+                      : 'season.markAllWatched'
+                    ) | transloco
+                  "
+                  size="small"
+                  severity="secondary"
+                  variant="text"
+                  (onClick)="onBatchToggle($event, season)"
+                />
+              </div>
+            </div>
+            @if ((season.episodeCount ?? season.episodes.length) > 0) {
+              <p-progressbar [value]="getSeasonProgress(season)" styleClass="season-progress" />
+            }
+          </p-accordion-header>
+          <p-accordion-content>
+            @for (episode of season.episodes ?? []; track episode.id) {
+              <app-episode-item
+                [episode]="episode"
+                [season]="season.seasonNumber"
+                (watchedToggle)="onEpisodeToggle($event, season.id)"
+              />
+            }
+          </p-accordion-content>
+        </p-accordion-panel>
+      }
+    </p-accordion>
+  }
+</div>

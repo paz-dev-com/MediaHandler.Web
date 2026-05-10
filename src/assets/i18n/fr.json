@@ -65,7 +65,10 @@
     "markWatched": "Marquer comme vu",
     "markUnwatched": "Marquer comme non vu",
     "watchedOn": "Vu le",
-    "minutes": "min"
+    "minutes": "min",
+    "seasonsError": "Impossible de charger les saisons. Veuillez réessayer.",
+    "filesError": "Impossible de charger les fichiers.",
+    "seasonsLoading": "Chargement des saisons…"
   },
   "season": {
     "episodeCount": "{{count}} épisodes",
@@ -144,7 +147,8 @@
       "libraryRoots": "Racines de bibliothèque",
       "scanner": "Scanner",
       "review": "Révision",
-      "scanResults": "Résultats de scan"
+      "scanResults": "Résultats de scan",
+      "enrichment": "Enrichissement TMDB"
     },
     "users": {
       "title": "Gestion des utilisateurs",
@@ -230,6 +234,7 @@
       "startedAt": "Démarré le",
       "finishedAt": "Terminé le",
       "historyEmpty": "Aucun scan trouvé.",
+      "viewResults": "Voir les résultats",
       "scanStarted": "Scan démarré avec succès.",
       "scanCancelled": "Scan annulé.",
       "modes": {
@@ -311,6 +316,14 @@
         "dismissedSuccess": "Élément ignoré.",
         "deletedSuccess": "Élément supprimé.",
         "reopenedSuccess": "Élément rouvert."
+      },
+      "bulkResolve": {
+        "checkboxLabel": "Appliquer à tous les {{count}} épisodes du même dossier",
+        "successToast": "{{count}} éléments de révision résolus avec succès",
+        "confirmTitle": "Résolution groupée",
+        "confirmMessage": "Appliquer cette action à tous les {{count}} éléments ouverts dans le même dossier ?",
+        "rootFolderLabel": "Dossier racine : {{folder}}",
+        "rootFolderHint": "S'applique à tous les éléments sous : {{folder}}"
       }
     },
     "scanResults": {
@@ -333,6 +346,13 @@
       "reassignSuccess": "Entrée TMDB réassignée avec succès.",
       "searchTmdb": "Rechercher TMDB",
       "searchTmdbTitle": "Rechercher TMDB",
+      "assignTmdb": "Assigner TMDB",
+      "assignedTitle": "Entrée TMDB assignée",
+      "changeTmdb": "Changer TMDB",
+      "episodes": "Épisodes",
+      "episodeCount": "{{count}} épisodes",
+      "tmdbAssigned": "TMDB assigné",
+      "tmdbNotAssigned": "Non assigné",
       "viewMode": "Mode d'affichage",
       "tableView": "Vue tableau",
       "groupView": "Groupes de séries",
@@ -345,6 +365,7 @@
       "decision": "Décision",
       "assignedEntry": "Entrée assignée",
       "noGroups": "Aucun groupe de séries trouvé",
+      "assigning": "Attribution TMDB en cours…",
       "decisionTypes": {
         "Added": "Ajouté",
         "Updated": "Mis à jour",
@@ -362,7 +383,14 @@
         "decisionType": "Décision",
         "assignedEntry": "TMDB assigné",
         "decidedAt": "Décidé le"
-      }
+      },
+      "groupHeader": "Groupe de série",
+      "showName": "Nom de la série",
+      "groupedView": "Vue groupée",
+      "flatView": "Vue liste",
+      "assignToAll": "Assigner à tous les épisodes",
+      "showCandidates": "Candidats TMDB pour la série",
+      "reassignEnriched": "Réassigner (déjà enrichi)"
     },
     "tmdbSearch": {
       "search": "Rechercher",
@@ -385,23 +413,64 @@
     "enrichment": {
       "title": "Enrichissement TMDB",
       "subtitle": "Enrichir les entrées média avec les métadonnées TMDB en lot",
+      "description": "L'enrichissement TMDB récupère les métadonnées détaillées pour les entrées média qui ont déjà été associées à TMDB lors du scan.",
+      "descriptionDetail": "Cela inclut le casting, l'équipe, les genres, les notes et les images. Seules les entrées nouvelles, modifiées ou pas encore enrichies seront traitées.",
       "start": "Démarrer l'enrichissement TMDB",
+      "startButton": "Démarrer l'enrichissement TMDB",
       "confirmTitle": "Démarrer l'enrichissement",
       "confirmMessage": "Êtes-vous sûr de vouloir lancer un enrichissement TMDB en lot ?",
       "status": "Statut de l'enrichissement",
+      "statusLabel": "Statut",
+      "statusRunning": "En cours",
+      "statusCompleted": "Terminé",
+      "statusFailed": "Enrichissement échoué",
+      "summaryTitle": "Résumé de l'enrichissement",
+      "resultsTitle": "Résultats de l'enrichissement",
       "running": "En cours",
       "completed": "Terminé",
       "failed": "Échoué",
       "cancelled": "Annulé",
-      "summary": "Résumé de l'enrichissement",
+      "summary": {
+        "newCount": "Nouvelles entrées",
+        "changedCount": "Entrées modifiées",
+        "skippedCount": "Déjà à jour",
+        "totalEligible": "Total éligible"
+      },
       "newEntries": "Nouvelles entrées",
       "changedEntries": "Entrées modifiées",
       "skipped": "Ignorées",
+      "skippedEntries": "Ignorées",
       "enriched": "Enrichies",
       "failedEntries": "Échouées",
       "errors": "Erreurs",
       "nothingToEnrich": "Rien à enrichir — toutes les entrées sont à jour",
-      "empty": "Aucune donnée d'enrichissement disponible"
+      "empty": "Aucune donnée d'enrichissement disponible",
+      "historyTitle": "Historique des enrichissements",
+      "historyEmpty": "Aucun enrichissement n'a encore été enregistré.",
+      "historyColumns": {
+        "status": "Statut",
+        "startedAt": "Démarré le",
+        "finishedAt": "Terminé le",
+        "enriched": "Enrichies",
+        "failed": "Échouées",
+        "skipped": "Ignorées"
+      },
+      "errorDetails": "Détails des erreurs",
+      "errorMediaId": "ID Média",
+      "errorTitle": "Titre",
+      "errorMessage": "Erreur",
+      "mediaDetails": {
+        "header": "Détails d’enrichissement par média",
+        "title": "Titre",
+        "tmdbId": "ID TMDB",
+        "type": "Type",
+        "status": "Statut",
+        "fileCount": "Fichiers",
+        "files": "Noms de fichiers",
+        "statusEnriched": "Enrichi",
+        "statusFailed": "Échoué",
+        "statusSkipped": "Ignoré"
+      }
     },
     "rename": {
       "singleTitle": "Renommer le fichier",
@@ -420,6 +489,26 @@
       "loading": "Chargement de l'aperçu...",
       "button": "Renommer le fichier",
       "batchButton": "Renommer tous les épisodes"
+    },
+    "parentFolders": {
+      "tab": "Dossiers Parents",
+      "title": "Validation des dossiers parents",
+      "subtitle": "Assigner des entrées TMDB aux dossiers parents de séries découverts",
+      "folderPath": "Chemin du dossier",
+      "detectedShowName": "Série détectée",
+      "episodeCount": "Épisodes",
+      "status": "Statut",
+      "tmdbAssignment": "Assignation TMDB",
+      "actions": "Actions",
+      "assignTmdb": "Assigner TMDB",
+      "statusAll": "Tous",
+      "statusNotAssigned": "Non assigné",
+      "statusAssigned": "Assigné",
+      "statusInCollection": "Dans la collection",
+      "emptyMessage": "Aucun dossier parent trouvé. Lancez un scan pour découvrir les répertoires de séries.",
+      "assignDialogTitle": "Assigner TMDB à {{folderName}}",
+      "assignSuccess": "TMDB assigné avec succès à {{folderName}}",
+      "filterByStatus": "Filtrer par statut"
     }
   }
 }

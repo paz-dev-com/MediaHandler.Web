@@ -40,8 +40,20 @@ export class ApiService {
     return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${path}`, body, { params: httpParams });
   }
 
-  put<T>(path: string, body: unknown): Observable<ApiResponse<T>> {
-    return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${path}`, body);
+  put<T>(
+    path: string,
+    body: unknown,
+    params?: Record<string, string | number | boolean | null | undefined>,
+  ): Observable<ApiResponse<T>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== null && value !== undefined) {
+          httpParams = httpParams.set(key, String(value));
+        }
+      }
+    }
+    return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${path}`, body, { params: httpParams });
   }
 
   delete<T>(path: string): Observable<ApiResponse<T>> {

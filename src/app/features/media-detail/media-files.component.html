@@ -1,0 +1,40 @@
+<div class="media-files">
+  <h3>{{ 'media.files' | transloco }}</h3>
+
+  @if (!files().length) {
+    <p class="text-color-secondary">{{ 'media.noFiles' | transloco }}</p>
+  } @else {
+    <ul class="media-files__list">
+      @for (file of files(); track file.id) {
+        <li class="media-files__item">
+          <div class="media-files__path">
+            <i class="pi pi-file mr-2 text-color-secondary"></i>
+            <span class="media-files__path-text" [title]="file.filePath">{{ file.filePath }}</span>
+          </div>
+          <div class="media-files__meta">
+            @if (file.format) {
+              <p-tag
+                [value]="file.format.toUpperCase()"
+                severity="secondary"
+                styleClass="text-xs"
+              />
+            }
+            @if (file.resolution) {
+              <p-tag [value]="file.resolution" severity="info" styleClass="text-xs" />
+            }
+            <span class="text-sm text-color-secondary">{{ file.fileSizeBytes | fileSize }}</span>
+            <p-button
+              icon="pi pi-copy"
+              size="small"
+              variant="text"
+              severity="secondary"
+              [pTooltip]="'common.copyPath' | transloco"
+              [attr.aria-label]="'common.copyPath' | transloco"
+              (onClick)="copyPath(file.filePath)"
+            />
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>

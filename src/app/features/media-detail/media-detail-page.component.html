@@ -74,10 +74,10 @@
           }
         </div>
 
-        @if (media.genres.length) {
+        @if (media.genres?.length) {
           <div class="detail-page__genres">
-            @for (genre of media.genres; track genre.name) {
-              <p-chip [label]="genre.name" />
+            @for (genre of media.genres; track genre) {
+              <p-chip [label]="genre" />
             }
           </div>
         }
@@ -108,17 +108,27 @@
     </div>
 
     <div class="detail-page__files">
-      <app-media-files [files]="media.mediaFiles" />
+      @if (service.filesError()) {
+        <app-error-message [message]="service.filesError()!" (retry)="reload()" />
+      } @else {
+        <app-media-files [files]="media.files ?? []" />
+      }
     </div>
 
     @if (media.type === MediaType.TvShow) {
       <div class="detail-page__seasons">
-        <app-season-list
-          [seasons]="service.seasons()"
-          [mediaId]="media.id"
-          (episodeWatchedToggle)="onEpisodeToggle($event)"
-          (seasonBatchToggle)="onSeasonBatchToggle($event)"
-        />
+        @if (service.seasonsLoading()) {
+          <p class="text-color-secondary">{{ 'media.seasonsLoading' | transloco }}</p>
+        } @else if (service.seasonsError()) {
+          <app-error-message [message]="service.seasonsError()!" (retry)="reload()" />
+        } @else {
+          <app-season-list
+            [seasons]="service.seasons()"
+            [mediaId]="media.id"
+            (episodeWatchedToggle)="onEpisodeToggle($event)"
+            (seasonBatchToggle)="onSeasonBatchToggle($event)"
+          />
+        }
       </div>
     }
   </div>

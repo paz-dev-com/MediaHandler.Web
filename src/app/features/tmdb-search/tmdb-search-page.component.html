@@ -31,11 +31,11 @@
       </div>
     } @else {
       <div class="search-page__results">
-        @for (result of searchService.results(); track result.tmdbId) {
+        @for (result of searchService.results(); track result.id) {
           <app-tmdb-result-card
             [result]="result"
-            [importing]="isImporting(result.tmdbId)"
-            [wishlisting]="isWishlisting(result.tmdbId)"
+            [importing]="isImporting(result.id)"
+            [wishlisting]="isWishlisting(result.id)"
             (importClick)="onImport($event)"
             (wishlistClick)="onWishlist($event)"
           />

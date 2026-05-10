@@ -35,6 +35,11 @@ export class AdminLayoutComponent implements OnInit {
     { labelKey: 'admin.nav.review', route: '/admin/review', value: 'review' },
     { labelKey: 'admin.nav.scanResults', route: '/admin/scan-results', value: 'scan-results' },
     { labelKey: 'admin.nav.enrichment', route: '/admin/enrichment', value: 'enrichment' },
+    {
+      labelKey: 'admin.parentFolders.tab',
+      route: '/admin/parent-folders',
+      value: 'parent-folders',
+    },
   ];
 
   readonly activeTab = signal<string>('dashboard');

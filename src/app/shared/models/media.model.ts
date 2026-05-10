@@ -1,11 +1,5 @@
 import { MediaType } from './enums';
-import { TvSeason } from './tv.model';
 import { UserMedia } from './user.model';
-
-export interface MediaGenre {
-  mediaId: string;
-  name: string;
-}
 
 export interface MediaFile {
   id: string;
@@ -30,10 +24,11 @@ export interface Media {
   voteAverage: number | null;
   voteCount: number | null;
   language: string | null;
-  genres: MediaGenre[];
-  mediaFiles: MediaFile[];
+  /** Backend returns an array of genre name strings */
+  genres: string[] | null;
+  /** Backend returns this as "files" (not "mediaFiles") */
+  files: MediaFile[] | null;
   userMedia: UserMedia | null;
-  tvSeasons: TvSeason[];
   createdAt: string;
   updatedAt: string;
 }

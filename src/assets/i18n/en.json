@@ -65,7 +65,10 @@
     "markWatched": "Mark as watched",
     "markUnwatched": "Mark as unwatched",
     "watchedOn": "Watched on",
-    "minutes": "min"
+    "minutes": "min",
+    "seasonsError": "Failed to load seasons. Please try again.",
+    "filesError": "Failed to load files.",
+    "seasonsLoading": "Loading seasons…"
   },
   "season": {
     "episodeCount": "{{count}} episodes",
@@ -144,7 +147,8 @@
       "libraryRoots": "Library Roots",
       "scanner": "Scanner",
       "review": "Review",
-      "scanResults": "Scan Results"
+      "scanResults": "Scan Results",
+      "enrichment": "TMDB Enrichment"
     },
     "users": {
       "title": "User Management",
@@ -218,6 +222,7 @@
       "startedAt": "Started",
       "finishedAt": "Finished",
       "historyEmpty": "No scans found.",
+      "viewResults": "View Results",
       "scanStarted": "Scan started successfully.",
       "scanCancelled": "Scan cancelled.",
       "modes": {
@@ -311,6 +316,14 @@
         "dismissedSuccess": "Item dismissed.",
         "deletedSuccess": "Item deleted.",
         "reopenedSuccess": "Item reopened."
+      },
+      "bulkResolve": {
+        "checkboxLabel": "Apply to all {{count}} episodes in the same folder",
+        "successToast": "{{count}} review items resolved successfully",
+        "confirmTitle": "Bulk Resolve",
+        "confirmMessage": "Apply this action to all {{count}} open review items in the same folder?",
+        "rootFolderLabel": "Root folder: {{folder}}",
+        "rootFolderHint": "Applies to all items under: {{folder}}"
       }
     },
     "scanResults": {
@@ -333,6 +346,13 @@
       "reassignSuccess": "TMDB entry reassigned successfully.",
       "searchTmdb": "Search TMDB",
       "searchTmdbTitle": "Search TMDB",
+      "assignTmdb": "Assign TMDB",
+      "assignedTitle": "Assigned TMDB Entry",
+      "changeTmdb": "Change TMDB",
+      "episodes": "Episodes",
+      "episodeCount": "{{count}} episodes",
+      "tmdbAssigned": "TMDB Assigned",
+      "tmdbNotAssigned": "Not Assigned",
       "viewMode": "View Mode",
       "tableView": "Table View",
       "groupView": "TV Show Groups",
@@ -345,6 +365,7 @@
       "decision": "Decision",
       "assignedEntry": "Assigned Entry",
       "noGroups": "No TV show groups found",
+      "assigning": "Assigning TMDB…",
       "decisionTypes": {
         "Added": "Added",
         "Updated": "Updated",
@@ -362,7 +383,14 @@
         "decisionType": "Decision",
         "assignedEntry": "Assigned TMDB",
         "decidedAt": "Decided At"
-      }
+      },
+      "groupHeader": "Show Group",
+      "showName": "Show Name",
+      "groupedView": "Grouped View",
+      "flatView": "Flat View",
+      "assignToAll": "Assign to all episodes",
+      "showCandidates": "TMDB Candidates for Show",
+      "reassignEnriched": "Reassign (already enriched)"
     },
     "tmdbSearch": {
       "search": "Search",
@@ -385,23 +413,64 @@
     "enrichment": {
       "title": "TMDB Enrichment",
       "subtitle": "Batch enrich media entries with TMDB metadata",
+      "description": "TMDB Enrichment fetches detailed metadata for media entries that have already been matched to TMDB during scanning.",
+      "descriptionDetail": "This includes cast, crew, genres, ratings, and images. Only entries that are new, changed, or not yet enriched will be processed.",
       "start": "Start TMDB Enrichment",
+      "startButton": "Start TMDB Enrichment",
       "confirmTitle": "Start Enrichment",
       "confirmMessage": "Are you sure you want to start a batch TMDB enrichment scan?",
       "status": "Enrichment Status",
+      "statusLabel": "Status",
+      "statusRunning": "Running",
+      "statusCompleted": "Completed",
+      "statusFailed": "Enrichment failed",
+      "summaryTitle": "Enrichment Summary",
+      "resultsTitle": "Enrichment Results",
       "running": "Running",
       "completed": "Completed",
       "failed": "Failed",
       "cancelled": "Cancelled",
-      "summary": "Enrichment Summary",
+      "summary": {
+        "newCount": "New Entries",
+        "changedCount": "Changed Entries",
+        "skippedCount": "Already Up-to-date",
+        "totalEligible": "Total Eligible"
+      },
       "newEntries": "New Entries",
       "changedEntries": "Changed Entries",
       "skipped": "Skipped",
+      "skippedEntries": "Skipped",
       "enriched": "Enriched",
       "failedEntries": "Failed",
       "errors": "Errors",
       "nothingToEnrich": "Nothing to enrich — all entries are up to date",
-      "empty": "No enrichment data available"
+      "empty": "No enrichment data available",
+      "historyTitle": "Enrichment History",
+      "historyEmpty": "No enrichment runs have been recorded yet.",
+      "historyColumns": {
+        "status": "Status",
+        "startedAt": "Started At",
+        "finishedAt": "Finished At",
+        "enriched": "Enriched",
+        "failed": "Failed",
+        "skipped": "Skipped"
+      },
+      "errorDetails": "Error Details",
+      "errorMediaId": "Media ID",
+      "errorTitle": "Title",
+      "errorMessage": "Error",
+      "mediaDetails": {
+        "header": "Per-Media Enrichment Details",
+        "title": "Title",
+        "tmdbId": "TMDB ID",
+        "type": "Type",
+        "status": "Status",
+        "fileCount": "Files",
+        "files": "File Names",
+        "statusEnriched": "Enriched",
+        "statusFailed": "Failed",
+        "statusSkipped": "Skipped"
+      }
     },
     "rename": {
       "singleTitle": "Rename File",
@@ -420,6 +489,26 @@
       "loading": "Loading preview...",
       "button": "Rename File",
       "batchButton": "Rename All Episodes"
+    },
+    "parentFolders": {
+      "tab": "Parent Folders",
+      "title": "Parent Folder Validation",
+      "subtitle": "Assign TV show TMDB entries to discovered parent folders",
+      "folderPath": "Folder Path",
+      "detectedShowName": "Detected Show",
+      "episodeCount": "Episodes",
+      "status": "Status",
+      "tmdbAssignment": "TMDB Assignment",
+      "actions": "Actions",
+      "assignTmdb": "Assign TMDB",
+      "statusAll": "All",
+      "statusNotAssigned": "Not Assigned",
+      "statusAssigned": "Assigned",
+      "statusInCollection": "In Collection",
+      "emptyMessage": "No parent folders found. Run a scan to discover TV show directories.",
+      "assignDialogTitle": "Assign TMDB to {{folderName}}",
+      "assignSuccess": "TMDB assigned successfully to {{folderName}}",
+      "filterByStatus": "Filter by status"
     }
   }
 }

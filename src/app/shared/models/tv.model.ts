@@ -1,5 +1,3 @@
-import { UserEpisode } from './user.model';
-
 export interface TvEpisode {
   id: string;
   seasonId: string;
@@ -9,7 +7,8 @@ export interface TvEpisode {
   stillPath: string | null;
   airDate: string | null;
   runtime: number | null;
-  userEpisode: UserEpisode | null;
+  /** Backend returns isWatched as a flat boolean (not nested userEpisode) */
+  isWatched: boolean;
 }
 
 export interface TvSeason {
@@ -21,6 +20,7 @@ export interface TvSeason {
   airDate: string | null;
   posterPath: string | null;
   episodeCount: number | null;
-  tvEpisodes: TvEpisode[];
+  /** Backend returns episodes as "episodes" (not "tvEpisodes") */
+  episodes: TvEpisode[];
   watchedCount: number;
 }

@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
 import { TvShowGroup } from '@shared/models/scan-decision.model';
@@ -34,6 +35,7 @@ import { RenameDialogComponent } from '../shared/rename-dialog.component';
     ChipModule,
     DialogModule,
     MessageModule,
+    ProgressSpinnerModule,
     TagModule,
     TmdbSearchPanelComponent,
     RenameDialogComponent,
@@ -52,6 +54,7 @@ export class TvShowGroupListComponent {
 
   readonly dialogVisible = signal(false);
   readonly activeGroup = signal<TvShowGroup | null>(null);
+  readonly assigning = signal(false);
 
   readonly renameDialogVisible = signal(false);
   readonly selectedGroupForRename = signal<TvShowGroup | null>(null);
@@ -66,6 +69,7 @@ export class TvShowGroupListComponent {
   closeDialog(): void {
     this.dialogVisible.set(false);
     this.activeGroup.set(null);
+    this.assigning.set(false);
   }
 
   openBatchRenameDialog(group: TvShowGroup): void {
@@ -81,8 +85,10 @@ export class TvShowGroupListComponent {
     const group = this.activeGroup();
     if (!group) return;
 
-    this.scanDecisionService.assignTvGroup(group.groupId, result.tmdbId).subscribe({
+    this.assigning.set(true);
+    this.scanDecisionService.assignTvGroup(group.groupId, result.id).subscribe({
       next: (updated) => {
+        this.assigning.set(false);
         this.messageService.add({
           severity: 'success',
           summary: 'TMDB Assigned',
@@ -92,11 +98,8 @@ export class TvShowGroupListComponent {
         this.groupAssigned.emit(updated);
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Assignment Failed',
-          detail: 'Could not assign TMDB ID to TV show group.',
-        });
+        // Error toast is handled by the global error interceptor
+        this.assigning.set(false);
       },
     });
   }

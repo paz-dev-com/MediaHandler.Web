@@ -60,7 +60,7 @@ export class TmdbSearchPageComponent implements OnInit, OnDestroy {
 
   onImport(result: TmdbSearchResult): void {
     const mediaType = result.mediaType === 'movie' ? 'movie' : 'tv';
-    this.searchService.import(result.tmdbId, mediaType);
+    this.searchService.import(result.id, mediaType);
     this.messageService.add({
       severity: 'info',
       summary: this.transloco.translate('tmdb.importStarted'),
@@ -70,7 +70,7 @@ export class TmdbSearchPageComponent implements OnInit, OnDestroy {
 
   onWishlist(result: TmdbSearchResult): void {
     this.wishlistService.addItem({
-      tmdbId: result.tmdbId,
+      tmdbId: result.id,
       title: result.title,
       posterPath: result.posterPath ?? undefined,
       releaseDate: result.releaseDate ?? undefined,

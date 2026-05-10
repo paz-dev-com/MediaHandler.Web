@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -20,11 +21,17 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
 })
 export class ScanStatusComponent {
   private readonly scanService = inject(AdminScanService);
+  private readonly router = inject(Router);
 
   readonly activeScan = this.scanService.activeScan;
+  readonly ScanStatus = ScanStatus;
 
   isRunning(scan: ScanRunDetail): boolean {
     return scan.status === ScanStatus.Running || scan.status === ScanStatus.Pending;
+  }
+
+  isCompleted(scan: ScanRunDetail): boolean {
+    return scan.status === ScanStatus.Completed;
   }
 
   getStatusSeverity(status: ScanStatus): TagSeverity {
@@ -46,5 +53,9 @@ export class ScanStatusComponent {
 
   onCancel(scan: ScanRunDetail): void {
     this.scanService.cancelScan(scan.id);
+  }
+
+  navigateToResults(scanId: string): void {
+    this.router.navigate(['/admin/scan-results', scanId]);
   }
 }

@@ -1,6 +1,6 @@
 <div class="tv-show-group-list" *transloco="let t">
   @if (groups.length === 0) {
-    <p-message severity="info" [text]="t('admin.scanResults.noTvGroups')" />
+    <p-message severity="info" [text]="t('admin.scanResults.noGroups')" />
   } @else {
     <p-accordion [multiple]="true">
       @for (group of groups; track group.groupId) {
@@ -77,7 +77,12 @@
     [style]="{ width: '640px' }"
     [draggable]="false"
   >
-    @if (activeGroup()) {
+    @if (assigning()) {
+      <div class="tv-show-group-list__assigning">
+        <p-progressSpinner [style]="{ width: '2rem', height: '2rem' }" />
+        <span>{{ t('admin.scanResults.assigning') }}</span>
+      </div>
+    } @else if (activeGroup()) {
       <app-tmdb-search-panel
         [initialQuery]="activeGroup()!.parsedShowName"
         [mediaTypeFilter]="MediaType.TvShow"
@@ -90,6 +95,7 @@
   <app-rename-dialog
     [mode]="'batch'"
     [groupId]="selectedGroupForRename()?.groupId ?? null"
+    [scanId]="scanId"
     [visible]="renameDialogVisible()"
     (visibleChange)="renameDialogVisible.set($event)"
     (renamed)="onGroupRenamed()"

@@ -60,6 +60,13 @@ export const adminRoutes: Routes = [
             (m) => m.AdminEnrichmentPageComponent,
           ),
       },
+      {
+        path: 'parent-folders',
+        loadComponent: () =>
+          import('./parent-folders/admin-parent-folders-page.component').then(
+            (m) => m.AdminParentFoldersPageComponent,
+          ),
+      },
     ],
   },
 ];

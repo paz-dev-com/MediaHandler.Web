@@ -3,7 +3,7 @@ import { ApiService } from '@core/api/api.service';
 import { TranslocoService } from '@jsverse/transloco';
 
 export interface TmdbSearchResult {
-  tmdbId: number;
+  id: number;
   title: string;
   overview: string | null;
   posterPath: string | null;

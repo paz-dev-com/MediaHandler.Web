@@ -32,6 +32,7 @@ export class RenameDialogComponent implements OnChanges {
   @Input() mode: 'single' | 'batch' = 'single';
   @Input() fileId: string | null = null;
   @Input() groupId: string | null = null;
+  @Input() scanId: string = '';
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() renamed = new EventEmitter<void>();

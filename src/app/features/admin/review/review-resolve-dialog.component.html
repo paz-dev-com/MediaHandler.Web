@@ -117,7 +117,8 @@
             {{ t('admin.review.resolveDialog.tmdbSearch') }}
           </h4>
           <app-tmdb-search-panel
-            [initialQuery]="item?.parsedTitle ?? ''"
+            [initialQuery]="item.parsedTitle ?? ''"
+            [mediaTypeFilter]="tmdbMediaTypeFilter()"
             (selected)="onTmdbSearchSelected($event, t)"
           />
         </div>
@@ -126,6 +127,17 @@
   }
 
   <ng-template pTemplate="footer">
+    @if (siblingCount() > 0) {
+      <div class="review-resolve-dialog__bulk-resolve">
+        <p-checkbox [(ngModel)]="bulkResolve" [binary]="true" [inputId]="'bulkResolveCheck'" />
+        <label for="bulkResolveCheck">
+          {{ t('admin.review.bulkResolve.checkboxLabel', { count: siblingCount() }) }}
+        </label>
+        <span class="review-resolve-dialog__bulk-hint">
+          {{ t('admin.review.bulkResolve.rootFolderHint', { folder: parentFolderPath() }) }}
+        </span>
+      </div>
+    }
     <p-button
       [label]="t('admin.review.resolveDialog.assign')"
       icon="pi pi-check"
