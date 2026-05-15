@@ -1,30 +1,67 @@
-<nav class="sidebar" [class.sidebar--collapsed]="collapsed()">
-  <button
-    class="sidebar__toggle p-button p-button-text p-button-rounded"
-    (click)="toggleCollapse()"
-    [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+<!-- Desktop / tablet sidebar -->
+@if (mode() !== 'mobile') {
+  <nav
+    class="sidebar"
+    [attr.data-mode]="mode()"
+    [@sidebarState]="mode()"
+    [attr.aria-label]="'a11y.mainNav' | transloco"
+    role="navigation"
   >
-    <i [class]="collapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
-  </button>
+    <!-- Collapse toggle -->
+    <button
+      class="sidebar__toggle"
+      (click)="toggleCollapse()"
+      [attr.aria-label]="
+        mode() === 'expanded' ? ('a11y.closeNav' | transloco) : ('a11y.openNav' | transloco)
+      "
+      [title]="mode() === 'expanded' ? ('a11y.closeNav' | transloco) : ('a11y.openNav' | transloco)"
+    >
+      <i [class]="mode() === 'expanded' ? 'pi pi-chevron-left' : 'pi pi-chevron-right'"></i>
+    </button>
 
-  <ul class="sidebar__nav" role="listbox">
+    <!-- Navigation links -->
+    <ul class="sidebar__nav" role="list">
+      @for (item of navItems(); track item.route) {
+        <li>
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="sidebar__link--active"
+            [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+            class="sidebar__link"
+            [attr.aria-label]="item.labelKey | transloco"
+            [pTooltip]="mode() === 'collapsed' ? (item.labelKey | transloco) : ''"
+            tooltipPosition="right"
+          >
+            <i [class]="item.icon"></i>
+            @if (mode() === 'expanded') {
+              <span class="sidebar__label">{{ item.labelKey | transloco }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+}
+
+<!-- Mobile bottom navigation bar -->
+@if (mode() === 'mobile') {
+  <nav
+    class="bottom-nav"
+    [@bottomNavEnter]
+    [attr.aria-label]="'a11y.mainNav' | transloco"
+    role="navigation"
+  >
     @for (item of navItems(); track item.route) {
-      <li>
-        <a
-          [routerLink]="item.route"
-          routerLinkActive="sidebar__link--active"
-          [routerLinkActiveOptions]="{ exact: item.route === '/' }"
-          class="sidebar__link"
-          [attr.aria-label]="item.labelKey | transloco"
-          [pTooltip]="collapsed() ? (item.labelKey | transloco) : ''"
-          tooltipPosition="right"
-        >
-          <i [class]="item.icon"></i>
-          @if (!collapsed()) {
-            <span>{{ item.labelKey | transloco }}</span>
-          }
-        </a>
-      </li>
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bottom-nav__item--active"
+        [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+        class="bottom-nav__item"
+        [attr.aria-label]="item.labelKey | transloco"
+      >
+        <i [class]="item.icon"></i>
+        <span class="bottom-nav__label">{{ item.labelKey | transloco }}</span>
+      </a>
     }
-  </ul>
-</nav>
+  </nav>
+}

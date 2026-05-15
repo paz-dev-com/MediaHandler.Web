@@ -1,33 +1,36 @@
 :host {
   display: block;
   height: 100%;
+  flex-shrink: 0;
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  width: 220px;
+  // Width is controlled by @sidebarState Angular Animation
+  min-width: 0;
   height: 100%;
   background: var(--color-bg-surface);
   border-right: 1px solid var(--color-border);
   padding: 1rem 0;
-  transition: width var(--anim-normal) var(--anim-easing);
   overflow: hidden;
+  will-change: width;
 
-  &--collapsed {
-    width: 60px;
-  }
+  // ── Toggle button ──────────────────────────────────────────────────────────
 
   &__toggle {
     align-self: flex-end;
     margin: 0 0.5rem 1rem;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
     background: none;
     border: none;
-    color: var(--color-text-secondary);
-    padding: 0.5rem;
     border-radius: 6px;
-    line-height: 1;
+    color: var(--color-text-secondary);
     transition:
       color var(--anim-fast) var(--anim-easing),
       background var(--anim-fast) var(--anim-easing);
@@ -41,7 +44,19 @@
       outline: 2px solid var(--color-accent);
       outline-offset: 2px;
     }
+
+    i {
+      font-size: 0.875rem;
+    }
   }
+
+  // In collapsed rail mode, center the toggle
+  &[data-mode='collapsed'] .sidebar__toggle {
+    align-self: center;
+    margin: 0 0 1rem;
+  }
+
+  // ── Nav list ───────────────────────────────────────────────────────────────
 
   &__nav {
     list-style: none;
@@ -49,6 +64,8 @@
     padding: 0;
     flex: 1;
   }
+
+  // ── Nav link ───────────────────────────────────────────────────────────────
 
   &__link {
     display: flex;
@@ -58,11 +75,11 @@
     color: var(--color-text-secondary);
     text-decoration: none;
     border-left: 3px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
     transition:
       background var(--anim-fast) var(--anim-easing),
       color var(--anim-fast) var(--anim-easing);
-    white-space: nowrap;
-    overflow: hidden;
 
     i {
       font-size: 1.1rem;
@@ -85,6 +102,95 @@
       border-left-color: var(--color-accent);
       background: rgba(99, 102, 241, 0.1);
       font-weight: 600;
+
+      i {
+        color: var(--color-accent);
+      }
     }
+  }
+
+  // In collapsed rail mode: center icons, hide text
+  &[data-mode='collapsed'] .sidebar__link {
+    justify-content: center;
+    padding: 0.75rem;
+    border-left: 3px solid transparent;
+    gap: 0;
+  }
+
+  &[data-mode='collapsed'] .sidebar__link--active {
+    border-left-color: var(--color-accent);
+  }
+
+  &__label {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// ─── Mobile Bottom Navigation Bar ────────────────────────────────────────────
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: stretch;
+  background: var(--color-bg-surface);
+  border-top: 1px solid var(--color-border);
+  // iOS safe area padding
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.6rem 0.25rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--anim-fast) var(--anim-easing);
+    min-height: 56px;
+
+    i {
+      font-size: 1.2rem;
+      transition: transform var(--anim-fast) var(--anim-easing);
+    }
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: -2px;
+      border-radius: 4px;
+    }
+
+    &--active {
+      color: var(--color-accent);
+
+      i {
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  &__label {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60px;
   }
 }
