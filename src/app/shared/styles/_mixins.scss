@@ -1,0 +1,68 @@
+// Reusable SCSS mixins for the cinematic dark theme redesign.
+// All values use CSS custom properties from design-tokens.md.
+
+// Card hover glow effect
+@mixin card-glow {
+  box-shadow:
+    0 0 0 1px var(--color-border),
+    0 8px 32px var(--color-accent-glow);
+}
+
+// GPU-accelerated shimmer animation overlay
+@mixin shimmer {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer-slide var(--anim-slow, 500ms) var(--anim-easing) infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+@keyframes shimmer-slide {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+// Responsive CSS grid for media cards
+@mixin responsive-grid($min-col-width: 160px) {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax($min-col-width, 1fr));
+  }
+
+  @media (min-width: 1025px) {
+    gap: 1.25rem;
+  }
+}
+
+// Accessible focus ring using accent color
+@mixin focus-ring {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+// Gradient overlay for poster/backdrop images
+@mixin gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--color-poster-gradient);
+  pointer-events: none;
+}

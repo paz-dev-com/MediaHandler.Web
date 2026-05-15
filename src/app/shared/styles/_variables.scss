@@ -1,0 +1,28 @@
+// SCSS variables that reference CSS custom properties.
+// Use these in component stylesheets instead of hard-coded values.
+
+// Colors
+$bg-base: var(--color-bg-base);
+$bg-surface: var(--color-bg-surface);
+$bg-elevated: var(--color-bg-elevated);
+
+$accent: var(--color-accent);
+$accent-hover: var(--color-accent-hover);
+$accent-glow: var(--color-accent-glow);
+
+$text-primary: var(--color-text-primary);
+$text-secondary: var(--color-text-secondary);
+$text-accent: var(--color-text-accent);
+
+$border: var(--color-border);
+$poster-gradient: var(--color-poster-gradient);
+
+// Typography
+$font-display: var(--font-display);
+$font-body: var(--font-body);
+
+// Animation
+$anim-fast: var(--anim-fast);
+$anim-normal: var(--anim-normal);
+$anim-slow: var(--anim-slow);
+$anim-easing: var(--anim-easing);

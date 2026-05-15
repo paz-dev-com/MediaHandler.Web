@@ -86,7 +86,7 @@ export class TvShowGroupListComponent {
     if (!group) return;
 
     this.assigning.set(true);
-    this.scanDecisionService.assignTvGroup(group.groupId, result.id).subscribe({
+    this.scanDecisionService.assignTvGroup(group.groupId, result.id, this.scanId).subscribe({
       next: (updated) => {
         this.assigning.set(false);
         this.messageService.add({
