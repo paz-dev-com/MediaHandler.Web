@@ -12,4 +12,10 @@
   background: var(--color-bg-base);
   color: var(--color-text-primary);
   position: relative; // required for route animation positioning
+
+  // On mobile, add bottom padding so content isn't hidden behind the bottom nav
+  // (bottom nav is 56px + safe-area-inset-bottom)
+  @media (max-width: 767px) {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 1rem);
+  }
 }

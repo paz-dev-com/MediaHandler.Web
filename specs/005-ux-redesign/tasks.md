@@ -80,9 +80,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Refactor `SidebarComponent` to add `BreakpointObserver` (via `@angular/cdk/layout`) with `toSignal()`, computed `NavigationMode` signal ('expanded' | 'collapsed' | 'mobile'), and `@sidebarState` Angular Animation trigger (width 220px↔60px over 200ms, mobile slide-from-bottom) in `src/app/core/layout/sidebar.component.ts`
-- [ ] T024 [US2] Update sidebar template with conditional rendering: desktop sidebar (expanded/collapsed rail) vs mobile bottom navigation bar, animated icon transitions, and active route highlighting with accent color in `src/app/core/layout/sidebar.component.html`
-- [ ] T025 [US2] Restyle sidebar with dark theme (`--color-bg-surface` background, `--color-border` dividers, `--color-accent` active state), mobile bottom nav bar styles (fixed bottom, horizontal icon layout, safe-area padding), and collapsed rail styles (60px width, centered icons) in `src/app/core/layout/sidebar.component.scss`
+- [x] T023 [US2] Refactor `SidebarComponent` to add `BreakpointObserver` (via `@angular/cdk/layout`) with `toSignal()`, computed `NavigationMode` signal ('expanded' | 'collapsed' | 'mobile'), and `@sidebarState` Angular Animation trigger (width 220px↔60px over 200ms, mobile slide-from-bottom) in `src/app/core/layout/sidebar.component.ts`
+- [x] T024 [US2] Update sidebar template with conditional rendering: desktop sidebar (expanded/collapsed rail) vs mobile bottom navigation bar, animated icon transitions, and active route highlighting with accent color in `src/app/core/layout/sidebar.component.html`
+- [x] T025 [US2] Restyle sidebar with dark theme (`--color-bg-surface` background, `--color-border` dividers, `--color-accent` active state), mobile bottom nav bar styles (fixed bottom, horizontal icon layout, safe-area padding), and collapsed rail styles (60px width, centered icons) in `src/app/core/layout/sidebar.component.scss`
 
 **Checkpoint**: Navigation shell is fully responsive: desktop sidebar with expand/collapse, mobile bottom nav. Route transitions animate between pages. Can be tested independently.
 
