@@ -1,7 +1,68 @@
 .season-list {
-  h3 {
+  > h3 {
     margin: 0 0 1rem;
-    color: var(--p-text-color);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+  }
+
+  // Empty state
+  > p {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+  }
+}
+
+// Force accordion internals to use our dark palette —
+// belt-and-suspenders in case PrimeNG token injection wins
+:host ::ng-deep {
+  .p-accordionpanel {
+    border-color: var(--color-border) !important;
+  }
+
+  .p-accordionheader {
+    background: var(--color-bg-surface) !important;
+    color: var(--color-text-secondary) !important;
+    border-color: var(--color-border) !important;
+
+    &:hover {
+      background: var(--color-bg-elevated) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    // Active (expanded) state
+    &[aria-expanded='true'] {
+      background: var(--color-bg-surface) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    // Toggle chevron icon
+    .p-accordionheader-toggle-icon {
+      color: var(--color-text-secondary) !important;
+    }
+  }
+
+  .p-accordioncontent-content {
+    background: var(--color-bg-elevated) !important;
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border) !important;
+    padding: 0.75rem 1.125rem;
+  }
+
+  // Progress bar inside accordion
+  .season-progress {
+    height: 4px;
+    margin-top: 0.4rem;
+
+    .p-progressbar-value {
+      background: var(--color-accent) !important;
+    }
+
+    .p-progressbar {
+      background: var(--color-bg-elevated) !important;
+    }
   }
 }
 
@@ -10,28 +71,39 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 
   &__name {
     font-weight: 600;
-    color: var(--p-text-color);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    flex: 1;
   }
 
   &__meta {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
   }
 
-  &__progress,
-  &__date {
+  &__progress {
     font-size: 0.8rem;
-    color: var(--p-text-color-secondary);
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
   }
-}
 
-:host ::ng-deep .season-progress {
-  height: 4px;
-  margin-top: 0.4rem;
+  &__date {
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+  }
 }

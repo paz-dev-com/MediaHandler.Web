@@ -25,7 +25,10 @@ if (environment.auth0.audience) {
   authParams['audience'] = environment.auth0.audience;
 }
 
-// Cinematic dark theme preset based on Aura with Indigo accent palette
+// Cinematic dark theme preset based on Aura with Indigo accent palette.
+// All semantic colorScheme.light tokens are overridden to dark values so that
+// PrimeNG's runtime CSS variable injection produces dark backgrounds/text,
+// regardless of CSS cascade order.
 const CinematicPreset = definePreset(Aura, {
   primitive: {
     indigo: {
@@ -58,8 +61,9 @@ const CinematicPreset = definePreset(Aura, {
     },
     colorScheme: {
       light: {
+        // Surface scale remapped to cinematic dark palette
         surface: {
-          0: '#ffffff',
+          0: '#141420',
           50: '#0a0a0f',
           100: '#141420',
           200: '#1e1e2e',
@@ -83,6 +87,93 @@ const CinematicPreset = definePreset(Aura, {
           focusBackground: 'rgba(99, 102, 241, 0.24)',
           color: '#f5f5f7',
           focusColor: '#f5f5f7',
+        },
+        // Text tokens — overridden so all components get light text on dark bg
+        text: {
+          color: '#f5f5f7',
+          hoverColor: '#f5f5f7',
+          mutedColor: '#a1a1aa',
+          hoverMutedColor: '#f5f5f7',
+        },
+        // Content background — this is what accordion, panels, overlays use
+        content: {
+          background: '#141420',
+          hoverBackground: '#1e1e2e',
+          borderColor: 'rgba(255, 255, 255, 0.08)',
+          color: '#f5f5f7',
+        },
+        // Form fields (inputs, selects, textareas)
+        formField: {
+          background: '#1e1e2e',
+          disabledBackground: '#0a0a0f',
+          filledBackground: '#1e1e2e',
+          filledFocusBackground: '#1e1e2e',
+          borderColor: 'rgba(255, 255, 255, 0.08)',
+          hoverBorderColor: '#818cf8',
+          focusBorderColor: '#6366f1',
+          invalidBorderColor: '#ef4444',
+          color: '#f5f5f7',
+          disabledColor: '#a1a1aa',
+          placeholderColor: '#a1a1aa',
+          iconColor: '#a1a1aa',
+          shadow: 'none',
+        },
+        // Overlay panels (select dropdown, popover, dialog)
+        overlay: {
+          select: {
+            background: '#141420',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+            borderRadius: '8px',
+          },
+          popover: {
+            background: '#141420',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+            borderRadius: '8px',
+            color: '#f5f5f7',
+          },
+          modal: {
+            background: '#141420',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+            borderRadius: '8px',
+            color: '#f5f5f7',
+          },
+          navigation: {
+            background: '#141420',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+            borderRadius: '8px',
+            color: '#f5f5f7',
+          },
+        },
+        // List options (dropdown items, multiselect, autocomplete)
+        list: {
+          option: {
+            focusBackground: '#1e1e2e',
+            selectedBackground: 'rgba(99, 102, 241, 0.15)',
+            selectedFocusBackground: 'rgba(99, 102, 241, 0.25)',
+            color: '#f5f5f7',
+            focusColor: '#f5f5f7',
+            selectedColor: '#818cf8',
+            selectedFocusColor: '#818cf8',
+          },
+          optionGroup: {
+            background: '#0a0a0f',
+            color: '#a1a1aa',
+          },
+        },
+        // Navigation items (menubar, breadcrumb, etc.)
+        navigation: {
+          item: {
+            focusBackground: '#1e1e2e',
+            activeBackground: 'rgba(99, 102, 241, 0.1)',
+            color: '#a1a1aa',
+            focusColor: '#f5f5f7',
+            activeColor: '#6366f1',
+            icon: {
+              color: '#a1a1aa',
+              focusColor: '#f5f5f7',
+              activeColor: '#6366f1',
+            },
+          },
         },
       },
     },

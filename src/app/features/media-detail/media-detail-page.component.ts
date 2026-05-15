@@ -1,7 +1,9 @@
 import { DecimalPipe, SlicePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
 import { ErrorMessageComponent } from '@shared/components/error-message.component';
 import { LoadingSkeletonComponent } from '@shared/components/loading-skeleton.component';
 import { MediaType } from '@shared/models/enums';
@@ -32,6 +34,13 @@ import { SeasonListComponent } from './season-list.component';
     SlicePipe,
     DecimalPipe,
   ],
+  animations: [
+    trigger('accordionExpand', [
+      state('closed', style({ height: '0', overflow: 'hidden', opacity: 0 })),
+      state('open', style({ height: '*', overflow: 'hidden', opacity: 1 })),
+      transition('closed <=> open', animate(ANIMATION_TIMINGS.NORMAL)),
+    ]),
+  ],
 })
 export class MediaDetailPageComponent implements OnInit {
   readonly service = inject(MediaDetailService);
@@ -39,6 +48,13 @@ export class MediaDetailPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   readonly MediaType = MediaType;
+
+  /** Controls the files accordion open/closed state. */
+  readonly filesOpen = signal(false);
+
+  toggleFiles(): void {
+    this.filesOpen.update((v) => !v);
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;

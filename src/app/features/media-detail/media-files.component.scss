@@ -1,7 +1,11 @@
 .media-files {
   h3 {
     margin: 0 0 1rem;
-    color: var(--p-text-color);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
   }
 
   &__list {
@@ -19,9 +23,9 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0.5rem 0.75rem;
-    background: var(--p-surface-50);
+    background: var(--color-bg-elevated);
     border-radius: 6px;
-    border: 1px solid var(--p-surface-200);
+    border: 1px solid var(--color-border);
     flex-wrap: wrap;
   }
 
@@ -30,6 +34,12 @@
     align-items: center;
     flex: 1;
     min-width: 0;
+    color: var(--color-text-secondary);
+
+    i {
+      flex-shrink: 0;
+      margin-right: 0.5rem;
+    }
   }
 
   &__path-text {
@@ -38,7 +48,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--p-text-color);
+    color: var(--color-text-primary);
   }
 
   &__meta {
@@ -46,5 +56,13 @@
     align-items: center;
     gap: 0.5rem;
     flex-shrink: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
+
+  &__empty {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    margin: 0;
   }
 }
