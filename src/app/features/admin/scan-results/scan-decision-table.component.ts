@@ -225,7 +225,9 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
     // Use the atomic batch endpoint for TV groups to prevent N concurrent inserts
     // creating N duplicate Media rows in the database.
     const obs$ = group.groupId
-      ? this.decisionService.assignTvGroup(group.groupId, tmdbId).pipe(map(() => void 0))
+      ? this.decisionService
+          .assignTvGroup(group.groupId, tmdbId, this.scanId)
+          .pipe(map(() => void 0))
       : this.decisionService.assignGroupDecisions(group.episodes, tmdbId, authoritativeKind);
 
     obs$.subscribe({

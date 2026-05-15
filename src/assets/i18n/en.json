@@ -4,7 +4,8 @@
     "search": "Search",
     "wishlist": "Wishlist",
     "profile": "Profile",
-    "admin": "Administration"
+    "admin": "Administration",
+    "skipToContent": "Skip to main content"
   },
   "common": {
     "loading": "Loading...",
@@ -510,5 +511,18 @@
       "assignSuccess": "TMDB assigned successfully to {{folderName}}",
       "filterByStatus": "Filter by status"
     }
+  },
+  "a11y": {
+    "openNav": "Open navigation",
+    "closeNav": "Close navigation",
+    "mainNav": "Main navigation",
+    "posterAlt": "{{title}} poster",
+    "backdropAlt": "{{title}} backdrop",
+    "cardHover": "View details for {{title}}",
+    "expandSeason": "Expand season {{number}}",
+    "collapseSeason": "Collapse season {{number}}",
+    "loadingContent": "Loading content, please wait",
+    "searchInput": "Search for movies and TV shows",
+    "skipToContent": "Skip to main content"
   }
 }

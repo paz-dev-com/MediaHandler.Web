@@ -1,7 +1,13 @@
 <div class="app-shell">
   <app-sidebar />
   <main class="app-main">
-    <router-outlet />
+    <ng-container #routerOutletRef>
+      <router-outlet
+        #outlet="outlet"
+        [@routeAnimation]="getRouteAnimationState(outlet)"
+        [@.disabled]="prefersReducedMotion"
+      />
+    </ng-container>
   </main>
 </div>
 <p-toast />

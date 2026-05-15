@@ -4,7 +4,8 @@
     "search": "Rechercher",
     "wishlist": "Liste de souhaits",
     "profile": "Profil",
-    "admin": "Administration"
+    "admin": "Administration",
+    "skipToContent": "Aller au contenu principal"
   },
   "common": {
     "loading": "Chargement...",
@@ -510,5 +511,18 @@
       "assignSuccess": "TMDB assigné avec succès à {{folderName}}",
       "filterByStatus": "Filtrer par statut"
     }
+  },
+  "a11y": {
+    "openNav": "Ouvrir la navigation",
+    "closeNav": "Fermer la navigation",
+    "mainNav": "Navigation principale",
+    "posterAlt": "Affiche de {{title}}",
+    "backdropAlt": "Image de fond de {{title}}",
+    "cardHover": "Voir les détails de {{title}}",
+    "expandSeason": "Développer la saison {{number}}",
+    "collapseSeason": "Réduire la saison {{number}}",
+    "loadingContent": "Chargement du contenu, veuillez patienter",
+    "searchInput": "Rechercher des films et des séries TV",
+    "skipToContent": "Aller au contenu principal"
   }
 }

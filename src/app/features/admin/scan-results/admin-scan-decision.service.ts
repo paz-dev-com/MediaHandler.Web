@@ -96,9 +96,9 @@ export class AdminScanDecisionService {
     });
   }
 
-  assignTvGroup(groupId: string, tmdbId: number): Observable<TvShowGroup> {
+  assignTvGroup(groupId: string, tmdbId: number, scanId: string): Observable<TvShowGroup> {
     return this.api
-      .put<TvShowGroup>(`admin/tv-groups/${groupId}/assign`, { tmdbId })
+      .put<TvShowGroup>(`admin/tv-groups/${groupId}/assign`, { tmdbId }, { scanId })
       .pipe(map((response) => response.data));
   }
 

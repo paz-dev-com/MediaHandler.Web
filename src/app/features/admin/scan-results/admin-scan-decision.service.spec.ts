@@ -150,9 +150,9 @@ describe('AdminScanDecisionService', () => {
 
   it('should PUT assignTvGroup with tmdbId', () => {
     let result: unknown;
-    service.assignTvGroup('group-1', 54321).subscribe((r) => (result = r));
+    service.assignTvGroup('group-1', 54321, 'scan-abc').subscribe((r) => (result = r));
 
-    const req = httpTesting.expectOne(`${base}/admin/tv-groups/group-1/assign`);
+    const req = httpTesting.expectOne(`${base}/admin/tv-groups/group-1/assign?scanId=scan-abc`);
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual({ tmdbId: 54321 });
     req.flush({ data: { ...mockTvGroup, assignedTmdbId: 54321 }, meta: null, errors: [] });
