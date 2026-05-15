@@ -6,13 +6,13 @@
   <app-collection-filters [filters]="service.filters()" (filtersChange)="onFiltersChange($event)" />
 
   @if (service.loading()) {
-    <app-loading-skeleton variant="card" [count]="8" />
+    <app-loading-skeleton variant="card" [count]="12" />
   } @else if (service.error()) {
     <app-error-message [message]="service.error()!" (retry)="service.loadMedia()" />
   } @else if (service.isEmpty()) {
     <app-empty-collection />
   } @else {
-    <div class="media-grid">
+    <div class="media-grid" [@cardListStagger]="service.media().length">
       @for (item of service.media(); track item.id) {
         <app-media-card [media]="item" (watchedToggle)="onWatchedToggle($event)" />
       }

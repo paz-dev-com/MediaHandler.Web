@@ -2,18 +2,26 @@
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
+  color: var(--color-text-primary);
 
   &__back {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--p-text-color-secondary);
+    color: var(--color-text-secondary);
     text-decoration: none;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
+    transition: color var(--anim-fast) var(--anim-easing);
 
     &:hover {
-      color: var(--p-text-color);
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+      border-radius: 4px;
     }
   }
 
@@ -25,12 +33,13 @@
     border-radius: 12px;
     margin-bottom: 2rem;
     position: relative;
+    overflow: hidden;
 
     &::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, transparent 40%, var(--p-surface-50) 100%);
+      background: linear-gradient(to bottom, transparent 40%, var(--color-bg-base) 100%);
       border-radius: 12px;
     }
   }
@@ -57,26 +66,31 @@
   &__poster {
     width: 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.5),
+      0 0 0 1px var(--color-border);
   }
 
   &__poster-placeholder {
     width: 100%;
     aspect-ratio: 2 / 3;
-    background: var(--p-surface-100);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--p-text-color-secondary);
+    color: var(--color-text-secondary);
 
     i {
       font-size: 3rem;
+      opacity: 0.4;
     }
   }
 
   &__meta {
     flex: 1;
+    color: var(--color-text-primary);
   }
 
   &__header {
@@ -85,20 +99,25 @@
 
   &__title {
     margin: 0 0 0.25rem;
-    font-size: 2rem;
-    color: var(--p-text-color);
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
   }
 
   &__original-title {
     margin: 0 0 0.5rem;
-    color: var(--p-text-color-secondary);
+    color: var(--color-text-secondary);
     font-style: italic;
+    font-family: var(--font-body);
   }
 
   &__tags {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.5rem;
+    flex-wrap: wrap;
   }
 
   &__details {
@@ -120,16 +139,18 @@
 
     h3 {
       margin: 0 0 0.5rem;
+      font-family: var(--font-display);
       font-size: 1rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--p-text-color-secondary);
+      letter-spacing: 0.08em;
+      color: var(--color-text-secondary);
     }
 
     p {
       margin: 0;
       line-height: 1.6;
-      color: var(--p-text-color);
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
     }
   }
 
@@ -140,13 +161,61 @@
     flex-wrap: wrap;
   }
 
-  &__files,
+  // Shared panel style for files/seasons sections
+  &__panel {
+    margin-bottom: 1.5rem;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
   &__seasons {
     margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: var(--p-surface-0);
-    border: 1px solid var(--p-surface-200);
+  }
+
+  // Files accordion toggle button
+  &__files-accordion {
+    margin-bottom: 1.5rem;
+  }
+
+  &__files-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background var(--anim-fast) var(--anim-easing);
+
+    &:hover {
+      background: var(--color-bg-elevated);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &__files-body {
+    padding: 1rem 1.5rem;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
   }
 }
 
@@ -159,6 +228,12 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--p-text-color-secondary);
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+  }
+
+  span:last-child {
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
   }
 }

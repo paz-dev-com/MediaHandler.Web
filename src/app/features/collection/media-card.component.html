@@ -1,13 +1,25 @@
-<a [routerLink]="['/media', media().id]" class="media-card-link">
+<a
+  [routerLink]="['/media', media().id]"
+  class="media-card-link"
+  [@cardEnter]="inViewport() ? 'visible' : 'hidden'"
+  [class.is-hovered]="hovered()"
+  [attr.aria-label]="media().title"
+>
   <div class="media-card">
+    <!-- Poster image -->
     <div class="media-card__poster">
       @if (posterUrl) {
-        <img [src]="posterUrl" [alt]="media().title" loading="lazy" />
+        <img [src]="posterUrl" [alt]="media().title" width="342" height="513" loading="lazy" />
       } @else {
         <div class="media-card__poster-placeholder">
           <i class="pi pi-image"></i>
         </div>
       }
+
+      <!-- Gradient overlay (always visible, stronger on hover) -->
+      <div class="media-card__gradient"></div>
+
+      <!-- Type + watched badges (top-left) -->
       <div class="media-card__badges">
         <p-tag
           [value]="
@@ -22,27 +34,39 @@
           <p-tag value="" icon="pi pi-check" severity="secondary" styleClass="text-xs" />
         }
       </div>
-    </div>
-    <div class="media-card__info">
-      <p class="media-card__title" [title]="media().title">{{ media().title }}</p>
-      @if (media().releaseDate) {
-        <p class="media-card__year">{{ media().releaseDate | slice: 0 : 4 }}</p>
-      }
-    </div>
-    <div class="media-card__actions">
-      <p-button
-        [icon]="media().userMedia?.isWatched ? 'pi pi-eye-slash' : 'pi pi-eye'"
-        [pTooltip]="
-          (media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco
-        "
-        [severity]="media().userMedia?.isWatched ? 'secondary' : 'primary'"
-        size="small"
-        variant="text"
-        (onClick)="onToggleWatched($event)"
-        [attr.aria-label]="
-          (media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco
-        "
-      />
+
+      <!-- Watch toggle (top-right) -->
+      <div class="media-card__watch-action">
+        <p-button
+          [icon]="media().userMedia?.isWatched ? 'pi pi-eye-slash' : 'pi pi-eye'"
+          [pTooltip]="
+            (media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco
+          "
+          [severity]="media().userMedia?.isWatched ? 'secondary' : 'primary'"
+          size="small"
+          variant="text"
+          (onClick)="onToggleWatched($event)"
+          [attr.aria-label]="
+            (media().userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco
+          "
+        />
+      </div>
+
+      <!-- Info overlay (visible on hover) -->
+      <div class="media-card__overlay">
+        <p class="media-card__title">{{ media().title }}</p>
+        <div class="media-card__meta">
+          @if (releaseYear) {
+            <span class="media-card__year">{{ releaseYear }}</span>
+          }
+          @if (rating) {
+            <span class="media-card__rating">
+              <i class="pi pi-star-fill"></i>
+              {{ rating }}
+            </span>
+          }
+        </div>
+      </div>
     </div>
   </div>
 </a>

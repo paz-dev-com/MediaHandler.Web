@@ -18,7 +18,7 @@
     <div class="detail-page__content">
       <div class="detail-page__poster-col">
         @if (media.posterPath | tmdbImage: 'w342'; as posterUrl) {
-          <img [src]="posterUrl" [alt]="media.title" class="detail-page__poster" />
+          <img [src]="posterUrl" [alt]="media.title" class="detail-page__poster" loading="lazy" />
         } @else {
           <div class="detail-page__poster-placeholder">
             <i class="pi pi-image"></i>
@@ -99,7 +99,7 @@
             (onClick)="onWatchedToggle()"
           />
           @if (media.userMedia?.watchedAt) {
-            <span class="text-sm text-color-secondary">
+            <span class="text-sm" style="color: var(--color-text-secondary)">
               {{ 'media.watchedOn' | transloco }} {{ media.userMedia!.watchedAt | slice: 0 : 10 }}
             </span>
           }
@@ -107,18 +107,11 @@
       </div>
     </div>
 
-    <div class="detail-page__files">
-      @if (service.filesError()) {
-        <app-error-message [message]="service.filesError()!" (retry)="reload()" />
-      } @else {
-        <app-media-files [files]="media.files ?? []" />
-      }
-    </div>
-
+    <!-- TV Show: seasons first, then files accordion at the bottom -->
     @if (media.type === MediaType.TvShow) {
       <div class="detail-page__seasons">
         @if (service.seasonsLoading()) {
-          <p class="text-color-secondary">{{ 'media.seasonsLoading' | transloco }}</p>
+          <app-loading-skeleton variant="list" [count]="3" />
         } @else if (service.seasonsError()) {
           <app-error-message [message]="service.seasonsError()!" (retry)="reload()" />
         } @else {
@@ -131,5 +124,31 @@
         }
       </div>
     }
+
+    <!-- Files accordion — always at the bottom -->
+    <div class="detail-page__files-accordion">
+      <button
+        class="detail-page__files-header"
+        (click)="toggleFiles()"
+        [attr.aria-expanded]="filesOpen()"
+        type="button"
+      >
+        <h3>{{ 'media.files' | transloco }}</h3>
+        <i
+          class="pi"
+          [class.pi-chevron-down]="!filesOpen()"
+          [class.pi-chevron-up]="filesOpen()"
+        ></i>
+      </button>
+      <div class="detail-page__files-body" [@accordionExpand]="filesOpen() ? 'open' : 'closed'">
+        @if (service.filesError()) {
+          <app-error-message [message]="service.filesError()!" (retry)="reload()" />
+        } @else {
+          <app-media-files [files]="media.files ?? []" />
+        }
+      </div>
+    </div>
+
+    <!-- Films: no seasons section -->
   </div>
 }

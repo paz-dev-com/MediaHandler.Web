@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { TranslocoModule } from '@jsverse/transloco';
+import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
 import { ErrorMessageComponent } from '@shared/components/error-message.component';
 import { LoadingSkeletonComponent } from '@shared/components/loading-skeleton.component';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -23,6 +25,22 @@ import { MediaCardComponent } from './media-card.component';
     EmptyCollectionComponent,
     LoadingSkeletonComponent,
     ErrorMessageComponent,
+  ],
+  animations: [
+    trigger('cardListStagger', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(24px)' }),
+            stagger(ANIMATION_TIMINGS.STAGGER_DELAY, [
+              animate(ANIMATION_TIMINGS.NORMAL, style({ opacity: 1, transform: 'translateY(0)' })),
+            ]),
+          ],
+          { optional: true },
+        ),
+      ]),
+    ]),
   ],
 })
 export class CollectionPageComponent implements OnInit {

@@ -1,0 +1,105 @@
+@keyframes shimmer-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+// Base shimmer applied via class
+.shimmer {
+  background: var(--color-bg-elevated);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer-slide var(--anim-slow, 500ms) ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+// Card grid — mirrors media-grid responsive breakpoints
+.skeleton-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+// Poster card skeleton (2:3 aspect ratio)
+.skeleton-card {
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+// List view skeleton
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-list-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  &__lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+
+  &--70 {
+    width: 70%;
+  }
+
+  &--40 {
+    width: 40%;
+  }
+}

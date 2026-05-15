@@ -80,6 +80,133 @@
   }
 }
 
+// ─── PrimeNG Surface Token Remapping (dark theme) ───────────────────────────
+// Remap PrimeNG's surface tokens to our cinematic design tokens so that all
+// PrimeNG components automatically use the dark palette.
+// RULE: Never use var(--p-*) directly in component styles — always use var(--color-*).
+:root {
+  // Surface scale — mapped to dark palette
+  --p-surface-0: var(--color-bg-surface);
+  --p-surface-50: var(--color-bg-base);
+  --p-surface-100: var(--color-bg-elevated);
+  --p-surface-200: var(--color-border);
+  --p-surface-300: rgba(255, 255, 255, 0.12);
+  --p-surface-400: rgba(255, 255, 255, 0.18);
+  --p-surface-500: rgba(255, 255, 255, 0.28);
+  --p-surface-600: var(--color-text-secondary);
+  --p-surface-700: var(--color-text-secondary);
+  --p-surface-800: var(--color-text-primary);
+  --p-surface-900: var(--color-text-primary);
+  --p-surface-950: var(--color-text-primary);
+
+  // Text tokens
+  --p-text-color: var(--color-text-primary);
+  --p-text-color-secondary: var(--color-text-secondary);
+  --p-text-muted-color: var(--color-text-secondary);
+
+  // Primary / accent tokens
+  --p-primary-color: var(--color-accent);
+  --p-primary-50: rgba(99, 102, 241, 0.1);
+  --p-primary-100: rgba(99, 102, 241, 0.15);
+  --p-primary-color-text: #ffffff;
+
+  // Form field tokens (input, textarea, select)
+  --p-form-field-background: var(--color-bg-elevated);
+  --p-form-field-filled-background: var(--color-bg-elevated);
+  --p-form-field-border-color: var(--color-border);
+  --p-form-field-hover-border-color: var(--color-accent-hover);
+  --p-form-field-focus-border-color: var(--color-accent);
+  --p-form-field-color: var(--color-text-primary);
+  --p-form-field-placeholder-color: var(--color-text-secondary);
+  --p-form-field-disabled-background: var(--color-bg-base);
+
+  // Overlay / dropdown panel tokens
+  --p-overlay-select-background: var(--color-bg-surface);
+  --p-overlay-select-border-color: var(--color-border);
+  --p-overlay-select-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --p-overlay-popover-background: var(--color-bg-surface);
+  --p-overlay-popover-border-color: var(--color-border);
+  --p-overlay-modal-background: var(--color-bg-surface);
+  --p-overlay-modal-border-color: var(--color-border);
+
+  // List / select option tokens
+  --p-list-option-color: var(--color-text-primary);
+  --p-list-option-focus-color: var(--color-text-primary);
+  --p-list-option-selected-color: var(--color-accent);
+  --p-list-option-focus-background: var(--color-bg-elevated);
+  --p-list-option-selected-background: rgba(99, 102, 241, 0.15);
+  --p-list-option-selected-focus-background: rgba(99, 102, 241, 0.25);
+
+  // Navigation / menubar
+  --p-navigation-item-color: var(--color-text-secondary);
+  --p-navigation-item-focus-color: var(--color-text-primary);
+  --p-navigation-item-active-color: var(--color-accent);
+
+  // Panel / card tokens
+  --p-panel-background: var(--color-bg-surface);
+  --p-panel-border-color: var(--color-border);
+  --p-panel-color: var(--color-text-primary);
+  --p-card-background: var(--color-bg-surface);
+  --p-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  // Content tokens
+  --p-content-background: var(--color-bg-surface);
+  --p-content-hover-background: var(--color-bg-elevated);
+  --p-content-border-color: var(--color-border);
+  --p-content-color: var(--color-text-primary);
+
+  // Chip
+  --p-chip-background: var(--color-bg-elevated);
+  --p-chip-color: var(--color-text-primary);
+  --p-chip-border-color: var(--color-border);
+
+  // Tag
+  --p-tag-secondary-background: var(--color-bg-elevated);
+  --p-tag-secondary-color: var(--color-text-secondary);
+
+  // Toast
+  --p-toast-background: var(--color-bg-surface);
+  --p-toast-border-color: var(--color-border);
+  --p-toast-color: var(--color-text-primary);
+
+  // Paginator
+  --p-paginator-background: var(--color-bg-surface);
+  --p-paginator-border-color: var(--color-border);
+  --p-paginator-color: var(--color-text-secondary);
+
+  // ── Additional alias tokens used by legacy components ──
+  // (prevents undefined-token fallback to PrimeNG light defaults)
+  --p-surface-border: var(--color-border);
+  --p-surface-card: var(--color-bg-surface);
+  --p-surface-overlay: var(--color-bg-elevated);
+  --p-surface-hover: var(--color-bg-elevated);
+  --p-surface-ground: var(--color-bg-base);
+  --p-surface-section: var(--color-bg-surface);
+  --p-border-radius: 6px;
+  --p-border-radius-sm: 4px;
+  --p-border-radius-lg: 8px;
+
+  // Primary contrast
+  --p-primary-contrast-color: #ffffff;
+
+  // Green shades (used for wishlist watched states)
+  --p-green-50: rgba(34, 197, 94, 0.08);
+  --p-green-100: rgba(34, 197, 94, 0.12);
+  --p-green-200: rgba(34, 197, 94, 0.2);
+  --p-green-500: #22c55e;
+
+  // Red shades (used for error states)
+  --p-red-50: rgba(239, 68, 68, 0.08);
+  --p-red-100: rgba(239, 68, 68, 0.12);
+  --p-red-500: #ef4444;
+
+  // Orange / yellow shades (used for review/warning states)
+  --p-orange-50: rgba(249, 115, 22, 0.08);
+  --p-orange-500: #f97316;
+  --p-yellow-50: rgba(234, 179, 8, 0.08);
+  --p-yellow-500: #eab308;
+}
+
 // ─── Global Styles ───────────────────────────────────────────────────────────
 
 html,
@@ -136,4 +263,219 @@ a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+// ─── PrimeNG Component Dark Theme Overrides ──────────────────────────────────
+// Direct class overrides for PrimeNG internals not covered by token remapping.
+// These ensure correct contrast in ALL phases — add here as needed.
+
+// Form inputs
+.p-inputtext,
+.p-textarea {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  &:hover {
+    border-color: var(--color-accent-hover);
+  }
+
+  &:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px var(--color-accent-glow);
+  }
+}
+
+// Select / dropdown
+.p-select,
+.p-multiselect {
+  background: var(--color-bg-elevated);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+
+  .p-select-label,
+  .p-multiselect-label {
+    color: var(--color-text-primary);
+  }
+
+  .p-placeholder {
+    color: var(--color-text-secondary);
+  }
+}
+
+// Dropdown panel (overlay)
+.p-select-overlay,
+.p-multiselect-overlay,
+.p-autocomplete-overlay {
+  background: var(--color-bg-surface);
+  border-color: var(--color-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  .p-select-option,
+  .p-multiselect-option {
+    color: var(--color-text-primary);
+
+    &:hover,
+    &.p-focus {
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+    }
+
+    &.p-selected {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-accent);
+    }
+  }
+
+  .p-select-filter-input {
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+  }
+}
+
+// Chips
+.p-chip {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+
+  .p-chip-label {
+    color: var(--color-text-primary);
+  }
+}
+
+// Paginator
+.p-paginator {
+  background: transparent;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+
+  .p-paginator-page,
+  .p-paginator-next,
+  .p-paginator-prev,
+  .p-paginator-first,
+  .p-paginator-last {
+    color: var(--color-text-secondary);
+    background: transparent;
+
+    &:hover {
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+    }
+
+    &.p-highlight {
+      background: var(--color-accent);
+      color: #ffffff;
+    }
+  }
+}
+
+// Accordion — override with !important because PrimeNG injects its CSS vars
+// at runtime (after static stylesheets), so token remapping alone is not enough.
+.p-accordion,
+p-accordion {
+  .p-accordionpanel {
+    border-color: var(--color-border) !important;
+  }
+
+  .p-accordionheader {
+    background: var(--color-bg-surface) !important;
+    color: var(--color-text-secondary) !important;
+    border-color: var(--color-border) !important;
+
+    &:hover {
+      background: var(--color-bg-elevated) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    .p-accordionheader-toggle-icon {
+      color: var(--color-text-secondary) !important;
+    }
+  }
+
+  .p-accordioncontent-content {
+    background: var(--color-bg-elevated) !important;
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border) !important;
+  }
+}
+
+// Toast notifications
+.p-toast-message {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+
+  .p-toast-message-text {
+    color: var(--color-text-primary);
+  }
+
+  .p-toast-summary {
+    color: var(--color-text-primary);
+  }
+
+  .p-toast-detail {
+    color: var(--color-text-secondary);
+  }
+}
+
+// Tooltip
+.p-tooltip .p-tooltip-text {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+// Skeleton (PrimeNG built-in)
+.p-skeleton {
+  background: var(--color-bg-elevated);
+
+  &::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  }
+}
+
+// ─── PrimeFlex utility class overrides ──────────────────────────────────────
+// PrimeFlex classes use var(--p-*) which may still resolve to light values.
+// Explicit overrides here ensure these utility classes work on our dark bg.
+.text-color {
+  color: var(--color-text-primary) !important;
+}
+
+.text-color-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+.surface-0 {
+  background-color: var(--color-bg-surface) !important;
+}
+
+.surface-50 {
+  background-color: var(--color-bg-base) !important;
+}
+
+.surface-100 {
+  background-color: var(--color-bg-elevated) !important;
+}
+
+.surface-card {
+  background-color: var(--color-bg-surface) !important;
+}
+
+.surface-border {
+  border-color: var(--color-border) !important;
+}
+
+// ─── Progress bar ───────────────────────────────────────────────────────────
+.p-progressbar {
+  background: var(--color-bg-elevated);
+
+  .p-progressbar-value {
+    background: var(--color-accent);
+  }
 }

@@ -119,3 +119,41 @@ npm test
 - **Signals-first**: All new reactive state uses Angular signals
 - **OnPush**: All components use `ChangeDetectionStrategy.OnPush`
 - **Standalone**: All new components are standalone (no NgModules)
+
+## ⚠️ Coding Rules — Must Follow in ALL Phases
+
+### 1. Styles in `.scss` files only — never inline in `.ts`
+
+Every component MUST use `styleUrl` (external file), never `styles: [...]`:
+
+```typescript
+// ✅ CORRECT
+@Component({ styleUrl: './my.component.scss' })
+
+// ❌ FORBIDDEN
+@Component({ styles: ['...'] })
+```
+
+### 2. Never use `var(--p-*)` tokens in component styles
+
+Always use our design tokens. PrimeNG's `--p-*` tokens may resolve incorrectly:
+
+```scss
+// ✅ CORRECT
+color: var(--color-text-primary);
+background: var(--color-bg-surface);
+border-color: var(--color-border);
+
+// ❌ FORBIDDEN — may cause white-on-white or invisible text
+color: var(--p-text-color);
+background: var(--p-surface-0);
+```
+
+The global remapping in `styles.scss` handles PrimeNG's own components automatically.
+No new component style should ever reference `var(--p-*)`.
+
+### 3. All PrimeNG component dark theme fixes go in `styles.scss`
+
+If a PrimeNG component still looks wrong, add a CSS class override in the
+`PrimeNG Component Dark Theme Overrides` section of `src/styles.scss`.
+Do **not** use `::ng-deep` in individual component files.

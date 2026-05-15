@@ -21,59 +21,8 @@ import { CollectionFilters } from './collection.service';
     IconFieldModule,
     InputIconModule,
   ],
-  template: `
-    <div class="collection-filters">
-      <p-iconfield>
-        <p-inputicon styleClass="pi pi-search" />
-        <input
-          pInputText
-          type="search"
-          [placeholder]="'collection.searchPlaceholder' | transloco"
-          [ngModel]="filters().search"
-          (ngModelChange)="onSearchChange($event)"
-          class="w-full"
-        />
-      </p-iconfield>
-
-      <p-select
-        [options]="typeOptions"
-        [ngModel]="filters().type"
-        (ngModelChange)="onTypeChange($event)"
-        optionLabel="label"
-        optionValue="value"
-        [placeholder]="'collection.allTypes' | transloco"
-        [showClear]="true"
-        styleClass="w-full"
-      />
-
-      <p-select
-        [options]="watchedOptions"
-        [ngModel]="filters().isWatched"
-        (ngModelChange)="onWatchedChange($event)"
-        optionLabel="label"
-        optionValue="value"
-        [placeholder]="'collection.allStatuses' | transloco"
-        [showClear]="true"
-        styleClass="w-full"
-      />
-    </div>
-  `,
-  styles: [
-    `
-      .collection-filters {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        align-items: center;
-        margin-bottom: 1.5rem;
-
-        > * {
-          flex: 1;
-          min-width: 180px;
-        }
-      }
-    `,
-  ],
+  templateUrl: './collection-filters.component.html',
+  styleUrl: './collection-filters.component.scss',
 })
 export class CollectionFiltersComponent {
   readonly filters = input.required<CollectionFilters>();

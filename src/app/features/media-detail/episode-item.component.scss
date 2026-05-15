@@ -1,9 +1,9 @@
 .episode-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--p-surface-100);
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--color-border);
 
   &:last-child {
     border-bottom: none;
@@ -12,18 +12,25 @@
   &--watched {
     .episode-item__name {
       text-decoration: line-through;
-      color: var(--p-text-color-secondary);
+      color: var(--color-text-secondary);
+      opacity: 0.7;
     }
   }
 
   &__check {
     cursor: pointer;
     flex-shrink: 0;
+    padding-top: 2px; // align with text baseline
 
     input[type='checkbox'] {
       cursor: pointer;
       width: 16px;
       height: 16px;
+      accent-color: var(--color-accent);
+      // Ensure checkbox is visible on dark background
+      background-color: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
     }
   }
 
@@ -33,24 +40,36 @@
     gap: 0.5rem;
     flex: 1;
     flex-wrap: wrap;
+    min-width: 0;
   }
 
   &__number {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--p-primary-color);
-    min-width: 2.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: var(--font-body);
+    color: var(--color-accent);
+    min-width: 2rem;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
   }
 
   &__name {
     font-size: 0.875rem;
-    color: var(--p-text-color);
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__date,
   &__runtime {
-    font-size: 0.75rem;
-    color: var(--p-text-color-secondary);
+    font-size: 0.73rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
