@@ -40,6 +40,14 @@
         </li>
       }
     </ul>
+
+    <!-- Theme toggle — bottom of sidebar -->
+    <div class="sidebar__footer">
+      <app-theme-toggle
+        class="sidebar__theme-toggle"
+        [class.sidebar__theme-toggle--expanded]="mode() === 'expanded'"
+      />
+    </div>
   </nav>
 }
 
@@ -63,5 +71,9 @@
         <span class="bottom-nav__label">{{ item.labelKey | transloco }}</span>
       </a>
     }
+    <!-- Theme toggle as last bottom nav item -->
+    <div class="bottom-nav__item bottom-nav__item--toggle">
+      <app-theme-toggle />
+    </div>
   </nav>
 }

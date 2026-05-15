@@ -123,6 +123,13 @@
     "language": "Language",
     "languageSaved": "Language preference saved",
     "loadError": "Failed to load profile",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeOptions": {
+      "dark": "Dark",
+      "light": "Light",
+      "system": "System default"
+    },
     "roles": {
       "User": "User",
       "Admin": "Admin"
@@ -526,6 +533,7 @@
     "searchInput": "Search for movies and TV shows",
     "skipToContent": "Skip to main content",
     "scrollLeft": "Scroll left",
-    "scrollRight": "Scroll right"
+    "scrollRight": "Scroll right",
+    "toggleTheme": "Toggle light / dark theme"
   }
 }

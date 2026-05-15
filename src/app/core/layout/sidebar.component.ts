@@ -6,6 +6,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { AuthService } from '@core/auth/auth.service';
 import { BREAKPOINTS } from '@shared/constants/breakpoints';
 import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
+import { ThemeToggleComponent } from '@shared/components/theme-toggle.component';
 import { TranslocoModule } from '@jsverse/transloco';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -22,7 +23,7 @@ interface NavItem {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, TranslocoModule, TooltipModule],
+  imports: [RouterLink, RouterLinkActive, TranslocoModule, TooltipModule, ThemeToggleComponent],
   animations: [
     // Desktop sidebar width transition: 220px ↔ 60px
     trigger('sidebarState', [

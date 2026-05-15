@@ -220,12 +220,57 @@
 
 **Purpose**: Final improvements that affect multiple user stories
 
-- [ ] T051 [P] Verify PrimeNG token overrides apply correctly to theme-only pages (Settings, Profile, Admin) — confirm dark palette and Inter/Bebas Neue typography without advanced animations
-- [ ] T052 [P] **⚠️ Measure baseline first**: Run `ng build --configuration=production` BEFORE making changes to record baseline bundle size. After implementation, verify bundle stays within constitution budget (**500kB warning / 1MB error** initial) — record `@angular/animations` impact separately. If baseline already exceeds 500kB, file a constitution amendment ADR before continuing.
-- [ ] T053 [P] Audit all animation definitions across the codebase to verify ONLY `transform` and `opacity` are animated (no `width`, `height`, `top`, `left`, `margin`, or other layout-triggering properties) — enforce SC-004 reflow safety
+- [x] T051 [P] Verify PrimeNG token overrides apply correctly to theme-only pages (Settings, Profile, Admin) — confirm dark palette and Inter/Bebas Neue typography without advanced animations
+- [x] T052 [P] **⚠️ Measure baseline first**: Run `ng build --configuration=production` BEFORE making changes to record baseline bundle size. After implementation, verify bundle stays within constitution budget (**500kB warning / 1MB error** initial) — record `@angular/animations` impact separately. If baseline already exceeds 500kB, file a constitution amendment ADR before continuing.
+- [x] T053 [P] Audit all animation definitions across the codebase to verify ONLY `transform` and `opacity` are animated (no `width`, `height`, `top`, `left`, `margin`, or other layout-triggering properties) — enforce SC-004 reflow safety
 - [ ] T054 [P] Verify Lighthouse scores: 90+ desktop / 75+ mobile, LCP < 2.5s, TTI < 3s, CLS < 0.1 on collection and detail pages
 - [ ] T055 Run full quickstart.md verification checklist (all 11 items: dark theme, typography, card hover, scroll entrance, route transitions, sidebar collapse, mobile nav, skeleton shimmer, reduced motion, focus rings, contrast)
-- [ ] T056 Verify all new/modified components use `ChangeDetectionStrategy.OnPush`, are standalone (no NgModules), and use signals for state
+- [x] T056 Verify all new/modified components use `ChangeDetectionStrategy.OnPush`, are standalone (no NgModules), and use signals for state
+
+---
+
+## Phase 14: User Story 7 — Light / Dark Theme Toggle (Extension)
+
+**Goal**: Allow users to choose between the dark cinematic theme and a light mode, with a system-default option that respects `prefers-color-scheme`. The selected preference is persisted to `localStorage` and applied before first paint to prevent a flash of wrong theme. The toggle is surfaced in the sidebar navigation and in the Profile preferences page.
+
+> ⚠️ **Scope extension**: The original spec (Assumption §) marked a light theme toggle as out-of-scope. This phase explicitly lifts that constraint. The token-based architecture (CSS custom properties + `--p-surface-*` aliases) makes this achievable with no PrimeNG configuration change — all design tokens live under a `[data-theme]` attribute on `<html>`.
+
+**Independent Test**: Open the app — it respects the OS `prefers-color-scheme`. Click the sun/moon icon in the sidebar — the entire app transitions between dark cinematic and light palettes within 200ms. Navigate to Profile → Appearance and change the theme using the selector — the page updates immediately and the value survives a full page reload.
+
+**Acceptance Scenarios**:
+
+1. **Given** the OS is set to dark mode, **When** the app loads for the first time (no `localStorage` key), **Then** the dark cinematic theme is applied
+2. **Given** a user clicks the theme toggle in the sidebar, **When** they switch from dark to light, **Then** all colors, surfaces, and text change within 200ms using a CSS `transition` on `:root`
+3. **Given** a user selects "Light" in Profile → Appearance, **When** they reload the page, **Then** the light theme is still applied (persisted via `localStorage`)
+4. **Given** any theme is active, **When** the user has `prefers-reduced-motion: reduce`, **Then** the theme transition animation is instant (0ms)
+
+### Implementation for User Story 7
+
+- [x] T076 Create `ThemeService` as a signal-based, tree-shakeable service (`providedIn: 'root'`): expose `theme` writable signal (`'dark' | 'light' | 'system'`, default read from `localStorage` key `'app-theme'` or `'system'`); computed `resolvedTheme: Signal<'dark' | 'light'>` (resolves `'system'` via `window.matchMedia('(prefers-color-scheme: dark)')` at construction time and on OS change via `MediaQueryList.addEventListener`); on `resolvedTheme` change set `document.documentElement.setAttribute('data-theme', value)` and save `theme()` to `localStorage`; use `effect()` for the side-effect; use `DestroyRef` or `takeUntilDestroyed()` for `MediaQueryList` cleanup — `src/app/shared/services/theme.service.ts`
+
+- [x] T077 Add light and dark theme CSS custom property override blocks in `src/styles.scss`: `[data-theme="light"]` on `:root` with a clean light palette (`--color-bg-base: #f4f4f8`, `--color-bg-surface: #ffffff`, `--color-bg-elevated: #ededf4`, `--color-accent: #6366f1` (same), `--color-accent-hover: #4f46e5`, `--color-accent-glow: rgba(99,102,241,0.2)`, `--color-text-primary: #0a0a0f`, `--color-text-secondary: #52525b`, `--color-text-accent: #4f46e5`, `--color-border: rgba(0,0,0,0.1)`, `--color-poster-gradient: linear-gradient(to top, rgba(244,244,248,0.96) 0%, rgba(244,244,248,0.45) 55%, transparent 100%)`); also add a smooth `:root { transition: background-color 200ms, color 200ms; }` with `prefers-reduced-motion: reduce` override to `transition: none` — `src/styles.scss`
+
+- [x] T078 [P] Create `ThemeToggleComponent` (standalone, OnPush, signals): inject `ThemeService`; render a `<button>` with `aria-label` (transloco key `a11y.toggleTheme`); display `pi pi-sun` when `resolvedTheme() === 'dark'` and `pi pi-moon` when `'light'`; on click call `themeService.toggle()` (cycles dark→light→dark or sets opposite of resolved); CSS micro-interaction: icon swaps with `opacity` + `scale` transition over `var(--anim-fast)`; host style: `:host { display: contents }` — `src/app/shared/components/theme-toggle.component.ts`, `.html`, `.scss`
+
+- [x] T079 Integrate `ThemeToggleComponent` into `SidebarComponent`: import it in `sidebar.component.ts`; in the desktop sidebar template add `<app-theme-toggle>` at the bottom of the nav list (after last nav item, before user avatar if any); in the mobile bottom nav template add the toggle as the rightmost icon; ensure it receives proper padding and active/hover dark-surface styles consistent with the nav items — update `sidebar.component.html` and `sidebar.component.scss`
+
+- [x] T080 [P] Add "Appearance" section to `ProfilePageComponent`: add `ThemeService` injection and a `themeOptions` array (`[{label: t('profile.themeOptions.dark'), value:'dark'}, …light, …system]`); add a new preferences card in `profile-page.component.html` with a `p-select` bound to `themeService.theme()` via `ngModel` and `(onChange)="onThemeChange($event.value)"` (calls `themeService.setTheme()`); restyle the new Appearance card to match existing preference cards in `profile-page.component.scss` — `src/app/features/profile/profile-page.component.ts` and `.html`
+
+- [x] T081 Bootstrap `ThemeService` before first paint to prevent flash of wrong theme (FOWT): inject `ThemeService` in `AppComponent` constructor (or add it to `APP_INITIALIZER` in `app.config.ts`) so that the `data-theme` attribute is written to `<html>` synchronously during app init, before Angular renders any component — `src/app/app.ts` or `src/app/app.config.ts`
+
+- [x] T082 [P] Add i18n translation keys for theme UI in `src/assets/i18n/en.json` and `src/assets/i18n/fr.json`: `profile.appearance` (section title), `profile.theme` (label), `profile.themeOptions.dark`, `profile.themeOptions.light`, `profile.themeOptions.system`, `a11y.toggleTheme` (aria-label for sidebar button)
+
+**Checkpoint**: The theme toggle is visible in the sidebar, persists across reloads, respects OS preference on first visit, transitions smoothly between dark cinematic and light palettes, and is configurable from the Profile page. All PrimeNG components (cards, tables, tags, dialogs, etc.) correctly reflect both themes via the `--color-*` custom property cascade.
+
+---
+
+## Phase 15: Tests — Theme Toggle (Constitution §II)
+
+- [ ] T083 [P] Write unit tests for `ThemeService`: verify `resolvedTheme` returns `'dark'` when `theme` is `'dark'`; returns `'light'` when `'light'`; follows `prefers-color-scheme: dark` when `'system'` and OS is dark; `data-theme` attribute on `document.documentElement` is set correctly on each resolved theme; `localStorage` is read on construction (`'app-theme'` key) and written on `setTheme()`; OS `MediaQueryList` change event updates `resolvedTheme` when `theme` is `'system'` — `src/app/shared/services/theme.service.spec.ts`
+
+- [ ] T084 [P] Write component tests for `ThemeToggleComponent`: verify `pi-sun` icon is shown when `resolvedTheme()` is `'dark'`; `pi-moon` icon is shown when `'light'`; clicking the button calls `themeService.toggle()`; `aria-label` is bound to the correct transloco key — `src/app/shared/components/theme-toggle.component.spec.ts`
+
+**Checkpoint**: `ThemeService` and `ThemeToggleComponent` have passing unit/component tests. Run `npx vitest --coverage` and verify 80%+ coverage on both new files.
 
 ---
 
@@ -260,6 +305,8 @@
 - **FR-022 Admin Theme-Only (Phase 11)**: Depends on Foundational (design tokens from Phase 1/2) — can run in parallel with US1–US4 and Phase 10
 - **Polish (Phase 12)**: Depends on all user stories and FR-022 phases being complete — T051 verifies theme-only pages from Phases 10–11
 - **Tests (Phase 13)**: Can start incrementally after each phase; T057-T063 map to Foundational/Phase 2-5 components and can be written in parallel with implementation work
+- **US7 Theme Toggle (Phase 14)**: Depends on Foundational (design tokens T002 must be complete); T076 (ThemeService) before T078/T079/T080/T081; T077 (CSS tokens) can run in parallel with T076; T082 (i18n) can run in parallel with all implementation tasks
+- **Tests — Theme Toggle (Phase 15)**: Depends on Phase 14 complete; T083 and T084 can run in parallel
 
 ### User Story Dependencies
 

@@ -123,6 +123,13 @@
     "language": "Langue",
     "languageSaved": "Préférence de langue enregistrée",
     "loadError": "Impossible de charger le profil",
+    "appearance": "Apparence",
+    "theme": "Thème",
+    "themeOptions": {
+      "dark": "Sombre",
+      "light": "Clair",
+      "system": "Système (défaut)"
+    },
     "roles": {
       "User": "Utilisateur",
       "Admin": "Administrateur"
@@ -526,6 +533,7 @@
     "searchInput": "Rechercher des films et des séries TV",
     "skipToContent": "Aller au contenu principal",
     "scrollLeft": "Défiler à gauche",
-    "scrollRight": "Défiler à droite"
+    "scrollRight": "Défiler à droite",
+    "toggleTheme": "Basculer entre le thème clair et sombre"
   }
 }
