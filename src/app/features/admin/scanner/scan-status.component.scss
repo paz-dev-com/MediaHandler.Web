@@ -7,6 +7,9 @@
 
 .scan-status__title {
   margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  color: var(--color-text-primary);
 }
 
 .scan-status__badge {
@@ -34,19 +37,21 @@
   flex-direction: column;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: var(--p-surface-100);
+  background: var(--color-bg-elevated);
   border-radius: 0.5rem;
   min-width: 6rem;
 }
 
 .scan-status__count-label {
   font-size: 0.75rem;
-  color: var(--p-text-muted-color);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
 }
 
 .scan-status__count-value {
   font-size: 1.25rem;
   font-weight: 600;
+  color: var(--color-text-primary);
 }
 
 .scan-status__actions {

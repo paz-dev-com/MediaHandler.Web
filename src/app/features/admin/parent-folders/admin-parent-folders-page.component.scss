@@ -1,5 +1,6 @@
 .parent-folders-page {
   padding: 1.5rem;
+  font-family: var(--font-body);
 
   &__header {
     margin-bottom: 1.5rem;
@@ -9,10 +10,13 @@
     font-size: 1.5rem;
     font-weight: 600;
     margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--color-text-primary);
   }
 
   &__subtitle {
-    color: var(--p-text-color-secondary);
+    color: var(--color-text-secondary);
     margin: 0;
   }
 
@@ -30,6 +34,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: default;
+    color: var(--color-text-secondary);
+    font-family: monospace;
+    font-size: 0.85rem;
   }
 
   &__badge {
@@ -39,8 +46,8 @@
     min-width: 2rem;
     padding: 0.125rem 0.5rem;
     border-radius: 9999px;
-    background-color: var(--p-primary-color);
-    color: var(--p-primary-contrast-color);
+    background-color: var(--color-accent);
+    color: var(--color-text-primary);
     font-size: 0.8rem;
     font-weight: 600;
   }

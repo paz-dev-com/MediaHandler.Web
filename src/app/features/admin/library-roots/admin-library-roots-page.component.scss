@@ -14,6 +14,9 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--color-text-primary);
   }
 
   &__actions {
@@ -28,5 +31,6 @@
     font-size: 0.85rem;
     word-break: break-all;
     max-width: 20rem;
+    color: var(--color-text-secondary);
   }
 }

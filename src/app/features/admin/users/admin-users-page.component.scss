@@ -14,9 +14,14 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--color-text-primary);
   }
 
   &__search {
+    font-family: var(--font-body);
+
     .p-input-icon-left {
       i {
         top: 50%;

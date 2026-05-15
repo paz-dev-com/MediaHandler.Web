@@ -1,4 +1,6 @@
 .rename-dialog {
+  font-family: var(--font-body);
+
   &__content {
     display: flex;
     flex-direction: column;
@@ -17,14 +19,14 @@
   }
 
   &__hint {
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
     font-size: 0.9rem;
     margin: 0;
     padding: 0.5rem 0;
   }
 
   &__no-changes {
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
     font-style: italic;
     margin: 0;
   }
@@ -44,16 +46,17 @@
   &__preview-label {
     font-weight: 600;
     font-size: 0.85rem;
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
   }
 
   &__preview-value {
     font-family: monospace;
     font-size: 0.9rem;
     word-break: break-all;
+    color: var(--color-text-primary);
 
     &--proposed {
-      color: var(--green-600);
+      color: #4ade80; // green-400, WCAG AA on dark bg
     }
   }
 
@@ -71,8 +74,8 @@
     gap: 0.5rem;
     font-weight: 600;
     font-size: 0.85rem;
-    color: var(--text-color-secondary);
-    border-bottom: 1px solid var(--surface-border);
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 0.5rem;
   }
 
@@ -81,18 +84,19 @@
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
     padding: 0.25rem 0;
-    border-bottom: 1px solid var(--surface-border);
+    border-bottom: 1px solid var(--color-border);
     font-size: 0.85rem;
   }
 
   &__batch-current {
     font-family: monospace;
     word-break: break-all;
+    color: var(--color-text-primary);
   }
 
   &__batch-proposed {
     font-family: monospace;
     word-break: break-all;
-    color: var(--green-600);
+    color: #4ade80; // green-400, WCAG AA on dark bg
   }
 }

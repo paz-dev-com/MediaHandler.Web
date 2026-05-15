@@ -1,6 +1,7 @@
 :host {
   display: block;
   height: 100%;
+  background: var(--color-bg-base);
 }
 
 .admin-layout {
@@ -8,6 +9,13 @@
   flex-direction: column;
   height: 100%;
   padding: 1rem;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+
+  // PrimeNG Tabs nav bar bottom border
+  ::ng-deep .p-tablist {
+    border-bottom: 1px solid var(--color-border);
+  }
 }
 
 .admin-content {
