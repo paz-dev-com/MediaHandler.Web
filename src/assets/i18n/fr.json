@@ -49,7 +49,8 @@
       "tvShows": "Séries TV",
       "watched": "Vus",
       "unwatched": "Non vus"
-    }
+    },
+    "recentlyAdded": "Ajoutés récemment"
   },
   "media": {
     "overview": "Synopsis",
@@ -523,6 +524,8 @@
     "collapseSeason": "Réduire la saison {{number}}",
     "loadingContent": "Chargement du contenu, veuillez patienter",
     "searchInput": "Rechercher des films et des séries TV",
-    "skipToContent": "Aller au contenu principal"
+    "skipToContent": "Aller au contenu principal",
+    "scrollLeft": "Défiler à gauche",
+    "scrollRight": "Défiler à droite"
   }
 }

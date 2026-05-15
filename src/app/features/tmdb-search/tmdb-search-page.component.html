@@ -1,46 +1,48 @@
-<ng-container *transloco="let t">
-  <div class="search-page p-4">
-    <h1 class="search-page__title">{{ t('tmdb.searchTitle') }}</h1>
-
-    <div class="search-page__input-wrap">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input
-          pInputText
-          type="text"
-          [placeholder]="t('tmdb.searchPlaceholder')"
-          [value]="searchQuery()"
-          (input)="onQueryChange($any($event.target).value)"
-          class="search-page__input"
-        />
-      </span>
-    </div>
-
-    @if (searchService.loading()) {
-      <app-loading-skeleton variant="list" [count]="5" />
-    } @else if (searchService.error()) {
-      <app-error-message
-        [message]="t(searchService.error()!)"
-        [showRetry]="true"
-        (retry)="searchService.search(searchQuery())"
+<div class="search-page">
+  <h1 class="search-page__title">{{ 'tmdb.searchTitle' | transloco }}</h1>
+  <!-- Search input with focus-glow -->
+  <div class="search-page__input-wrap">
+    <div class="search-page__input-icon-wrap" [class.is-focused]="inputFocused()">
+      <i class="pi pi-search search-page__search-icon" aria-hidden="true"></i>
+      <input
+        pInputText
+        type="search"
+        [placeholder]="'tmdb.searchPlaceholder' | transloco"
+        [value]="searchQuery()"
+        (input)="onQueryChange($any($event.target).value)"
+        (focus)="inputFocused.set(true)"
+        (blur)="inputFocused.set(false)"
+        class="search-page__input"
+        [attr.aria-label]="'tmdb.searchPlaceholder' | transloco"
+        autocomplete="off"
       />
-    } @else if (searchService.results().length === 0 && searchQuery().length > 0) {
-      <div class="search-page__empty">
-        <i class="pi pi-search"></i>
-        <p>{{ t('tmdb.noResults') }}</p>
-      </div>
-    } @else {
-      <div class="search-page__results">
-        @for (result of searchService.results(); track result.id) {
-          <app-tmdb-result-card
-            [result]="result"
-            [importing]="isImporting(result.id)"
-            [wishlisting]="isWishlisting(result.id)"
-            (importClick)="onImport($event)"
-            (wishlistClick)="onWishlist($event)"
-          />
-        }
-      </div>
-    }
+    </div>
   </div>
-</ng-container>
+  @if (searchService.loading()) {
+    <app-loading-skeleton variant="list" [count]="5" />
+  } @else if (searchService.error()) {
+    <app-error-message
+      [message]="searchService.error()! | transloco"
+      [showRetry]="true"
+      (retry)="searchService.search(searchQuery())"
+    />
+  } @else if (searchService.results().length === 0 && searchQuery().length > 0) {
+    <div class="search-page__empty" role="status">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <p>{{ 'tmdb.noResults' | transloco }}</p>
+    </div>
+  } @else if (searchService.results().length > 0) {
+    <!-- @resultsEnter staggered card entrance keyed on result count -->
+    <div class="search-page__results" [@resultsEnter]="searchService.results().length">
+      @for (result of searchService.results(); track result.id) {
+        <app-tmdb-result-card
+          [result]="result"
+          [importing]="isImporting(result.id)"
+          [wishlisting]="isWishlisting(result.id)"
+          (importClick)="onImport($event)"
+          (wishlistClick)="onWishlist($event)"
+        />
+      }
+    </div>
+  }
+</div>

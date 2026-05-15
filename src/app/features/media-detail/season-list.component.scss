@@ -8,102 +8,136 @@
     color: var(--color-text-primary);
   }
 
-  // Empty state
-  > p {
+  &__empty {
     color: var(--color-text-secondary);
     font-family: var(--font-body);
   }
 }
 
-// Force accordion internals to use our dark palette —
-// belt-and-suspenders in case PrimeNG token injection wins
-:host ::ng-deep {
-  .p-accordionpanel {
-    border-color: var(--color-border) !important;
-  }
+// ── Custom accordion shell ────────────────────────────────────────────────
+.season-accordion {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
 
-  .p-accordionheader {
-    background: var(--color-bg-surface) !important;
-    color: var(--color-text-secondary) !important;
-    border-color: var(--color-border) !important;
+.season-panel {
+  border-bottom: 1px solid var(--color-border);
 
-    &:hover {
-      background: var(--color-bg-elevated) !important;
-      color: var(--color-text-primary) !important;
-    }
-
-    // Active (expanded) state
-    &[aria-expanded='true'] {
-      background: var(--color-bg-surface) !important;
-      color: var(--color-text-primary) !important;
-    }
-
-    // Toggle chevron icon
-    .p-accordionheader-toggle-icon {
-      color: var(--color-text-secondary) !important;
-    }
-  }
-
-  .p-accordioncontent-content {
-    background: var(--color-bg-elevated) !important;
-    color: var(--color-text-primary) !important;
-    border-color: var(--color-border) !important;
-    padding: 0.75rem 1.125rem;
-  }
-
-  // Progress bar inside accordion
-  .season-progress {
-    height: 4px;
-    margin-top: 0.4rem;
-
-    .p-progressbar-value {
-      background: var(--color-accent) !important;
-    }
-
-    .p-progressbar {
-      background: var(--color-bg-elevated) !important;
-    }
+  &:last-child {
+    border-bottom: none;
   }
 }
 
+// ── Season header button ──────────────────────────────────────────────────
 .season-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  padding: 1rem 1.25rem;
+  background: var(--color-bg-surface);
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  text-align: left;
   gap: 0.75rem;
-  flex-wrap: wrap;
+  transition: background var(--anim-fast) var(--anim-easing);
+
+  &:hover {
+    background: var(--color-bg-elevated);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+
+  &.is-expanded {
+    // Accent highlight on the chevron when open
+    .season-header__chevron {
+      color: var(--color-accent);
+    }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
 
   &__name {
+    display: block;
     font-weight: 600;
-    font-family: var(--font-body);
     font-size: 0.95rem;
     color: var(--color-text-primary);
-    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__meta {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex-shrink: 0;
     flex-wrap: wrap;
+    margin-top: 0.2rem;
   }
 
   &__progress {
     font-size: 0.8rem;
-    font-family: var(--font-body);
     color: var(--color-text-secondary);
     white-space: nowrap;
   }
 
   &__date {
     font-size: 0.75rem;
-    font-family: var(--font-body);
     color: var(--color-text-secondary);
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
     border-radius: 4px;
     padding: 0.1rem 0.4rem;
   }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  &__chevron {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    transition:
+      color var(--anim-fast) var(--anim-easing),
+      transform var(--anim-fast) var(--anim-easing);
+  }
+}
+
+// ── Progress bar sits between header and content ───────────────────────────
+:host ::ng-deep {
+  .season-progress {
+    height: 3px;
+    border-radius: 0;
+
+    .p-progressbar-value {
+      background: var(--color-accent) !important;
+      border-radius: 0 !important;
+    }
+
+    .p-progressbar {
+      background: var(--color-bg-elevated) !important;
+      border-radius: 0 !important;
+      height: 3px !important;
+    }
+  }
+}
+
+// ── Expanded episode content area ─────────────────────────────────────────
+.season-content {
+  background: var(--color-bg-elevated);
+  border-top: 1px solid var(--color-border);
+  padding: 0.5rem 0;
+  overflow: hidden;
 }

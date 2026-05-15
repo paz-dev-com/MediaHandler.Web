@@ -2,13 +2,21 @@
   <h3>{{ 'media.seasons' | transloco }}</h3>
 
   @if (!seasons().length) {
-    <p class="text-color-secondary">{{ 'media.noSeasons' | transloco }}</p>
+    <p class="season-list__empty">{{ 'media.noSeasons' | transloco }}</p>
   } @else {
-    <p-accordion [multiple]="true">
+    <div class="season-accordion">
       @for (season of seasons(); track season.id) {
-        <p-accordion-panel [value]="season.id">
-          <p-accordion-header>
-            <div class="season-header">
+        <div class="season-panel">
+          <!-- ── Season header (custom button, replaces p-accordion-header) ── -->
+          <button
+            class="season-header"
+            [class.is-expanded]="isExpanded(season.id)"
+            (click)="toggleSeason(season.id)"
+            [attr.aria-expanded]="isExpanded(season.id)"
+            [attr.aria-controls]="'season-content-' + season.id"
+            type="button"
+          >
+            <div class="season-header__info">
               <span class="season-header__name">{{ season.name }}</span>
               <div class="season-header__meta">
                 <span class="season-header__progress">
@@ -27,26 +35,43 @@
                 @if (season.airDate) {
                   <span class="season-header__date">{{ season.airDate | slice: 0 : 4 }}</span>
                 }
-                <p-button
-                  [icon]="isSeasonFullyWatched(season) ? 'pi pi-eye-slash' : 'pi pi-eye'"
-                  [label]="
-                    (isSeasonFullyWatched(season)
-                      ? 'season.markAllUnwatched'
-                      : 'season.markAllWatched'
-                    ) | transloco
-                  "
-                  size="small"
-                  severity="secondary"
-                  variant="text"
-                  (onClick)="onBatchToggle($event, season)"
-                />
               </div>
             </div>
-            @if ((season.episodeCount ?? season.episodes.length) > 0) {
-              <p-progressbar [value]="getSeasonProgress(season)" styleClass="season-progress" />
-            }
-          </p-accordion-header>
-          <p-accordion-content>
+            <div class="season-header__actions">
+              <p-button
+                [icon]="isSeasonFullyWatched(season) ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                [label]="
+                  (isSeasonFullyWatched(season)
+                    ? 'season.markAllUnwatched'
+                    : 'season.markAllWatched'
+                  ) | transloco
+                "
+                size="small"
+                severity="secondary"
+                variant="text"
+                (onClick)="onBatchToggle($event, season)"
+              />
+              <i
+                class="pi season-header__chevron"
+                [class.pi-chevron-down]="!isExpanded(season.id)"
+                [class.pi-chevron-up]="isExpanded(season.id)"
+                aria-hidden="true"
+              ></i>
+            </div>
+          </button>
+
+          <!-- Progress bar always visible below header -->
+          @if ((season.episodeCount ?? season.episodes.length) > 0) {
+            <p-progressbar [value]="getSeasonProgress(season)" styleClass="season-progress" />
+          }
+
+          <!-- ── Episode list — always in DOM, animated via state binding ── -->
+          <div
+            class="season-content"
+            [id]="'season-content-' + season.id"
+            role="region"
+            [@accordionExpand]="isExpanded(season.id) ? 'expanded' : 'collapsed'"
+          >
             @for (episode of season.episodes ?? []; track episode.id) {
               <app-episode-item
                 [episode]="episode"
@@ -54,9 +79,9 @@
                 (watchedToggle)="onEpisodeToggle($event, season.id)"
               />
             }
-          </p-accordion-content>
-        </p-accordion-panel>
+          </div>
+        </div>
       }
-    </p-accordion>
+    </div>
   }
 </div>

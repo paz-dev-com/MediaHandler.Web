@@ -405,22 +405,83 @@ p-accordion {
   }
 }
 
-// Toast notifications
-.p-toast-message {
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-
-  .p-toast-message-text {
-    color: var(--color-text-primary);
+// Toast notifications — dark cinematic theme with accent left-border + slide-in animation
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
   }
-
-  .p-toast-summary {
-    color: var(--color-text-primary);
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
+}
 
-  .p-toast-detail {
-    color: var(--color-text-secondary);
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+.p-toast {
+  .p-toast-message {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    animation: toastSlideIn var(--anim-normal) var(--anim-easing) both;
+
+    &.p-toast-message-info {
+      border-left-color: var(--color-accent);
+    }
+
+    &.p-toast-message-success {
+      border-left-color: #4ade80;
+    }
+
+    &.p-toast-message-warn {
+      border-left-color: #facc15;
+    }
+
+    &.p-toast-message-error {
+      border-left-color: #f87171;
+    }
+
+    .p-toast-message-text {
+      color: var(--color-text-primary);
+    }
+
+    .p-toast-summary {
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      font-weight: 600;
+    }
+
+    .p-toast-detail {
+      color: var(--color-text-secondary);
+      font-family: var(--font-body);
+    }
+
+    .p-toast-icon-close {
+      color: var(--color-text-secondary);
+
+      &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-bg-elevated);
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-toast .p-toast-message {
+    animation: none;
   }
 }
 

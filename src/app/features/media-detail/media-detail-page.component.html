@@ -4,21 +4,45 @@
   <app-error-message [message]="service.error()!" (retry)="reload()" />
 } @else if (service.media(); as media) {
   <div class="detail-page">
-    <a routerLink="/" class="detail-page__back">
-      <i class="pi pi-arrow-left"></i> {{ 'common.back' | transloco }}
+    <a routerLink="/" class="detail-page__back" [attr.aria-label]="'common.back' | transloco">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i> {{ 'common.back' | transloco }}
     </a>
 
-    @if (media.backdropPath) {
-      <div
-        class="detail-page__backdrop"
-        [style.background-image]="'url(' + (media.backdropPath | tmdbImage: 'w1280') + ')'"
-      ></div>
+    <!-- ── Cinematic hero section with parallax backdrop ── -->
+    @if (media.backdropPath | tmdbImage: 'w1280'; as backdropUrl) {
+      <div class="detail-page__hero" @heroEnter>
+        <!-- Backdrop image inside parallax container; CSS reads --scroll-offset -->
+        <div class="detail-page__hero-parallax">
+          <img
+            [src]="backdropUrl"
+            [alt]="media.title"
+            width="1280"
+            height="720"
+            loading="lazy"
+            class="detail-page__hero-img"
+          />
+        </div>
+        <!-- Gradient fade from transparent → --color-bg-base -->
+        <div class="detail-page__hero-overlay" aria-hidden="true"></div>
+        <!-- Title overlay in Bebas Neue -->
+        <div class="detail-page__hero-content">
+          <h1 class="detail-page__hero-title">{{ media.title }}</h1>
+        </div>
+      </div>
     }
 
-    <div class="detail-page__content">
+    <!-- ── Poster + metadata row ── -->
+    <div class="detail-page__content" @contentEnter>
       <div class="detail-page__poster-col">
         @if (media.posterPath | tmdbImage: 'w342'; as posterUrl) {
-          <img [src]="posterUrl" [alt]="media.title" class="detail-page__poster" loading="lazy" />
+          <img
+            [src]="posterUrl"
+            [alt]="media.title"
+            width="342"
+            height="513"
+            loading="lazy"
+            class="detail-page__poster"
+          />
         } @else {
           <div class="detail-page__poster-placeholder">
             <i class="pi pi-image"></i>
@@ -28,7 +52,12 @@
 
       <div class="detail-page__meta">
         <div class="detail-page__header">
-          <h1 class="detail-page__title">{{ media.title }}</h1>
+          <!-- Use H1 only when there is no hero backdrop to avoid duplicate H1 -->
+          @if (!(media.backdropPath | tmdbImage: 'w1280')) {
+            <h1 class="detail-page__title">{{ media.title }}</h1>
+          } @else {
+            <h2 class="detail-page__title">{{ media.title }}</h2>
+          }
           @if (media.originalTitle && media.originalTitle !== media.title) {
             <p class="detail-page__original-title">{{ media.originalTitle }}</p>
           }
@@ -99,7 +128,7 @@
             (onClick)="onWatchedToggle()"
           />
           @if (media.userMedia?.watchedAt) {
-            <span class="text-sm" style="color: var(--color-text-secondary)">
+            <span class="detail-page__watched-date">
               {{ 'media.watchedOn' | transloco }} {{ media.userMedia!.watchedAt | slice: 0 : 10 }}
             </span>
           }
@@ -107,7 +136,7 @@
       </div>
     </div>
 
-    <!-- TV Show: seasons first, then files accordion at the bottom -->
+    <!-- TV Show: season list -->
     @if (media.type === MediaType.TvShow) {
       <div class="detail-page__seasons">
         @if (service.seasonsLoading()) {
@@ -131,6 +160,7 @@
         class="detail-page__files-header"
         (click)="toggleFiles()"
         [attr.aria-expanded]="filesOpen()"
+        [attr.aria-label]="'media.files' | transloco"
         type="button"
       >
         <h3>{{ 'media.files' | transloco }}</h3>
@@ -148,7 +178,5 @@
         }
       </div>
     </div>
-
-    <!-- Films: no seasons section -->
   </div>
 }

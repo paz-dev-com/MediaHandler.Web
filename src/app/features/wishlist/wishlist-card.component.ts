@@ -1,6 +1,15 @@
 import { DatePipe, SlicePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  input,
+  signal,
+} from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { TranslocoModule } from '@jsverse/transloco';
+import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
 import { WishlistItem } from '@shared/models/wishlist.model';
 import { TmdbImagePipe } from '@shared/pipes/tmdb-image.pipe';
 import { ButtonModule } from 'primeng/button';
@@ -13,18 +22,27 @@ import { TagModule } from 'primeng/tag';
   templateUrl: './wishlist-card.component.html',
   styleUrl: './wishlist-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('cardEnter', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(12px)' }),
+        animate(ANIMATION_TIMINGS.NORMAL, style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
+    ]),
+  ],
 })
 export class WishlistCardComponent {
-  @Input({ required: true }) item!: WishlistItem;
+  readonly item = input.required<WishlistItem>();
+  readonly hovered = signal(false);
 
   @Output() acquiredToggle = new EventEmitter<{ id: string; isAcquired: boolean }>();
   @Output() remove = new EventEmitter<string>();
 
   onMarkAcquired(): void {
-    this.acquiredToggle.emit({ id: this.item.id, isAcquired: !this.item.isAcquired });
+    this.acquiredToggle.emit({ id: this.item().id, isAcquired: !this.item().isAcquired });
   }
 
   onRemove(): void {
-    this.remove.emit(this.item.id);
+    this.remove.emit(this.item().id);
   }
 }

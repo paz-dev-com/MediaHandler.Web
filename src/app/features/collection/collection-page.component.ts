@@ -10,6 +10,7 @@ import { CollectionStatsComponent } from './collection-stats.component';
 import { CollectionFilters, CollectionService } from './collection.service';
 import { EmptyCollectionComponent } from './empty-collection.component';
 import { MediaCardComponent } from './media-card.component';
+import { SpotlightCarouselComponent } from './spotlight-carousel.component';
 
 @Component({
   selector: 'app-collection-page',
@@ -25,6 +26,7 @@ import { MediaCardComponent } from './media-card.component';
     EmptyCollectionComponent,
     LoadingSkeletonComponent,
     ErrorMessageComponent,
+    SpotlightCarouselComponent,
   ],
   animations: [
     trigger('cardListStagger', [
