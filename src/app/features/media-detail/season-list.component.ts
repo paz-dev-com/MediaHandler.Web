@@ -1,8 +1,9 @@
 import { SlicePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TranslocoModule } from '@jsverse/transloco';
+import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
 import { TvSeason } from '@shared/models/tv.model';
-import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
@@ -13,7 +14,6 @@ import { EpisodeItemComponent } from './episode-item.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TranslocoModule,
-    AccordionModule,
     ButtonModule,
     ProgressBarModule,
     TagModule,
@@ -22,9 +22,23 @@ import { EpisodeItemComponent } from './episode-item.component';
   ],
   templateUrl: './season-list.component.html',
   styleUrl: './season-list.component.scss',
+  animations: [
+    /**
+     * @accordionExpand — state-based height animation (no :enter flash).
+     * The content div is always in the DOM, starting in 'collapsed' state.
+     * Transitioning to 'expanded' avoids the 1-frame visibility flash
+     * that `:enter` animations produce.
+     */
+    trigger('accordionExpand', [
+      state('collapsed', style({ height: '0', overflow: 'hidden', opacity: 0 })),
+      state('expanded', style({ height: '*', overflow: 'visible', opacity: 1 })),
+      transition('collapsed => expanded', animate(ANIMATION_TIMINGS.NORMAL)),
+      transition('expanded => collapsed', animate(ANIMATION_TIMINGS.FAST)),
+    ]),
+  ],
 })
 export class SeasonListComponent {
-  /** T121: Accept null/undefined gracefully — defaults to empty array. */
+  /** Accept null/undefined gracefully — defaults to empty array. */
   readonly seasons = input<TvSeason[]>([]);
   readonly mediaId = input.required<string>();
   readonly episodeWatchedToggle = output<{
@@ -40,15 +54,32 @@ export class SeasonListComponent {
     isWatched: boolean;
   }>();
 
+  /** Set of currently expanded season IDs. */
+  private readonly expandedSeasonIds = signal<Set<string>>(new Set());
+
+  isExpanded(seasonId: string): boolean {
+    return this.expandedSeasonIds().has(seasonId);
+  }
+
+  toggleSeason(seasonId: string): void {
+    this.expandedSeasonIds.update((prev) => {
+      const next = new Set(prev);
+      if (next.has(seasonId)) {
+        next.delete(seasonId);
+      } else {
+        next.add(seasonId);
+      }
+      return next;
+    });
+  }
+
   isSeasonFullyWatched(season: TvSeason): boolean {
-    const episodes = season.episodes ?? [];
-    const total = season.episodeCount ?? episodes.length;
+    const total = season.episodeCount ?? (season.episodes ?? []).length;
     return total > 0 && season.watchedCount >= total;
   }
 
   getSeasonProgress(season: TvSeason): number {
-    const episodes = season.episodes ?? [];
-    const total = season.episodeCount ?? episodes.length;
+    const total = season.episodeCount ?? (season.episodes ?? []).length;
     if (total === 0) return 0;
     return Math.round((season.watchedCount / total) * 100);
   }

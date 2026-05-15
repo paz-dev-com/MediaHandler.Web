@@ -96,12 +96,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Add hero section logic with parallax scroll handler (`requestAnimationFrame`-throttled scroll listener setting `--scroll-offset` CSS custom property, disabled under `prefers-reduced-motion`), and entry animation trigger to `MediaDetailPageComponent` in `src/app/features/media-detail/media-detail-page.component.ts`
-- [ ] T027 [P] [US3] Update detail page template with full-width hero section (backdrop image via `NgOptimizedImage` with width/height, gradient overlay using `--color-poster-gradient`, title in `--font-display`, metadata in `--font-body`), and parallax transform binding in `src/app/features/media-detail/media-detail-page.component.html`
-- [ ] T028 [P] [US3] Restyle detail page with hero section styles (full-width backdrop, gradient fade to `--color-bg-base`, parallax transform layer), dark content area (`--color-bg-surface` panels), and responsive layout adjustments in `src/app/features/media-detail/media-detail-page.component.scss`
-- [ ] T029 [US3] Add `@accordionExpand` Angular Animation trigger (height 0→auto with opacity fade, 300ms, staggered episode fade-in) to `SeasonListComponent` in `src/app/features/media-detail/season-list.component.ts`
-- [ ] T030 [US3] Update season list template with animation trigger bindings on expand/collapse and staggered episode entry in `src/app/features/media-detail/season-list.component.html`
-- [ ] T031 [US3] Restyle season list with dark accordion styles (`--color-bg-surface` headers, `--color-bg-elevated` content, `--color-border` dividers, `--color-accent` expand indicator) in `src/app/features/media-detail/season-list.component.scss`
+- [x] T026 [P] [US3] Add hero section logic with parallax scroll handler (`requestAnimationFrame`-throttled scroll listener setting `--scroll-offset` CSS custom property, disabled under `prefers-reduced-motion`), and entry animation trigger to `MediaDetailPageComponent` in `src/app/features/media-detail/media-detail-page.component.ts`
+- [x] T027 [P] [US3] Update detail page template with full-width hero section (backdrop image via `NgOptimizedImage` with width/height, gradient overlay using `--color-poster-gradient`, title in `--font-display`, metadata in `--font-body`), and parallax transform binding in `src/app/features/media-detail/media-detail-page.component.html`
+- [x] T028 [P] [US3] Restyle detail page with hero section styles (full-width backdrop, gradient fade to `--color-bg-base`, parallax transform layer), dark content area (`--color-bg-surface` panels), and responsive layout adjustments in `src/app/features/media-detail/media-detail-page.component.scss`
+- [x] T029 [US3] Add `@accordionExpand` Angular Animation trigger (height 0→auto with opacity fade, 300ms, staggered episode fade-in) to `SeasonListComponent` in `src/app/features/media-detail/season-list.component.ts`
+- [x] T030 [US3] Update season list template with animation trigger bindings on expand/collapse and staggered episode entry in `src/app/features/media-detail/season-list.component.html`
+- [x] T031 [US3] Restyle season list with dark accordion styles (`--color-bg-surface` headers, `--color-bg-elevated` content, `--color-border` dividers, `--color-accent` expand indicator) in `src/app/features/media-detail/season-list.component.scss`
 
 **Checkpoint**: Media detail page has a cinematic hero with parallax, animated accordion for seasons. Can be tested independently by navigating to any media item.
 
@@ -115,18 +115,18 @@
 
 ### Implementation for User Story 4
 
-- [ ] T032 [P] [US4] Add search input focus glow animation and staggered result card entrance trigger (`query + stagger`) to `TmdbSearchPageComponent` in `src/app/features/tmdb-search/tmdb-search-page.component.ts`
-- [ ] T033 [P] [US4] Update search page template with animation bindings on result cards and focus animation on search input in `src/app/features/tmdb-search/tmdb-search-page.component.html`
-- [ ] T034 [P] [US4] Restyle search page with dark theme (`--color-bg-base` background), search input focus animation (Indigo `--color-accent` glow border transition), and responsive grid for results in `src/app/features/tmdb-search/tmdb-search-page.component.scss`
-- [ ] T035 [P] [US4] Restyle `TmdbResultCardComponent` with dark card surface (`--color-bg-surface`), hover micro-interactions matching media cards, and `NgOptimizedImage` migration in `src/app/features/tmdb-search/tmdb-result-card.component.ts`
-- [ ] T036 [P] [US4] Update TMDB result card template with `NgOptimizedImage`, gradient overlay, and styled metadata in `src/app/features/tmdb-search/tmdb-result-card.component.html`
-- [ ] T037 [P] [US4] Restyle TMDB result card with dark theme, hover glow, and consistent card styling in `src/app/features/tmdb-search/tmdb-result-card.component.scss`
-- [ ] T038 [P] [US4] Add staggered entrance animation trigger to `WishlistPageComponent` and apply responsive CSS Grid (matching collection column counts) in `src/app/features/wishlist/wishlist-page.component.ts`
-- [ ] T039 [P] [US4] Update wishlist page template with animation bindings and responsive grid wrapper in `src/app/features/wishlist/wishlist-page.component.html`
-- [ ] T040 [P] [US4] Restyle wishlist page with dark grid layout, responsive columns, consistent spacing with collection in `src/app/features/wishlist/wishlist-page.component.scss`
-- [ ] T041 [P] [US4] Restyle `WishlistCardComponent` with dark card surface, hover micro-interactions (scale + glow), and `NgOptimizedImage` migration in `src/app/features/wishlist/wishlist-card.component.ts`
-- [ ] T042 [P] [US4] Update wishlist card template with `NgOptimizedImage`, gradient overlay, and styled metadata in `src/app/features/wishlist/wishlist-card.component.html`
-- [ ] T043 [P] [US4] Restyle wishlist card with dark theme, hover glow, Bebas Neue title, consistent with media cards in `src/app/features/wishlist/wishlist-card.component.scss`
+- [x] T032 [P] [US4] Add search input focus glow animation and staggered result card entrance trigger (`query + stagger`) to `TmdbSearchPageComponent` in `src/app/features/tmdb-search/tmdb-search-page.component.ts`
+- [x] T033 [P] [US4] Update search page template with animation bindings on result cards and focus animation on search input in `src/app/features/tmdb-search/tmdb-search-page.component.html`
+- [x] T034 [P] [US4] Restyle search page with dark theme (`--color-bg-base` background), search input focus animation (Indigo `--color-accent` glow border transition), and responsive grid for results in `src/app/features/tmdb-search/tmdb-search-page.component.scss`
+- [x] T035 [P] [US4] Restyle `TmdbResultCardComponent` with dark card surface (`--color-bg-surface`), hover micro-interactions matching media cards, and `NgOptimizedImage` migration in `src/app/features/tmdb-search/tmdb-result-card.component.ts`
+- [x] T036 [P] [US4] Update TMDB result card template with `NgOptimizedImage`, gradient overlay, and styled metadata in `src/app/features/tmdb-search/tmdb-result-card.component.html`
+- [x] T037 [P] [US4] Restyle TMDB result card with dark theme, hover glow, and consistent card styling in `src/app/features/tmdb-search/tmdb-result-card.component.scss`
+- [x] T038 [P] [US4] Add staggered entrance animation trigger to `WishlistPageComponent` and apply responsive CSS Grid (matching collection column counts) in `src/app/features/wishlist/wishlist-page.component.ts`
+- [x] T039 [P] [US4] Update wishlist page template with animation bindings and responsive grid wrapper in `src/app/features/wishlist/wishlist-page.component.html`
+- [x] T040 [P] [US4] Restyle wishlist page with dark grid layout, responsive columns, consistent spacing with collection in `src/app/features/wishlist/wishlist-page.component.scss`
+- [x] T041 [P] [US4] Restyle `WishlistCardComponent` with dark card surface, hover micro-interactions (scale + glow), and `NgOptimizedImage` migration in `src/app/features/wishlist/wishlist-card.component.ts`
+- [x] T042 [P] [US4] Update wishlist card template with `NgOptimizedImage`, gradient overlay, and styled metadata in `src/app/features/wishlist/wishlist-card.component.html`
+- [x] T043 [P] [US4] Restyle wishlist card with dark theme, hover glow, Bebas Neue title, consistent with media cards in `src/app/features/wishlist/wishlist-card.component.scss`
 
 **Checkpoint**: Search and wishlist pages have consistent dark cinematic styling, focus animations, staggered card entrances, and hover interactions. Can be tested independently.
 
@@ -140,8 +140,8 @@
 
 ### Implementation for User Story 5
 
-- [ ] T044 [US5] Restyle `ErrorMessageComponent` with dark theme styling (`--color-bg-elevated` background, `--color-text-primary` text, accent border) in `src/app/shared/components/error-message.component.ts`
-- [ ] T045 [US5] Add global PrimeNG toast overrides for dark theme (dark surface background, accent left-border, Angular Animations slide-in from right + fade-out) in `src/styles.scss`
+- [x] T044 [US5] Restyle `ErrorMessageComponent` with dark theme styling (`--color-bg-elevated` background, `--color-text-primary` text, accent border) in `src/app/shared/components/error-message.component.ts`
+- [x] T045 [US5] Add global PrimeNG toast overrides for dark theme (dark surface background, accent left-border, Angular Animations slide-in from right + fade-out) in `src/styles.scss`
 
 **Checkpoint**: Loading states are polished across the app, route transitions are smooth, and toast notifications have cinematic styling. Can be tested independently.
 
@@ -155,9 +155,9 @@
 
 ### Implementation for User Story 6
 
-- [ ] T046 [US6] Add `@.disabled` binding for Angular Animations (bound to `prefers-reduced-motion` media query match via `matchMedia`) to disable all Angular Animation triggers when reduced motion is preferred in `src/app/app.ts`
-- [ ] T047 [US6] Audit and update all interactive elements (nav items, cards, buttons, accordions, search input) to ensure keyboard operability, `tabindex` where needed, `aria-label` attributes, and visible focus ring via `--color-accent` in all modified component templates
-- [ ] T048 [US6] Verify and enforce `alt` attributes on all `<img>` and `NgOptimizedImage` instances with media title text across `src/app/features/collection/`, `src/app/features/media-detail/`, `src/app/features/tmdb-search/`, and `src/app/features/wishlist/`
+- [x] T046 [US6] Add `@.disabled` binding for Angular Animations (bound to `prefers-reduced-motion` media query match via `matchMedia`) to disable all Angular Animation triggers when reduced motion is preferred in `src/app/app.ts`
+- [x] T047 [US6] Audit and update all interactive elements (nav items, cards, buttons, accordions, search input) to ensure keyboard operability, `tabindex` where needed, `aria-label` attributes, and visible focus ring via `--color-accent` in all modified component templates
+- [x] T048 [US6] Verify and enforce `alt` attributes on all `<img>` and `NgOptimizedImage` instances with media title text across `src/app/features/collection/`, `src/app/features/media-detail/`, `src/app/features/tmdb-search/`, and `src/app/features/wishlist/`
 
 **Checkpoint**: App is fully accessible — reduced motion disables all animations, keyboard navigation works, focus rings are visible, contrast meets WCAG AA, and all images have alt text.
 
@@ -171,14 +171,52 @@
 
 ### Implementation
 
-- [ ] T049 [FR-023] Create `SpotlightCarouselComponent` (standalone, OnPush, signals) with horizontal scroll, Angular Animations slide transitions, responsive sizing, and dark card styling in `src/app/features/collection/spotlight-carousel.component.ts`
-- [ ] T050 [FR-023] Integrate `SpotlightCarouselComponent` into the collection page template above the main grid (conditionally rendered when recently added items exist; data source: last 10 items sorted by `dateAdded` descending) in `src/app/features/collection/collection-page.component.html`
+- [x] T049 [FR-023] Create `SpotlightCarouselComponent` (standalone, OnPush, signals) with horizontal scroll, Angular Animations slide transitions, responsive sizing, and dark card styling in `src/app/features/collection/spotlight-carousel.component.ts`
+- [x] T050 [FR-023] Integrate `SpotlightCarouselComponent` into the collection page template above the main grid (conditionally rendered when recently added items exist; data source: last 10 items sorted by `dateAdded` descending) in `src/app/features/collection/collection-page.component.html`
 
 **Checkpoint**: Spotlight carousel is displayed on the collection page with smooth animations. Optional enhancement — collection page works without it.
 
 ---
 
-## Phase 10: Polish & Cross-Cutting Concerns
+## Phase 10: FR-022 — Profile Page Theme-Only (Priority: P3)
+
+**Goal**: Apply the dark cinematic palette and typography tokens to the Profile page. No advanced animations — only design token migration (colors, fonts, surfaces, borders) per FR-022.
+
+**Independent Test**: Navigate to the Profile page, verify dark background surfaces (`--color-bg-surface`), accent-colored avatar, Bebas Neue page title, Inter body text, and consistent `--color-border` on cards. No shimmer, parallax, or staggered entrance animations expected.
+
+### Implementation for FR-022 — Profile
+
+- [x] T064 [FR-022] Restyle profile page SCSS to use design tokens: replace `var(--p-primary-color)` with `var(--color-accent)` on avatar, `var(--p-text-color-secondary)` with `var(--color-text-secondary)` on labels, `var(--p-text-color)` with `var(--color-text-primary)` on values; apply `font-family: var(--font-display)` to `&__title`, `font-family: var(--font-body)` to body text elements; add `background: var(--color-bg-surface)` and `border: 1px solid var(--color-border)` to `&__card` and `&__preferences` in `src/app/features/profile/profile-page.component.scss`
+
+**Checkpoint**: Profile page uses design tokens for all colors, typography, and surfaces. Visually consistent with the dark cinematic theme. No animations required.
+
+---
+
+## Phase 11: FR-022 — Admin Dashboard Theme-Only (Priority: P3)
+
+**Goal**: Apply the dark cinematic palette and typography tokens to all Admin area components (layout, dashboard, scanner, users, library roots, review, scan results, enrichment, parent folders, and shared dialogs). No advanced animations — only design token migration per FR-022.
+
+**Independent Test**: Navigate to Admin → Dashboard, verify dark surfaces and design token colors throughout. Click through each admin sub-page (Users, Library Roots, Scanner, Review, Scan Results, Enrichment, Parent Folders) and confirm consistent dark palette, `--font-display` on page titles, `--font-body` on body text, and `--color-border` on all borders/dividers.
+
+### Implementation for FR-022 — Admin
+
+- [ ] T065 [FR-022] Restyle admin layout SCSS: add `background: var(--color-bg-base)` to `:host`, `color: var(--color-text-primary)` to `.admin-layout`, and `border-bottom: 1px solid var(--color-border)` to tab navigation area in `src/app/features/admin/admin-layout.component.scss`
+- [ ] T066 [P] [FR-022] Restyle dashboard page SCSS: replace `var(--text-color)` with `var(--color-text-primary)` on `&__title`, apply `font-family: var(--font-display)` to title, add `background: var(--color-bg-surface)` and `border: 1px solid var(--color-border)` to grid cards in `src/app/features/admin/dashboard/admin-dashboard-page.component.scss`
+- [ ] T067 [P] [FR-022] Restyle health panel SCSS: replace `var(--text-color-secondary)` with `var(--color-text-secondary)` on `&__label` and `&__empty`, replace `var(--text-color)` with `var(--color-text-primary)` on `&__value`, apply `font-family: var(--font-body)` to content text in `src/app/features/admin/dashboard/health-panel.component.scss`
+- [ ] T068 [P] [FR-022] Restyle scanner page and sub-components SCSS: replace `var(--p-surface-border)` with `var(--color-border)` and `var(--p-surface-card)` with `var(--color-bg-surface)` on section containers, apply `font-family: var(--font-display)` to `__title` elements; update scan-status `var(--p-surface-100)` to `var(--color-bg-elevated)` and `var(--p-text-muted-color)` to `var(--color-text-secondary)` across `src/app/features/admin/scanner/admin-scanner-page.component.scss`, `src/app/features/admin/scanner/scan-status.component.scss`, `src/app/features/admin/scanner/scan-launcher.component.scss`, and `src/app/features/admin/scanner/scan-history-table.component.scss`
+- [ ] T069 [P] [FR-022] Restyle users page SCSS: apply `font-family: var(--font-display)` to `&__title`, `font-family: var(--font-body)` to body text, add `color: var(--color-text-primary)` to title in `src/app/features/admin/users/admin-users-page.component.scss`
+- [ ] T070 [P] [FR-022] Restyle library roots page SCSS: apply `font-family: var(--font-display)` to `&__title`, replace `var(--p-primary-color)` with `var(--color-accent)` and `var(--p-primary-contrast-color)` with `var(--color-text-primary)` on `&__badge`, add `color: var(--color-text-primary)` to title in `src/app/features/admin/library-roots/admin-library-roots-page.component.scss`
+- [ ] T071 [P] [FR-022] Restyle review page and resolve dialog SCSS: replace `var(--surface-hover)` with `var(--color-bg-elevated)` on row hover, apply `font-family: var(--font-display)` to `&__title`; in resolve dialog replace `var(--text-color-secondary)` with `var(--color-text-secondary)`, `var(--surface-border)` with `var(--color-border)`, `var(--surface-hover)` with `var(--color-bg-elevated)`, `var(--primary-color)` with `var(--color-accent)`, `var(--primary-50)` with `var(--color-bg-surface)`, `var(--surface-100)` with `var(--color-bg-elevated)` across `src/app/features/admin/review/admin-review-page.component.scss` and `src/app/features/admin/review/review-resolve-dialog.component.scss`
+- [ ] T072 [P] [FR-022] Restyle scan results page and sub-components SCSS: replace `var(--p-text-muted-color)` with `var(--color-text-secondary)`, `var(--p-surface-border)` with `var(--color-border)`, `var(--p-surface-50)` and `var(--p-surface-100)` with `var(--color-bg-elevated)`, `var(--p-surface-200)` with `var(--color-bg-elevated)` across `src/app/features/admin/scan-results/admin-scan-results-page.component.scss`, `src/app/features/admin/scan-results/scan-decision-detail.component.scss`, `src/app/features/admin/scan-results/scan-decision-table.component.scss`, and `src/app/features/admin/scan-results/tv-show-group-list.component.scss`
+- [ ] T073 [P] [FR-022] Restyle enrichment page SCSS: replace `var(--p-text-muted-color)` with `var(--color-text-secondary)` on `&__stat-label`, apply `font-family: var(--font-display)` to `&__title`, add `color: var(--color-text-primary)` to `&__stat-value` in `src/app/features/admin/enrichment/admin-enrichment-page.component.scss`
+- [ ] T074 [P] [FR-022] Restyle parent folders page SCSS: replace `var(--p-text-color-secondary)` with `var(--color-text-secondary)` on `&__subtitle`, replace `var(--p-primary-color)` with `var(--color-accent)` and `var(--p-primary-contrast-color)` with `var(--color-text-primary)` on `&__badge`, apply `font-family: var(--font-display)` to `&__title` in `src/app/features/admin/parent-folders/admin-parent-folders-page.component.scss`
+- [ ] T075 [P] [FR-022] Restyle shared admin components SCSS: in rename-dialog replace `var(--text-color-secondary)` with `var(--color-text-secondary)` and `var(--surface-border)` with `var(--color-border)`; in tmdb-search-panel replace `var(--p-surface-border)` with `var(--color-border)`, `var(--p-surface-hover)` with `var(--color-bg-elevated)`, `var(--p-surface-200)` with `var(--color-bg-elevated)`, `var(--p-text-muted-color)` with `var(--color-text-secondary)` across `src/app/features/admin/shared/rename-dialog.component.scss` and `src/app/features/admin/shared/tmdb-search-panel.component.scss`
+
+**Checkpoint**: All admin pages use design tokens for colors, typography, and surfaces. Visually consistent with the dark cinematic theme across all sub-pages. No animations required. T051 verification can now confirm theme-only pages are correct.
+
+---
+
+## Phase 12: Polish & Cross-Cutting Concerns
 
 **Purpose**: Final improvements that affect multiple user stories
 
@@ -191,7 +229,7 @@
 
 ---
 
-## Phase 11: Tests (Constitution §II — Mandatory)
+## Phase 13: Tests (Constitution §II — Mandatory)
 
 **Purpose**: Unit and component tests for all new shared utilities and modified components. Required by constitution §II (80% coverage, behavior-focused, test isolation). Uses Vitest.
 
@@ -218,8 +256,10 @@
 - **US5 Loading States (Phase 7)**: Depends on US1 (shimmer component from T022)
 - **US6 Accessibility (Phase 8)**: Depends on US1–US4 (audits all modified components)
 - **Spotlight Carousel (Phase 9)**: Depends on US1 (integrates into collection page)
-- **Polish (Phase 10)**: Depends on all user stories being complete
-- **Tests (Phase 11)**: Can start incrementally after each phase; T057-T063 map to Foundational/Phase 2-5 components and can be written in parallel with implementation work
+- **FR-022 Profile Theme-Only (Phase 10)**: Depends on Foundational (design tokens from Phase 1/2) — can run in parallel with US1–US4
+- **FR-022 Admin Theme-Only (Phase 11)**: Depends on Foundational (design tokens from Phase 1/2) — can run in parallel with US1–US4 and Phase 10
+- **Polish (Phase 12)**: Depends on all user stories and FR-022 phases being complete — T051 verifies theme-only pages from Phases 10–11
+- **Tests (Phase 13)**: Can start incrementally after each phase; T057-T063 map to Foundational/Phase 2-5 components and can be written in parallel with implementation work
 
 ### User Story Dependencies
 
@@ -244,7 +284,9 @@
 - **Phase 4**: All US2 tasks are sequential (same component)
 - **Phase 5**: T026, T027, T028 (detail page) in parallel; T029→T030→T031 (season list) sequential
 - **Phase 6**: All US4 tasks are parallelizable (different component files across search and wishlist)
-- **After Foundational**: US1, US2, US3, US4 can all proceed simultaneously
+- **After Foundational**: US1, US2, US3, US4, FR-022 Profile (Phase 10), FR-022 Admin (Phase 11) can all proceed simultaneously
+- **Phase 10**: Single task (T064) — profile SCSS restyling
+- **Phase 11**: T066–T075 are all parallelizable (different admin component SCSS files); only T065 (admin layout) should complete first as it sets the layout shell tokens
 
 ---
 
@@ -299,7 +341,8 @@ Developer D → US4: Search + Wishlist (Phase 6)
 6. Add US5 (Loading States) → Polished transitions and toasts → Deploy/Demo
 7. Add US6 (Accessibility) → Reduced motion + keyboard nav → Deploy/Demo
 8. Add Spotlight Carousel (optional P3) → Premium carousel enhancement
-9. Each story adds value without breaking previous stories
+9. Add FR-022 Profile + Admin Theme-Only (Phases 10–11) → Dark palette + typography on remaining pages
+10. Each story adds value without breaking previous stories
 
 ---
 

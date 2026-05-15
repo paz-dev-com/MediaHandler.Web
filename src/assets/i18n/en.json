@@ -49,7 +49,8 @@
       "tvShows": "TV Shows",
       "watched": "Watched",
       "unwatched": "Unwatched"
-    }
+    },
+    "recentlyAdded": "Recently Added"
   },
   "media": {
     "overview": "Overview",
@@ -523,6 +524,8 @@
     "collapseSeason": "Collapse season {{number}}",
     "loadingContent": "Loading content, please wait",
     "searchInput": "Search for movies and TV shows",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right"
   }
 }
