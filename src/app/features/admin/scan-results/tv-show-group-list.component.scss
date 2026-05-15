@@ -1,5 +1,6 @@
 .tv-show-group-list {
   padding: 1rem;
+  font-family: var(--font-body);
 
   &__header {
     display: flex;
@@ -11,6 +12,7 @@
   &__show-name {
     font-weight: 600;
     flex: 1;
+    color: var(--color-text-primary);
   }
 
   &__actions {
@@ -26,13 +28,13 @@
   }
 
   &__tmdb-id {
-    color: var(--p-text-muted-color);
+    color: var(--color-text-secondary);
     font-size: 0.875rem;
     margin-left: 0.25rem;
   }
 
   &__episode-count {
-    color: var(--p-text-muted-color);
+    color: var(--color-text-secondary);
     margin: 0;
   }
 }

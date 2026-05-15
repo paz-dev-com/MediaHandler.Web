@@ -13,6 +13,9 @@
 
   &__title {
     margin: 0;
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--color-text-primary);
   }
 
   &__filters {
@@ -26,7 +29,7 @@
     cursor: pointer;
 
     &:hover td {
-      background-color: var(--surface-hover);
+      background-color: var(--color-bg-elevated);
     }
   }
 

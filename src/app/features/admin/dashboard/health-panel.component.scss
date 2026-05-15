@@ -1,4 +1,6 @@
 .health-panel {
+  font-family: var(--font-body);
+
   &__loading {
     display: flex;
     justify-content: center;
@@ -21,15 +23,15 @@
   &__label {
     font-weight: 600;
     min-width: 6rem;
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
   }
 
   &__value {
-    color: var(--text-color);
+    color: var(--color-text-primary);
   }
 
   &__empty {
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
     font-style: italic;
   }
 }

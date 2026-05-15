@@ -1,4 +1,6 @@
 .review-resolve-dialog {
+  font-family: var(--font-body);
+
   &__content {
     display: flex;
     flex-direction: column;
@@ -14,6 +16,7 @@
   &__section-title {
     font-weight: 600;
     margin: 0 0 0.5rem;
+    color: var(--color-text-primary);
   }
 
   &__meta-row {
@@ -31,19 +34,21 @@
   &__label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
   &__value {
     font-size: 0.9rem;
+    color: var(--color-text-primary);
   }
 
   &__path {
     font-family: monospace;
     font-size: 0.8rem;
     word-break: break-all;
+    color: var(--color-text-secondary);
   }
 
   &__candidates {
@@ -59,18 +64,18 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0.75rem;
-    border: 1px solid var(--surface-border);
-    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius, 6px);
     cursor: pointer;
-    transition: background-color 0.15s;
+    transition: background-color var(--anim-fast) var(--anim-easing);
 
     &:hover {
-      background-color: var(--surface-hover);
+      background-color: var(--color-bg-elevated);
     }
 
     &--selected {
-      border-color: var(--primary-color);
-      background-color: var(--primary-50, #eff6ff);
+      border-color: var(--color-accent);
+      background-color: var(--color-bg-surface);
     }
   }
 
@@ -85,8 +90,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--surface-100);
-      color: var(--text-color-secondary);
+      background-color: var(--color-bg-elevated);
+      color: var(--color-text-secondary);
     }
   }
 
@@ -99,25 +104,26 @@
 
   &__candidate-title {
     font-weight: 600;
+    color: var(--color-text-primary);
   }
 
   &__candidate-year {
     font-size: 0.85rem;
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
   }
 
   &__candidate-score {
     font-size: 0.8rem;
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
   }
 
   &__check {
-    color: var(--primary-color);
+    color: var(--color-accent);
     font-size: 1.2rem;
   }
 
   &__no-candidates {
-    color: var(--text-color-secondary);
+    color: var(--color-text-secondary);
     font-style: italic;
   }
 }

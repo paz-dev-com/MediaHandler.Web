@@ -1,5 +1,6 @@
 .admin-enrichment-page {
   padding: 1.5rem;
+  font-family: var(--font-body);
 
   &__header {
     display: flex;
@@ -10,6 +11,9 @@
 
   &__title {
     margin: 0;
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--color-text-primary);
   }
 
   &__summary-card,
@@ -36,11 +40,12 @@
     font-size: 2rem;
     font-weight: 700;
     line-height: 1;
+    color: var(--color-text-primary);
   }
 
   &__stat-label {
     font-size: 0.875rem;
-    color: var(--p-text-muted-color);
+    color: var(--color-text-secondary);
   }
 
   &__running {
@@ -58,6 +63,7 @@
 
   &__status-label {
     font-weight: 600;
+    color: var(--color-text-primary);
   }
 
   &__errors {

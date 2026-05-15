@@ -540,3 +540,274 @@ p-accordion {
     background: var(--color-accent);
   }
 }
+
+// ─── Progress Spinner ────────────────────────────────────────────────────────
+.p-progressspinner-circle {
+  stroke: var(--color-accent) !important;
+}
+
+// ─── Tags — all severity variants ────────────────────────────────────────────
+// PrimeNG p-tag generates CSS vars per severity. Override them all for dark theme.
+.p-tag {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  // Default / no severity → uses primary
+  &:not([class*='p-tag-']) {
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--color-text-accent);
+  }
+
+  // info → indigo accent
+  &.p-tag-info {
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--color-text-accent); // #a5b4fc — WCAG AA on dark
+  }
+
+  // success → green
+  &.p-tag-success {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+  }
+
+  // warn → amber/yellow
+  &.p-tag-warn {
+    background: rgba(250, 204, 21, 0.15);
+    color: #facc15;
+  }
+
+  // danger / error → red
+  &.p-tag-danger {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+  }
+
+  // secondary → muted surface
+  &.p-tag-secondary {
+    background: var(--color-bg-elevated);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  // contrast → high-contrast white-on-accent
+  &.p-tag-contrast {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+}
+
+// ─── DataTable (p-table) ─────────────────────────────────────────────────────
+.p-datatable {
+  font-family: var(--font-body);
+
+  // Table wrapper
+  .p-datatable-table-container {
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  // Header row
+  .p-datatable-thead > tr > th {
+    background: var(--color-bg-surface);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.6rem 0.875rem;
+  }
+
+  // Body rows
+  .p-datatable-tbody > tr {
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+
+    > td {
+      border-color: var(--color-border);
+      padding: 0.5rem 0.875rem;
+    }
+
+    &:hover > td {
+      background: var(--color-bg-surface);
+    }
+
+    // Row expansion
+    &.p-datatable-row-expansion > td {
+      background: var(--color-bg-base);
+      padding: 0;
+    }
+  }
+
+  // Striped variant (if used)
+  &.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+    background: var(--color-bg-surface);
+  }
+
+  // Expand/collapse toggle button
+  .p-row-toggler {
+    color: var(--color-text-secondary);
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-elevated);
+    }
+  }
+
+  // Footer
+  .p-datatable-tfoot > tr > td {
+    background: var(--color-bg-surface);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border);
+  }
+}
+
+// ─── Message (p-message) ─────────────────────────────────────────────────────
+.p-message {
+  font-family: var(--font-body);
+  border-radius: 6px;
+  border-width: 0 0 0 4px;
+  border-style: solid;
+
+  &.p-message-info {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--color-accent);
+    color: var(--color-text-accent);
+
+    .p-message-icon {
+      color: var(--color-accent);
+    }
+  }
+
+  &.p-message-success {
+    background: rgba(74, 222, 128, 0.1);
+    border-color: #4ade80;
+    color: #4ade80;
+
+    .p-message-icon {
+      color: #4ade80;
+    }
+  }
+
+  &.p-message-warn {
+    background: rgba(250, 204, 21, 0.1);
+    border-color: #facc15;
+    color: #facc15;
+
+    .p-message-icon {
+      color: #facc15;
+    }
+  }
+
+  &.p-message-error {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: #f87171;
+    color: #f87171;
+
+    .p-message-icon {
+      color: #f87171;
+    }
+  }
+
+  .p-message-text {
+    color: inherit;
+  }
+}
+
+// ─── Tabs (p-tabs / p-tablist / p-tab) ──────────────────────────────────────
+// Used in admin layout for sub-page navigation.
+.p-tabs {
+  font-family: var(--font-body);
+
+  .p-tablist {
+    background: transparent;
+    border-bottom: 1px solid var(--color-border);
+
+    // The active ink-bar (animated underline)
+    .p-tablist-active-bar {
+      background: var(--color-accent);
+    }
+  }
+
+  .p-tab {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+      color var(--anim-fast) var(--anim-easing),
+      border-color var(--anim-fast) var(--anim-easing);
+
+    &:hover:not(.p-tab-active) {
+      color: var(--color-text-primary);
+      background: transparent;
+    }
+
+    &.p-tab-active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+      background: transparent;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  .p-tabpanels {
+    background: transparent;
+    padding: 0;
+  }
+}
+
+// ─── Dialog ──────────────────────────────────────────────────────────────────
+// Reinforce modal dark theme (header + content + footer)
+.p-dialog {
+  font-family: var(--font-body);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  .p-dialog-header {
+    background: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border);
+    padding: 1rem 1.25rem 0.875rem;
+
+    .p-dialog-title {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-text-primary);
+    }
+
+    .p-dialog-header-icon {
+      color: var(--color-text-secondary);
+
+      &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-bg-elevated);
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    padding: 1.25rem;
+  }
+
+  .p-dialog-footer {
+    background: var(--color-bg-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 0.875rem 1.25rem;
+  }
+}
