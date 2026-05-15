@@ -54,6 +54,36 @@
             />
           </div>
         </div>
+
+        <!-- Appearance (theme) -->
+        <div class="profile-page__appearance p-card p-4">
+          <h2 class="profile-page__section-title">{{ t('profile.appearance') }}</h2>
+
+          <div class="profile-page__field">
+            <label class="profile-page__label" for="theme-select">
+              {{ t('profile.theme') }}
+            </label>
+            <div class="profile-page__theme-row">
+              <p-select
+                inputId="theme-select"
+                [options]="themeOptions"
+                [optionLabel]="'labelKey'"
+                optionValue="value"
+                [ngModel]="themeService.theme()"
+                (ngModelChange)="onThemeChange($event)"
+                styleClass="profile-page__theme-select"
+              >
+                <ng-template pTemplate="selectedItem" let-option>
+                  {{ t(option.labelKey) }}
+                </ng-template>
+                <ng-template pTemplate="item" let-option>
+                  {{ t(option.labelKey) }}
+                </ng-template>
+              </p-select>
+              <app-theme-toggle />
+            </div>
+          </div>
+        </div>
       </div>
     }
   </div>

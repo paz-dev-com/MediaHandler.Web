@@ -80,6 +80,52 @@
   }
 }
 
+// ─── Light Theme Tokens ──────────────────────────────────────────────────────
+// Applied when ThemeService sets data-theme="light" on <html>.
+// All --color-* tokens are overridden; --p-surface-* aliases cascade automatically.
+
+:root[data-theme='light'] {
+  /* Color — Background */
+  --color-bg-base: #f4f4f8;
+  --color-bg-surface: #ffffff;
+  --color-bg-elevated: #ededf4;
+
+  /* Color — Accent (Indigo — same across themes) */
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+  --color-accent-glow: rgba(99, 102, 241, 0.2);
+
+  /* Color — Text */
+  --color-text-primary: #0a0a0f;
+  --color-text-secondary: #52525b;
+  --color-text-accent: #4f46e5;
+
+  /* Color — Border & overlay */
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-poster-gradient: linear-gradient(
+    to top,
+    rgba(244, 244, 248, 0.96) 0%,
+    rgba(244, 244, 248, 0.45) 55%,
+    transparent 100%
+  );
+}
+
+// ─── Theme Transition ────────────────────────────────────────────────────────
+// Smooth 200ms crossfade when switching themes.
+// Disabled under prefers-reduced-motion.
+
+:root {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+}
+
 // ─── PrimeNG Surface Token Remapping (dark theme) ───────────────────────────
 // Remap PrimeNG's surface tokens to our cinematic design tokens so that all
 // PrimeNG components automatically use the dark palette.

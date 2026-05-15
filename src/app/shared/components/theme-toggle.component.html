@@ -1,0 +1,13 @@
+<button
+  class="theme-toggle"
+  (click)="toggle()"
+  [attr.aria-label]="'a11y.toggleTheme' | transloco"
+  [attr.title]="'a11y.toggleTheme' | transloco"
+  type="button"
+>
+  @if (themeService.resolvedTheme() === 'dark') {
+    <i class="pi pi-sun theme-toggle__icon"></i>
+  } @else {
+    <i class="pi pi-moon theme-toggle__icon"></i>
+  }
+</button>
