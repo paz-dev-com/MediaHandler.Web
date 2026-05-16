@@ -78,14 +78,28 @@
         </td>
         <td>{{ root.createdAt | date: 'short' }}</td>
         <td>
-          <p-button
-            icon="pi pi-trash"
-            severity="danger"
-            [text]="true"
-            [rounded]="true"
-            [ariaLabel]="t('admin.libraryRoots.removeButton')"
-            (onClick)="onRemove(root)"
-          />
+          <div class="admin-library-roots-page__row-actions">
+            <p-button
+              icon="pi pi-pencil"
+              severity="secondary"
+              [outlined]="true"
+              [rounded]="true"
+              [ariaLabel]="t('admin.libraryRoots.editButton')"
+              [pTooltip]="t('admin.libraryRoots.editButton')"
+              tooltipPosition="left"
+              (onClick)="onEdit(root)"
+            />
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [outlined]="true"
+              [rounded]="true"
+              [ariaLabel]="t('admin.libraryRoots.removeButton')"
+              [pTooltip]="t('admin.libraryRoots.removeButton')"
+              tooltipPosition="left"
+              (onClick)="onRemove(root)"
+            />
+          </div>
         </td>
       </tr>
     </ng-template>

@@ -38,10 +38,11 @@ export class AuthService {
   });
 
   constructor() {
-    // Once Auth0 confirms the user is authenticated (login OR page-refresh with
-    // valid tokens in localStorage), fetch the backend profile exactly once.
-    // If the user is not yet in the DB (404), loadProfile() will automatically
-    // trigger syncUser() to provision them, regardless of the entry point.
+    // On page refresh (returning session), load the stored profile from the DB —
+    // this preserves the role that was set at first login.
+    // For fresh logins, AuthCallbackComponent calls syncUser() explicitly after the
+    // code exchange completes; loadProfile() will call syncUser() as a fallback only
+    // when the user is not yet in the DB (404).
     this.auth0.isAuthenticated$.pipe(filter(Boolean), take(1)).subscribe(() => this.loadProfile());
   }
 
@@ -79,27 +80,37 @@ export class AuthService {
     if (this._synced) return;
     this._synced = true;
 
-    const auth0User = this._auth0User();
-
-    this.api
-      .post<User>('auth/sync', {
-        // sub, email and name are sourced from the Auth0 ID token (auth0.user$).
-        // This is the only reliable source in dev when Auth0 issues an opaque access
-        // token (no audience configured) — the backend cannot decode the sub from it.
-        sub: auth0User?.sub ?? null,
-        email: auth0User?.email ?? null,
-        name: auth0User?.name ?? null,
-      })
-      .subscribe({
-        next: (response) => {
-          this._profileLoaded = true;
-          this._user.set(response.data);
-        },
-        error: () => {
-          // Sync failed — reset so loadProfile() can retry GET /auth/me as a fallback.
-          this._profileLoaded = false;
-          this.loadProfile();
-        },
+    // Wait for the Auth0 ID token to be decoded before posting to auth/sync.
+    // _auth0User() (toSignal) can still be null at call time (Firefox, slow connections).
+    // auth0.user$ is replay-like: if the user is already loaded it emits synchronously.
+    this.auth0.user$
+      .pipe(
+        filter((u) => !!u?.sub),
+        take(1),
+      )
+      .subscribe((auth0User) => {
+        // Include roles from the ID token as a fallback for the API.
+        // Auth0 access tokens only carry roles when an Auth0 Action is configured;
+        // sending them from the ID token mirrors the email/name pattern.
+        const roles = (auth0User?.[ROLES_CLAIM] as string[] | undefined) ?? [];
+        this.api
+          .post<User>('auth/sync', {
+            sub: auth0User?.sub ?? null,
+            email: auth0User?.email ?? null,
+            name: auth0User?.name ?? null,
+            roles,
+          })
+          .subscribe({
+            next: (response) => {
+              this._profileLoaded = true;
+              this._user.set(response.data);
+            },
+            error: () => {
+              // Sync failed — reset so loadProfile() can retry GET /auth/me as a fallback.
+              this._profileLoaded = false;
+              this.loadProfile();
+            },
+          });
       });
   }
 

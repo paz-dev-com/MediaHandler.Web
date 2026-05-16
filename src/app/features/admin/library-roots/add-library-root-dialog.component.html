@@ -1,6 +1,8 @@
 <p-dialog
   *transloco="let t"
-  [header]="t('admin.libraryRoots.addDialog.title')"
+  [header]="
+    isEditMode ? t('admin.libraryRoots.editDialog.title') : t('admin.libraryRoots.addDialog.title')
+  "
   [visible]="visible()"
   (visibleChange)="onVisibleChange($event)"
   [modal]="true"
@@ -19,6 +21,7 @@
         type="text"
         [placeholder]="t('admin.libraryRoots.addDialog.pathPlaceholder')"
         [(ngModel)]="path"
+        [disabled]="isEditMode"
       />
     </div>
 
@@ -58,8 +61,12 @@
   <ng-template pTemplate="footer">
     <p-button [label]="t('common.cancel')" severity="secondary" (onClick)="onCancel()" />
     <p-button
-      [label]="t('admin.libraryRoots.addDialog.submit')"
-      [disabled]="!path || !selectedKind"
+      [label]="
+        isEditMode
+          ? t('admin.libraryRoots.editDialog.submit')
+          : t('admin.libraryRoots.addDialog.submit')
+      "
+      [disabled]="!selectedKind || (!isEditMode && !path)"
       (onClick)="onSubmit(t)"
     />
   </ng-template>

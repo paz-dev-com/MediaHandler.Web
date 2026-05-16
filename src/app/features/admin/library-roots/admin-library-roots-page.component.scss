@@ -33,4 +33,10 @@
     max-width: 20rem;
     color: var(--color-text-secondary);
   }
+
+  &__row-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 }

@@ -41,12 +41,25 @@
       }
     </ul>
 
-    <!-- Theme toggle — bottom of sidebar -->
+    <!-- Theme toggle + logout — bottom of sidebar -->
     <div class="sidebar__footer">
       <app-theme-toggle
         class="sidebar__theme-toggle"
         [class.sidebar__theme-toggle--expanded]="mode() === 'expanded'"
       />
+      <button
+        class="sidebar__logout"
+        type="button"
+        (click)="logout()"
+        [pTooltip]="mode() === 'collapsed' ? ('nav.signOut' | transloco) : ''"
+        tooltipPosition="right"
+        [attr.aria-label]="'nav.signOut' | transloco"
+      >
+        <i class="pi pi-sign-out"></i>
+        @if (mode() === 'expanded') {
+          <span class="sidebar__label">{{ 'nav.signOut' | transloco }}</span>
+        }
+      </button>
     </div>
   </nav>
 }

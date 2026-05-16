@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { AuthService } from '@core/auth/auth.service';
 import { ErrorMessageComponent } from '@shared/components/error-message.component';
 import { LoadingSkeletonComponent } from '@shared/components/loading-skeleton.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle.component';
@@ -42,6 +43,7 @@ interface ThemeOption {
 export class ProfilePageComponent implements OnInit {
   readonly profileService = inject(ProfileService);
   readonly themeService = inject(ThemeService);
+  private readonly authService = inject(AuthService);
   private readonly transloco = inject(TranslocoService);
 
   readonly languages: LanguageOption[] = [
@@ -72,5 +74,9 @@ export class ProfilePageComponent implements OnInit {
 
   onRetry(): void {
     this.profileService.loadProfile();
+  }
+
+  onLogout(): void {
+    this.authService.logout();
   }
 }

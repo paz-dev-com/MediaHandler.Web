@@ -2,15 +2,28 @@ import { ReviewItem } from '@shared/models/review.model';
 import { ReviewStatus } from '@shared/models/enums';
 
 /**
+ * Returns the immediate parent folder of a file path (removes the filename).
+ */
+function immParentOf(filePath: string): string {
+  const parts = filePath.split('/');
+  parts.pop();
+  return parts.join('/');
+}
+
+/**
  * Derives the best parent folder path to use as the scope for a bulk operation.
  *
- * Rules:
- * 1. If no open siblings → return immediate parent (e.g. /nas/tv/Show/Season 1).
- * 2. Compute the "show folder" = one level above the immediate parent.
- * 3. Filter siblings to only those that live inside that show folder.
- * 4. If no related siblings are found (all are from other shows) → return the show folder.
- * 5. If all related siblings are in the same sub-folder as the current file → return immediate parent.
- * 6. Otherwise (siblings span multiple sub-folders, e.g. different seasons) → return show folder.
+ * Algorithm — Lowest Common Ancestor (LCA):
+ * 1. Collect all open siblings (other Open items in the current list).
+ * 2. For each sibling, compute the LCA of its immediate parent with the accumulator.
+ * 3. Apply a minimum-depth guard: if the LCA would be shallower than 4 path parts
+ *    (e.g. /nas/share/folder), fall back to one level above the current file's
+ *    immediate parent so unrelated shows never pull the scope up to the NAS root.
+ *
+ * This correctly handles deeply nested structures such as:
+ *   /NAS/Séries/Franchise/Spinoff/Season/EpisodeFolder/file
+ * where siblings from different seasons or spinoffs (all visible in the current page)
+ * cause the LCA to climb to the franchise level rather than stopping at the season.
  *
  * @param filePath - The file path of the current review item.
  * @param items    - All review items used to find open siblings.
@@ -21,44 +34,35 @@ export function deriveRootParentFolder(filePath: string, items: ReviewItem[]): s
     (it) => it.status === ReviewStatus.Open && it.filePath !== filePath,
   );
 
-  const parts = filePath.split('/');
-  parts.pop(); // remove filename
-  const immParent = parts.join('/'); // e.g. /nas/tv/ShowName/Season 1
+  const currentParent = immParentOf(filePath);
 
-  // No open siblings → immediate parent is the right scope
   if (openSiblings.length === 0) {
-    return immParent;
+    return currentParent;
   }
 
-  // Show-level folder: one level above the immediate parent
-  const showFolderParts = parts.slice(0, -1);
-  const showFolder = showFolderParts.join('/'); // e.g. /nas/tv/ShowName
+  // Compute the LCA of the current file's parent with every open sibling's parent.
+  // Starting value is the current file's immediate parent (most specific scope).
+  let lcaParts = currentParent.split('/');
 
-  if (!showFolder) {
-    return immParent;
+  for (const sibling of openSiblings) {
+    const sibParts = immParentOf(sibling.filePath).split('/');
+    const minLen = Math.min(lcaParts.length, sibParts.length);
+    let i = 0;
+    while (i < minLen && lcaParts[i] === sibParts[i]) {
+      i++;
+    }
+    lcaParts = lcaParts.slice(0, i);
   }
 
-  // Only keep siblings that live inside the same show folder
-  const showFolderPrefix = showFolder + '/';
-  const relatedSiblings = openSiblings.filter((it) => it.filePath.startsWith(showFolderPrefix));
-
-  // No related siblings (all aliens from other shows) → default to show folder
-  if (relatedSiblings.length === 0) {
-    return showFolder;
+  // Guard: the LCA must be at least 4 path parts deep to avoid selecting a NAS
+  // share or drive root as the scope.
+  // Parts: ['', 'NAS 1', 'Séries', 'Franchise'] → length 4 is the minimum allowed.
+  // If the LCA is too shallow (siblings are from completely different trees),
+  // fall back to one level above the current file's immediate parent.
+  if (lcaParts.length < 4) {
+    const currentParts = currentParent.split('/');
+    return currentParts.length > 2 ? currentParts.slice(0, -1).join('/') : currentParent;
   }
 
-  // Check if every related sibling is in the same immediate sub-folder as the current file
-  const currentSubFolder = parts[showFolderParts.length]; // e.g. 'Season 1'
-  const allInSameSubFolder = relatedSiblings.every((it) => {
-    const sibParts = it.filePath.split('/');
-    return sibParts[showFolderParts.length] === currentSubFolder;
-  });
-
-  // All in the same sub-folder (e.g. same season) → season scope is enough
-  if (allInSameSubFolder) {
-    return immParent;
-  }
-
-  // Siblings span multiple sub-folders (e.g. different seasons) → use show folder
-  return showFolder;
+  return lcaParts.join('/');
 }

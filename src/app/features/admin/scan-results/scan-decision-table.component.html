@@ -53,7 +53,7 @@
       <p-message severity="info" [text]="t('admin.scanResults.empty')" />
     } @else {
       <div class="scan-decision-table__groups">
-        @for (group of groupedDecisions(); track group.showName) {
+        @for (group of pagedGroups(); track group.showName) {
           <div class="scan-decision-table__group">
             <!-- Group Header -->
             <div
@@ -139,10 +139,21 @@
                 />
               </div>
 
-              <!-- Group Episodes -->
+              <!-- Group Episodes — use native button for chevron to avoid PrimeNG overhead -->
               <div class="scan-decision-table__group-episodes">
                 @for (episode of group.episodes; track episode.id) {
                   <div class="scan-decision-table__episode-row">
+                    <button
+                      class="scan-decision-table__chevron-btn"
+                      type="button"
+                      (click)="toggleEpisode(episode.id); $event.stopPropagation()"
+                    >
+                      <i
+                        class="pi"
+                        [class.pi-chevron-down]="isEpisodeExpanded(episode.id)"
+                        [class.pi-chevron-right]="!isEpisodeExpanded(episode.id)"
+                      ></i>
+                    </button>
                     <span class="scan-decision-table__path" [title]="episode.filePath">{{
                       episode.filePath
                     }}</span>
@@ -152,15 +163,43 @@
                     />
                     <span>{{ episode.decidedAt | date: 'short' }}</span>
                   </div>
-                  <div class="scan-decision-table__episode-detail">
-                    <app-scan-decision-detail [decision]="episode" />
-                  </div>
+                  @if (isEpisodeExpanded(episode.id)) {
+                    <div class="scan-decision-table__episode-detail">
+                      <app-scan-decision-detail [decision]="episode" />
+                    </div>
+                  }
                 }
               </div>
             }
           </div>
         }
       </div>
+
+      <!-- Groups pagination -->
+      @if (groupsTotalPages() > 1) {
+        <div class="scan-decision-table__groups-pagination">
+          <button
+            class="scan-decision-table__page-btn"
+            type="button"
+            [disabled]="groupsPage() === 1"
+            (click)="goToGroupsPage(groupsPage() - 1)"
+          >
+            <i class="pi pi-chevron-left"></i>
+          </button>
+          <span class="scan-decision-table__page-info">
+            {{ groupsPage() }} / {{ groupsTotalPages() }} ({{ groupedDecisions().length }}
+            {{ t('admin.scanResults.groups') }})
+          </span>
+          <button
+            class="scan-decision-table__page-btn"
+            type="button"
+            [disabled]="groupsPage() === groupsTotalPages()"
+            (click)="goToGroupsPage(groupsPage() + 1)"
+          >
+            <i class="pi pi-chevron-right"></i>
+          </button>
+        </div>
+      }
     }
   } @else {
     <!-- Flat Table View -->

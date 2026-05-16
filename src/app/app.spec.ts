@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { AuthService } from '@auth0/auth0-angular';
+import { TranslocoService } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { describe, it, beforeEach, vi } from 'vitest';
@@ -46,6 +47,7 @@ describe('App', () => {
         provideRouter([]),
         provideNoopAnimations(),
         { provide: AuthService, useValue: mockAuth0 },
+        { provide: TranslocoService, useValue: { setActiveLang: vi.fn() } },
         MessageService,
       ],
     })

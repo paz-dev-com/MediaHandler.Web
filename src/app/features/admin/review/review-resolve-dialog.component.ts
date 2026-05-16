@@ -13,9 +13,8 @@ import { DecimalPipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
-import { FormsModule } from '@angular/forms';
+import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
 import { AdminReviewService } from './admin-review.service';
 import { ReviewItem, TmdbCandidate } from '@shared/models/review.model';
@@ -31,10 +30,9 @@ const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w92';
   standalone: true,
   imports: [
     DecimalPipe,
-    FormsModule,
     TranslocoModule,
-    CheckboxModule,
     DialogModule,
+    DividerModule,
     ButtonModule,
     TagModule,
     TmdbSearchPanelComponent,
@@ -53,7 +51,9 @@ export class ReviewResolveDialogComponent implements OnChanges {
 
   readonly selectedCandidate = signal<TmdbCandidate | null>(null);
   readonly showTmdbSearch = signal(false);
-  bulkResolve = false;
+  /** Signal — safe with OnPush; toggled by the bulk banner button */
+  readonly bulkResolve = signal(false);
+  readonly resolving = signal(false);
 
   readonly ReviewResolutionAction = ReviewResolutionAction;
   readonly MediaType = MediaType;
@@ -93,20 +93,23 @@ export class ReviewResolveDialogComponent implements OnChanges {
     // Reset selection when item changes
     this.selectedCandidate.set(null);
     this.showTmdbSearch.set(false);
-    this.bulkResolve = false;
+    this.bulkResolve.set(false);
+    this.resolving.set(false);
   }
 
   onVisibleChange(visible: boolean): void {
     if (!visible) {
       this.selectedCandidate.set(null);
       this.showTmdbSearch.set(false);
-      this.bulkResolve = false;
+      this.bulkResolve.set(false);
+      this.resolving.set(false);
       this.closed.emit();
     }
   }
 
   selectCandidate(candidate: TmdbCandidate): void {
     this.selectedCandidate.set(candidate);
+    this.showTmdbSearch.set(false);
   }
 
   isSelected(candidate: TmdbCandidate): boolean {
@@ -136,7 +139,9 @@ export class ReviewResolveDialogComponent implements OnChanges {
     const candidate = this.selectedCandidate();
     if (!this.item || !candidate) return;
 
-    if (this.bulkResolve) {
+    this.resolving.set(true);
+
+    if (this.bulkResolve()) {
       this.reviewService
         .bulkResolveByFolder(
           this.parentFolderPath(),
@@ -144,31 +149,39 @@ export class ReviewResolveDialogComponent implements OnChanges {
           candidate.tmdbId,
           candidate.kind as string,
         )
-        .subscribe((result) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: t('admin.review.bulkResolve.successToast', { count: result.resolvedCount }),
-            life: 3000,
-          });
+        .subscribe({
+          next: (result) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: t('admin.review.bulkResolve.successToast', { count: result.resolvedCount }),
+              life: 4000,
+            });
+            this.resolving.set(false);
+            this.resolved.emit();
+          },
+          error: () => this.resolving.set(false),
         });
     } else {
-      this.reviewService.resolveItem(
-        this.item.id,
-        ReviewResolutionAction.Assign,
-        candidate.tmdbId,
-        candidate.kind as MediaType,
-      );
-
-      this.messageService.add({
-        severity: 'success',
-        summary: t('admin.review.resolveDialog.assignedSuccess'),
-        life: 3000,
-      });
+      this.reviewService
+        .resolveItem(
+          this.item.id,
+          ReviewResolutionAction.Assign,
+          candidate.tmdbId,
+          candidate.kind as MediaType,
+        )
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: t('admin.review.resolveDialog.assignedSuccess'),
+              life: 3000,
+            });
+            this.resolving.set(false);
+            this.resolved.emit();
+          },
+          error: () => this.resolving.set(false),
+        });
     }
-
-    this.selectedCandidate.set(null);
-    this.showTmdbSearch.set(false);
-    this.resolved.emit();
   }
 
   onTmdbSearchSelected(
@@ -178,8 +191,9 @@ export class ReviewResolveDialogComponent implements OnChanges {
     if (!this.item) return;
 
     const kind: MediaType = result.mediaType === 'movie' ? MediaType.Film : MediaType.TvShow;
+    this.resolving.set(true);
 
-    if (this.bulkResolve) {
+    if (this.bulkResolve()) {
       this.reviewService
         .bulkResolveByFolder(
           this.parentFolderPath(),
@@ -187,25 +201,34 @@ export class ReviewResolveDialogComponent implements OnChanges {
           result.id,
           kind as string,
         )
-        .subscribe((res) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: t('admin.review.bulkResolve.successToast', { count: res.resolvedCount }),
-            life: 3000,
-          });
+        .subscribe({
+          next: (res) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: t('admin.review.bulkResolve.successToast', { count: res.resolvedCount }),
+              life: 4000,
+            });
+            this.resolving.set(false);
+            this.resolved.emit();
+          },
+          error: () => this.resolving.set(false),
         });
     } else {
-      this.reviewService.resolveItem(this.item.id, ReviewResolutionAction.Assign, result.id, kind);
-
-      this.messageService.add({
-        severity: 'success',
-        summary: t('admin.review.resolveDialog.assignedSuccess'),
-        life: 3000,
-      });
+      this.reviewService
+        .resolveItem(this.item.id, ReviewResolutionAction.Assign, result.id, kind)
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: t('admin.review.resolveDialog.assignedSuccess'),
+              life: 3000,
+            });
+            this.resolving.set(false);
+            this.resolved.emit();
+          },
+          error: () => this.resolving.set(false),
+        });
     }
-
-    this.showTmdbSearch.set(false);
-    this.resolved.emit();
   }
 
   onAction(
@@ -214,34 +237,36 @@ export class ReviewResolveDialogComponent implements OnChanges {
   ): void {
     if (!this.item) return;
 
-    if (this.bulkResolve && action !== ReviewResolutionAction.Reopen) {
-      this.reviewService
-        .bulkResolveByFolder(this.parentFolderPath(), action)
-        .subscribe((result) => {
+    if (this.bulkResolve() && action !== ReviewResolutionAction.Reopen) {
+      this.resolving.set(true);
+      this.reviewService.bulkResolveByFolder(this.parentFolderPath(), action).subscribe({
+        next: (result) => {
           this.messageService.add({
             severity: 'success',
             summary: t('admin.review.bulkResolve.successToast', { count: result.resolvedCount }),
-            life: 3000,
+            life: 4000,
           });
-        });
+          this.resolving.set(false);
+          this.resolved.emit();
+        },
+        error: () => this.resolving.set(false),
+      });
     } else {
-      this.reviewService.resolveItem(this.item.id, action);
-
-      const msgKey =
-        action === ReviewResolutionAction.Dismiss
-          ? 'admin.review.resolveDialog.dismissedSuccess'
-          : action === ReviewResolutionAction.Delete
-            ? 'admin.review.resolveDialog.deletedSuccess'
-            : 'admin.review.resolveDialog.reopenedSuccess';
-
-      this.messageService.add({
-        severity: 'success',
-        summary: t(msgKey),
-        life: 3000,
+      this.resolving.set(true);
+      this.reviewService.resolveItem(this.item.id, action).subscribe({
+        next: () => {
+          const msgKey =
+            action === ReviewResolutionAction.Dismiss
+              ? 'admin.review.resolveDialog.dismissedSuccess'
+              : action === ReviewResolutionAction.Delete
+                ? 'admin.review.resolveDialog.deletedSuccess'
+                : 'admin.review.resolveDialog.reopenedSuccess';
+          this.messageService.add({ severity: 'success', summary: t(msgKey), life: 3000 });
+          this.resolving.set(false);
+          this.resolved.emit();
+        },
+        error: () => this.resolving.set(false),
       });
     }
-
-    this.selectedCandidate.set(null);
-    this.resolved.emit();
   }
 }

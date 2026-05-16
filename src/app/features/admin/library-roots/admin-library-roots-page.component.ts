@@ -19,6 +19,7 @@ import { SelectModule } from 'primeng/select';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { TooltipModule } from 'primeng/tooltip';
 import { DatePipe } from '@angular/common';
 import { AdminLibraryRootService } from './admin-library-root.service';
 import { AddLibraryRootDialogComponent } from './add-library-root-dialog.component';
@@ -48,6 +49,7 @@ interface EnabledFilterOption {
     ToggleSwitchModule,
     ButtonModule,
     ConfirmDialogModule,
+    TooltipModule,
     AddLibraryRootDialogComponent,
   ],
   templateUrl: './admin-library-roots-page.component.html',
@@ -170,6 +172,10 @@ export class AdminLibraryRootsPageComponent implements OnInit {
 
   onAddRoot(): void {
     this.addDialog.open();
+  }
+
+  onEdit(root: LibraryRoot): void {
+    this.addDialog.openForEdit(root);
   }
 
   getEnabledTagSeverity(isEnabled: boolean): 'success' | 'danger' {
