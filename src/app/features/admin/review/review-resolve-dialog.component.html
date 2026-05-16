@@ -4,169 +4,222 @@
   [visible]="!!item"
   (visibleChange)="onVisibleChange($event)"
   [modal]="true"
-  [style]="{ width: '50rem' }"
-  [closable]="true"
+  [style]="{ width: '52rem', 'max-height': '90vh' }"
+  [closable]="!resolving()"
   [draggable]="false"
+  [dismissableMask]="!resolving()"
 >
   @if (item) {
-    <div class="review-resolve-dialog__content">
-      <!-- File info -->
-      <div class="review-resolve-dialog__section">
-        <div class="review-resolve-dialog__field">
-          <span class="review-resolve-dialog__label">{{
-            t('admin.review.resolveDialog.filePath')
-          }}</span>
-          <span class="review-resolve-dialog__value review-resolve-dialog__path">{{
-            item.filePath
-          }}</span>
+    <div class="rrd">
+      <!-- ── File metadata ───────────────────────────────────────────── -->
+      <div class="rrd__file-card">
+        <div class="rrd__file-path">
+          <i class="pi pi-file rrd__file-icon"></i>
+          <span>{{ item.filePath }}</span>
         </div>
-        <div class="review-resolve-dialog__meta-row">
+        <div class="rrd__file-meta">
           @if (item.parsedTitle) {
-            <div class="review-resolve-dialog__field">
-              <span class="review-resolve-dialog__label">{{
-                t('admin.review.resolveDialog.parsedTitle')
-              }}</span>
-              <span class="review-resolve-dialog__value">{{ item.parsedTitle }}</span>
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">{{ t('admin.review.resolveDialog.parsedTitle') }}</span>
+              <span class="rrd__meta-value">{{ item.parsedTitle }}</span>
+            </div>
+          }
+          @if (item.parsedSeason != null) {
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">S</span>
+              <span class="rrd__meta-value">{{ item.parsedSeason }}</span>
+            </div>
+          }
+          @if (item.parsedEpisode != null) {
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">E</span>
+              <span class="rrd__meta-value">{{ item.parsedEpisode }}</span>
             </div>
           }
           @if (item.parsedYear) {
-            <div class="review-resolve-dialog__field">
-              <span class="review-resolve-dialog__label">{{
-                t('admin.review.resolveDialog.parsedYear')
-              }}</span>
-              <span class="review-resolve-dialog__value">{{ item.parsedYear }}</span>
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">{{ t('admin.review.resolveDialog.parsedYear') }}</span>
+              <span class="rrd__meta-value">{{ item.parsedYear }}</span>
             </div>
           }
-          <div class="review-resolve-dialog__field">
-            <span class="review-resolve-dialog__label">{{
-              t('admin.review.resolveDialog.reason')
-            }}</span>
-            <p-tag [value]="item.reason" [severity]="'warn'" />
-          </div>
-          <div class="review-resolve-dialog__field">
-            <span class="review-resolve-dialog__label">{{
-              t('admin.review.resolveDialog.status')
-            }}</span>
-            <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
-          </div>
+          <p-tag [value]="item.reason" severity="warn" />
+          <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
         </div>
       </div>
 
-      <!-- TMDB Candidates -->
-      @if (item.candidates && item.candidates.length > 0) {
-        <div class="review-resolve-dialog__section">
-          <h4 class="review-resolve-dialog__section-title">
-            {{ t('admin.review.resolveDialog.candidates') }}
-          </h4>
-          <div class="review-resolve-dialog__candidates">
+      <!-- ── Bulk resolve banner (shown only when siblings exist) ──── -->
+      @if (siblingCount() > 0) {
+        <button
+          class="rrd__bulk-banner"
+          [class.rrd__bulk-banner--active]="bulkResolve()"
+          type="button"
+          (click)="bulkResolve.set(!bulkResolve())"
+        >
+          <i
+            class="pi"
+            [class.pi-check-square]="bulkResolve()"
+            [class.pi-square]="!bulkResolve()"
+          ></i>
+          <div class="rrd__bulk-text">
+            <span class="rrd__bulk-title">
+              {{
+                bulkResolve()
+                  ? t('admin.review.bulkResolve.activeLabel', { count: siblingCount() + 1 })
+                  : t('admin.review.bulkResolve.checkboxLabel', { count: siblingCount() })
+              }}
+            </span>
+            <span class="rrd__bulk-hint">
+              {{ t('admin.review.bulkResolve.rootFolderHint', { folder: parentFolderPath() }) }}
+            </span>
+          </div>
+          <span class="rrd__bulk-badge">
+            {{ siblingCount() + 1 }}
+          </span>
+        </button>
+      }
+
+      <!-- ── TMDB Candidates ─────────────────────────────────────────── -->
+      @if (item.candidates && item.candidates.length > 0 && !showTmdbSearch()) {
+        <div class="rrd__section">
+          <div class="rrd__section-header">
+            <span class="rrd__section-title">{{ t('admin.review.resolveDialog.candidates') }}</span>
+            <button class="rrd__link-btn" type="button" (click)="showTmdbSearch.set(true)">
+              <i class="pi pi-search"></i>
+              {{ t('admin.review.resolveDialog.searchTmdb') }}
+            </button>
+          </div>
+          <div class="rrd__candidates">
             @for (candidate of item.candidates; track candidate.tmdbId) {
-              <div
-                class="review-resolve-dialog__candidate"
-                [class.review-resolve-dialog__candidate--selected]="isSelected(candidate)"
+              <button
+                class="rrd__candidate"
+                [class.rrd__candidate--selected]="isSelected(candidate)"
+                type="button"
                 (click)="selectCandidate(candidate)"
-                (keydown.enter)="selectCandidate(candidate)"
-                (keydown.space)="selectCandidate(candidate)"
-                tabindex="0"
-                role="button"
               >
                 @if (candidate.posterPath) {
                   <img
                     [src]="getPosterUrl(candidate.posterPath)"
                     [alt]="candidate.title"
-                    class="review-resolve-dialog__poster"
+                    class="rrd__poster"
                   />
                 } @else {
-                  <div
-                    class="review-resolve-dialog__poster review-resolve-dialog__poster--placeholder"
-                  >
+                  <div class="rrd__poster rrd__poster--empty">
                     <i class="pi pi-image"></i>
                   </div>
                 }
-                <div class="review-resolve-dialog__candidate-info">
-                  <span class="review-resolve-dialog__candidate-title">{{ candidate.title }}</span>
-                  @if (candidate.year) {
-                    <span class="review-resolve-dialog__candidate-year"
-                      >({{ candidate.year }})</span
-                    >
-                  }
-                  <p-tag [value]="candidate.kind" severity="info" />
-                  @if (candidate.score !== null) {
-                    <span class="review-resolve-dialog__candidate-score">
-                      {{ t('admin.review.resolveDialog.score') }}:
-                      {{ candidate.score | number: '1.0-2' }}
-                    </span>
-                  }
+                <div class="rrd__candidate-body">
+                  <span class="rrd__candidate-title">{{ candidate.title }}</span>
+                  <div class="rrd__candidate-meta">
+                    @if (candidate.year) {
+                      <span class="rrd__candidate-year">{{ candidate.year }}</span>
+                    }
+                    <p-tag [value]="candidate.kind" severity="info" />
+                    @if (candidate.score !== null) {
+                      <span class="rrd__candidate-score">
+                        {{ t('admin.review.resolveDialog.score') }}:
+                        {{ candidate.score | number: '1.0-2' }}
+                      </span>
+                    }
+                  </div>
                 </div>
                 @if (isSelected(candidate)) {
-                  <i class="pi pi-check review-resolve-dialog__check"></i>
+                  <i class="pi pi-check-circle rrd__selected-icon"></i>
                 }
-              </div>
+              </button>
             }
           </div>
         </div>
       } @else {
-        <p class="review-resolve-dialog__no-candidates">
-          {{ t('admin.review.resolveDialog.noCandidates') }}
-        </p>
-      }
-
-      <!-- TMDB Search Panel Dialog -->
-      @if (showTmdbSearch()) {
-        <div class="review-resolve-dialog__tmdb-search">
-          <h4 class="review-resolve-dialog__section-title">
-            {{ t('admin.review.resolveDialog.tmdbSearch') }}
-          </h4>
-          <app-tmdb-search-panel
-            [initialQuery]="item.parsedTitle ?? ''"
-            [mediaTypeFilter]="tmdbMediaTypeFilter()"
-            (selected)="onTmdbSearchSelected($event, t)"
-          />
+        <!-- No candidates or TMDB search open — show search panel inline -->
+        <div class="rrd__section">
+          @if (!showTmdbSearch() && (!item.candidates || item.candidates.length === 0)) {
+            <div class="rrd__no-candidates">
+              <i class="pi pi-search rrd__no-candidates-icon"></i>
+              <span>{{ t('admin.review.resolveDialog.noCandidates') }}</span>
+              <p-button
+                [label]="t('admin.review.resolveDialog.searchTmdb')"
+                icon="pi pi-search"
+                size="small"
+                (onClick)="showTmdbSearch.set(true)"
+              />
+            </div>
+          }
+          @if (showTmdbSearch()) {
+            <div class="rrd__section-header">
+              <span class="rrd__section-title">{{
+                t('admin.review.resolveDialog.tmdbSearch')
+              }}</span>
+              @if (item.candidates && item.candidates.length > 0) {
+                <button class="rrd__link-btn" type="button" (click)="showTmdbSearch.set(false)">
+                  <i class="pi pi-arrow-left"></i>
+                  {{ t('admin.review.resolveDialog.candidates') }}
+                </button>
+              }
+            </div>
+            <app-tmdb-search-panel
+              [initialQuery]="item.parsedTitle ?? ''"
+              [mediaTypeFilter]="tmdbMediaTypeFilter()"
+              (selected)="onTmdbSearchSelected($event, t)"
+            />
+          }
         </div>
       }
     </div>
   }
 
   <ng-template pTemplate="footer">
-    @if (siblingCount() > 0) {
-      <div class="review-resolve-dialog__bulk-resolve">
-        <p-checkbox [(ngModel)]="bulkResolve" [binary]="true" [inputId]="'bulkResolveCheck'" />
-        <label for="bulkResolveCheck">
-          {{ t('admin.review.bulkResolve.checkboxLabel', { count: siblingCount() }) }}
-        </label>
-        <span class="review-resolve-dialog__bulk-hint">
-          {{ t('admin.review.bulkResolve.rootFolderHint', { folder: parentFolderPath() }) }}
-        </span>
+    @if (item) {
+      <div class="rrd__footer">
+        <!-- Primary: Assign -->
+        <p-button
+          [label]="
+            bulkResolve()
+              ? t('admin.review.bulkResolve.assignLabel')
+              : t('admin.review.resolveDialog.assign')
+          "
+          icon="pi pi-check"
+          [disabled]="!selectedCandidate() || resolving()"
+          [loading]="resolving()"
+          (onClick)="onAssign(t)"
+        />
+        <!-- Show TMDB search toggle (only when candidates exist) -->
+        @if (item.candidates && item.candidates.length > 0) {
+          <p-button
+            [label]="t('admin.review.resolveDialog.searchTmdb')"
+            icon="pi pi-search"
+            severity="secondary"
+            [disabled]="resolving()"
+            (onClick)="showTmdbSearch.set(!showTmdbSearch())"
+          />
+        }
+        <div class="rrd__footer-spacer"></div>
+        <!-- Secondary actions -->
+        <p-button
+          [label]="t('admin.review.resolveDialog.dismiss')"
+          icon="pi pi-eye-slash"
+          severity="secondary"
+          [disabled]="resolving()"
+          [loading]="resolving()"
+          (onClick)="onAction(ReviewResolutionAction.Dismiss, t)"
+        />
+        <p-button
+          [label]="t('admin.review.resolveDialog.delete')"
+          icon="pi pi-trash"
+          severity="danger"
+          [disabled]="resolving()"
+          [loading]="resolving()"
+          (onClick)="onAction(ReviewResolutionAction.Delete, t)"
+        />
+        @if (item.status !== 'Open') {
+          <p-button
+            [label]="t('admin.review.resolveDialog.reopen')"
+            icon="pi pi-refresh"
+            severity="contrast"
+            [disabled]="resolving()"
+            (onClick)="onAction(ReviewResolutionAction.Reopen, t)"
+          />
+        }
       </div>
     }
-    <p-button
-      [label]="t('admin.review.resolveDialog.assign')"
-      icon="pi pi-check"
-      [disabled]="!selectedCandidate()"
-      (onClick)="onAssign(t)"
-    />
-    <p-button
-      [label]="t('admin.review.resolveDialog.searchTmdb')"
-      icon="pi pi-search"
-      severity="secondary"
-      (onClick)="showTmdbSearch.set(!showTmdbSearch())"
-    />
-    <p-button
-      [label]="t('admin.review.resolveDialog.dismiss')"
-      icon="pi pi-eye-slash"
-      severity="secondary"
-      (onClick)="onAction(ReviewResolutionAction.Dismiss, t)"
-    />
-    <p-button
-      [label]="t('admin.review.resolveDialog.delete')"
-      icon="pi pi-trash"
-      severity="danger"
-      (onClick)="onAction(ReviewResolutionAction.Delete, t)"
-    />
-    <p-button
-      [label]="t('admin.review.resolveDialog.reopen')"
-      icon="pi pi-refresh"
-      severity="contrast"
-      (onClick)="onAction(ReviewResolutionAction.Reopen, t)"
-    />
   </ng-template>
 </p-dialog>

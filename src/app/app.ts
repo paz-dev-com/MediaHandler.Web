@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '@core/layout/sidebar.component';
+import { AuthService } from '@core/auth/auth.service';
 import { routeAnimations } from '@shared/animations/route.animations';
 import { ThemeService } from '@shared/services/theme.service';
+import { TranslocoService } from '@jsverse/transloco';
 import { Toast } from 'primeng/toast';
 
 @Component({
@@ -22,6 +24,18 @@ export class App {
     // preventing a flash of wrong theme (FOWT). The service's effect() runs
     // synchronously in the constructor, writing the attribute to <html>.
     inject(ThemeService);
+
+    // Apply the user's preferred language as soon as the profile is loaded.
+    // This restores the correct language on every page refresh — Transloco's defaultLang
+    // is always 'en', so without this the language resets on each reload.
+    const authService = inject(AuthService);
+    const transloco = inject(TranslocoService);
+    effect(() => {
+      const lang = authService.user()?.preferredLanguage;
+      if (lang) {
+        transloco.setActiveLang(lang);
+      }
+    });
   }
 
   getRouteAnimationState(outlet: RouterOutlet): string {

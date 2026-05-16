@@ -5,7 +5,8 @@
     "wishlist": "Liste de souhaits",
     "profile": "Profil",
     "admin": "Administration",
-    "skipToContent": "Aller au contenu principal"
+    "skipToContent": "Aller au contenu principal",
+    "signOut": "Se déconnecter"
   },
   "common": {
     "loading": "Chargement...",
@@ -137,7 +138,8 @@
     "languages": {
       "en": "English",
       "fr": "Français"
-    }
+    },
+    "logout": "Se déconnecter"
   },
   "error": {
     "badRequest": "Requête invalide",
@@ -228,6 +230,12 @@
         "labelPlaceholder": "Nom d'affichage facultatif",
         "optional": "facultatif",
         "submit": "Ajouter"
+      },
+      "editButton": "Modifier",
+      "editedSuccess": "Répertoire mis à jour.",
+      "editDialog": {
+        "title": "Modifier le répertoire",
+        "submit": "Enregistrer"
       }
     },
     "scanner": {
@@ -327,7 +335,9 @@
         "reopenedSuccess": "Élément rouvert."
       },
       "bulkResolve": {
-        "checkboxLabel": "Appliquer à tous les {{count}} épisodes du même dossier",
+        "checkboxLabel": "Appliquer aussi aux {{count}} épisodes du même dossier",
+        "activeLabel": "Application à {{count}} épisodes (mode groupé actif)",
+        "assignLabel": "Assigner à tous",
         "successToast": "{{count}} éléments de révision résolus avec succès",
         "confirmTitle": "Résolution groupée",
         "confirmMessage": "Appliquer cette action à tous les {{count}} éléments ouverts dans le même dossier ?",
@@ -397,9 +407,10 @@
       "showName": "Nom de la série",
       "groupedView": "Vue groupée",
       "flatView": "Vue liste",
-      "assignToAll": "Assigner à tous les épisodes",
-      "showCandidates": "Candidats TMDB pour la série",
-      "reassignEnriched": "Réassigner (déjà enrichi)"
+      "assignToAll": "Assigner  tous les pisodes",
+      "showCandidates": "Candidats TMDB pour la srie",
+      "reassignEnriched": "Rassigner (dj enrichi)",
+      "groups": "groupes"
     },
     "tmdbSearch": {
       "search": "Rechercher",

@@ -193,4 +193,63 @@
     background: var(--color-bg-base);
     border-bottom: 1px solid var(--color-border);
   }
+
+  // ── Native chevron button (replaces heavy p-button for episode rows) ────
+  &__chevron-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    padding: 0;
+    transition: background 0.15s;
+
+    &:hover {
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+    }
+  }
+
+  // ── Groups client-side pagination ───────────────────────────────────────
+  &__groups-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  &__page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    transition: background 0.15s;
+
+    &:hover:not(:disabled) {
+      background: var(--color-bg-elevated);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__page-info {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
 }

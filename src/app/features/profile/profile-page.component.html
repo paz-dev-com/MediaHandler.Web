@@ -84,6 +84,16 @@
             </div>
           </div>
         </div>
+
+        <div class="profile-page__logout">
+          <p-button
+            [label]="t('profile.logout')"
+            icon="pi pi-sign-out"
+            severity="danger"
+            [outlined]="true"
+            (onClick)="onLogout()"
+          />
+        </div>
       </div>
     }
   </div>

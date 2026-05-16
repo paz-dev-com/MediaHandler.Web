@@ -76,7 +76,12 @@ export class AdminReviewService {
     });
   }
 
-  resolveItem(id: string, action: ReviewResolutionAction, tmdbId?: number, kind?: MediaType): void {
+  resolveItem(
+    id: string,
+    action: ReviewResolutionAction,
+    tmdbId?: number,
+    kind?: MediaType,
+  ): Observable<void> {
     const body: Record<string, unknown> = { action };
     if (tmdbId !== undefined) {
       body['tmdbId'] = tmdbId;
@@ -85,12 +90,10 @@ export class AdminReviewService {
       body['kind'] = kind;
     }
 
-    this.api.post<ReviewItem>(`admin/review-items/${id}/resolve`, body).subscribe({
-      next: () => this.refresh(),
-      error: () => {
-        /* handled by error interceptor */
-      },
-    });
+    return this.api.post<ReviewItem>(`admin/review-items/${id}/resolve`, body).pipe(
+      tap(() => this.refresh()),
+      map(() => undefined as void),
+    );
   }
 
   bulkResolveByFolder(

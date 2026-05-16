@@ -141,7 +141,7 @@ describe('AdminReviewService', () => {
     service.getItems();
     httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
 
-    service.resolveItem('item-1', ReviewResolutionAction.Assign, 12345, MediaType.Film);
+    service.resolveItem('item-1', ReviewResolutionAction.Assign, 12345, MediaType.Film).subscribe();
 
     const req = httpTesting.expectOne(`${base}/admin/review-items/item-1/resolve`);
     expect(req.request.method).toBe('POST');
@@ -160,7 +160,7 @@ describe('AdminReviewService', () => {
     service.getItems();
     httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
 
-    service.resolveItem('item-2', ReviewResolutionAction.Dismiss);
+    service.resolveItem('item-2', ReviewResolutionAction.Dismiss).subscribe();
 
     const req = httpTesting.expectOne(`${base}/admin/review-items/item-2/resolve`);
     expect(req.request.method).toBe('POST');
@@ -174,7 +174,7 @@ describe('AdminReviewService', () => {
     service.getItems();
     httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
 
-    service.resolveItem('item-3', ReviewResolutionAction.Delete);
+    service.resolveItem('item-3', ReviewResolutionAction.Delete).subscribe();
 
     const req = httpTesting.expectOne(`${base}/admin/review-items/item-3/resolve`);
     expect(req.request.method).toBe('POST');
@@ -188,7 +188,7 @@ describe('AdminReviewService', () => {
     service.getItems();
     httpTesting.expectOne((r) => r.url === `${base}/admin/review-items`).flush(emptyResponse);
 
-    service.resolveItem('item-4', ReviewResolutionAction.Reopen);
+    service.resolveItem('item-4', ReviewResolutionAction.Reopen).subscribe();
 
     const req = httpTesting.expectOne(`${base}/admin/review-items/item-4/resolve`);
     expect(req.request.method).toBe('POST');
@@ -211,7 +211,7 @@ describe('AdminReviewService', () => {
 
     expect(service.items()).toEqual(mockItems);
 
-    service.resolveItem('item-1', ReviewResolutionAction.Dismiss);
+    service.resolveItem('item-1', ReviewResolutionAction.Dismiss).subscribe();
     httpTesting
       .expectOne(`${base}/admin/review-items/item-1/resolve`)
       .flush({ data: null, meta: null, errors: [] });

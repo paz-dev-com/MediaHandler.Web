@@ -20,7 +20,8 @@ const makeUser = (role: UserRole): User => ({
 describe('AuthService', () => {
   let service: AuthService;
   let isAuthenticated$: BehaviorSubject<boolean>;
-  let user$: BehaviorSubject<null>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let user$: BehaviorSubject<any>;
   let mockGetToken: ReturnType<typeof vi.fn>;
   let mockLogin: ReturnType<typeof vi.fn>;
   let mockLogout: ReturnType<typeof vi.fn>;
@@ -29,7 +30,11 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     isAuthenticated$ = new BehaviorSubject(false);
-    user$ = new BehaviorSubject<null>(null);
+    user$ = new BehaviorSubject<{ sub: string; email: string; name: string } | null>({
+      sub: 'okta|test',
+      email: 'test@example.com',
+      name: 'Test User',
+    });
     mockGetToken = vi.fn().mockReturnValue(of('access-token'));
     mockLogin = vi.fn();
     mockLogout = vi.fn();
@@ -121,21 +126,21 @@ describe('AuthService', () => {
     });
   });
 
-  // ── loadProfile() (auto-triggered on auth) ───────────────────────────────
+  // ── loadProfile() — auto-triggered on auth ──────────────────────────────
 
-  describe('loadProfile() — auto-triggered', () => {
+  describe('loadProfile() — auto-triggered on auth', () => {
     it('calls api.get("auth/me") when the user becomes authenticated', () => {
       expect(mockApiGet).not.toHaveBeenCalled();
       isAuthenticated$.next(true);
       expect(mockApiGet).toHaveBeenCalledWith('auth/me');
     });
 
-    it('sets the user from the API response', () => {
+    it('sets the user from the profile API response', () => {
       isAuthenticated$.next(true);
       expect(service.user()?.role).toBe(UserRole.User);
     });
 
-    it('does not call api.get again if profile was already loaded', () => {
+    it('does not call the API a second time on subsequent auth events (take(1))', () => {
       isAuthenticated$.next(true); // first call
       isAuthenticated$.next(false);
       isAuthenticated$.next(true); // take(1) — service already unsubscribed
@@ -149,9 +154,10 @@ describe('AuthService', () => {
     it('calls api.post("auth/sync", {}) and updates the user', () => {
       service.syncUser();
       expect(mockApiPost).toHaveBeenCalledWith('auth/sync', {
-        sub: null,
-        email: null,
-        name: null,
+        sub: 'okta|test',
+        email: 'test@example.com',
+        name: 'Test User',
+        roles: [],
       });
       expect(service.user()?.role).toBe(UserRole.Admin);
     });

@@ -132,23 +132,61 @@
   // ── Footer (theme toggle area) ─────────────────────────────────────────────
 
   &__footer {
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem 0;
     border-top: 1px solid var(--color-border);
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  &__logout {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--color-text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    transition:
+      background var(--anim-fast) var(--anim-easing),
+      color var(--anim-fast) var(--anim-easing);
+
+    i {
+      font-size: 1.1rem;
+      min-width: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background: var(--color-bg-elevated);
+      color: #f87171;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  &[data-mode='collapsed'] .sidebar__logout {
     justify-content: center;
+    padding: 0.75rem;
+    gap: 0;
   }
 
   &__theme-toggle {
-    // In expanded mode: align to the left with padding to match nav links
-    &--expanded {
-      width: 100%;
-      padding: 0 0.5rem;
+    display: block;
+    padding: 0.75rem 1rem;
 
+    // In expanded mode: align to the left with icon+label layout
+    &--expanded {
       ::ng-deep .theme-toggle {
         width: 100%;
         justify-content: flex-start;
         gap: 0.75rem;
-        padding: 0.5rem 0.5rem;
         border-radius: 6px;
 
         &::after {
@@ -156,6 +194,12 @@
         }
       }
     }
+  }
+
+  &[data-mode='collapsed'] .sidebar__theme-toggle {
+    display: flex;
+    justify-content: center;
+    padding: 0.75rem;
   }
 }
 

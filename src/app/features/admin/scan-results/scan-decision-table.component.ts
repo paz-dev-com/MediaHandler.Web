@@ -6,6 +6,8 @@ import {
   Input,
   OnChanges,
   OnInit,
+  SimpleChanges,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -96,7 +98,20 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
   libraryRootOptions: FilterOption<string>[] = [];
 
   expandedRows: Record<string, boolean> = {};
-  expandedGroups: Record<string, boolean> = {};
+  readonly expandedGroups = signal<Record<string, boolean>>({});
+  readonly expandedEpisodes = signal<Record<string, boolean>>({});
+
+  // Client-side pagination for the grouped view (avoids rendering thousands of DOM nodes)
+  readonly groupsPage = signal(1);
+  readonly groupsPageSize = 25;
+  readonly pagedGroups = computed(() => {
+    const all = this.decisionService.groupedDecisions();
+    const start = (this.groupsPage() - 1) * this.groupsPageSize;
+    return all.slice(start, start + this.groupsPageSize);
+  });
+  readonly groupsTotalPages = computed(() =>
+    Math.max(1, Math.ceil(this.decisionService.groupedDecisions().length / this.groupsPageSize)),
+  );
 
   ngOnInit(): void {
     this.transloco.langChanges$
@@ -107,9 +122,13 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
       });
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.buildLibraryRootOptions();
-    if (this.scanId) {
+    // Only reload data when scanId actually changes — not on libraryRoots updates.
+    if (changes['scanId'] && this.scanId) {
+      this.expandedGroups.set({});
+      this.expandedEpisodes.set({});
+      this.groupsPage.set(1);
       this.loadData(1, 20);
     }
   }
@@ -173,32 +192,65 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
 
   onDecisionTypeChange(v: ScanDecisionType | null): void {
     this.selectedDecisionType = v;
+    this.groupsPage.set(1);
     this.loadData(1, this.meta().pageSize);
   }
   onMediaTypeChange(v: MediaType | null): void {
     this.selectedMediaType = v;
+    this.groupsPage.set(1);
     this.loadData(1, this.meta().pageSize);
   }
   onLibraryRootChange(v: string | null): void {
     this.selectedLibraryRootId = v;
+    this.groupsPage.set(1);
     this.loadData(1, this.meta().pageSize);
   }
 
   toggleViewMode(): void {
     this.useGroupedView = !this.useGroupedView;
     this.expandedRows = {};
-    this.expandedGroups = {};
+    this.expandedGroups.set({});
+    this.groupsPage.set(1);
     this.loadData(1, this.meta().pageSize);
   }
 
+  goToGroupsPage(page: number): void {
+    this.groupsPage.set(page);
+    this.expandedGroups.set({});
+  }
+
   toggleGroup(showName: string): void {
-    this.expandedGroups = this.expandedGroups[showName]
-      ? (({ [showName]: _, ...rest }) => rest)(this.expandedGroups)
-      : { ...this.expandedGroups, [showName]: true };
+    this.expandedGroups.update((state) => {
+      const next = { ...state };
+      if (next[showName]) {
+        delete next[showName];
+        // Do NOT reset expandedEpisodes here — it's an extra signal update that causes
+        // a double re-render (freeze). Episodes are hidden anyway because the group is collapsed.
+      } else {
+        next[showName] = true;
+      }
+      return next;
+    });
   }
 
   isGroupExpanded(showName: string): boolean {
-    return !!this.expandedGroups[showName];
+    return !!this.expandedGroups()[showName];
+  }
+
+  toggleEpisode(episodeId: string): void {
+    this.expandedEpisodes.update((state) => {
+      const next = { ...state };
+      if (next[episodeId]) {
+        delete next[episodeId];
+      } else {
+        next[episodeId] = true;
+      }
+      return next;
+    });
+  }
+
+  isEpisodeExpanded(episodeId: string): boolean {
+    return !!this.expandedEpisodes()[episodeId];
   }
 
   /** Returns show-level candidates: from group.candidates if available, else from first episode. */

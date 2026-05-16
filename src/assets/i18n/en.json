@@ -5,7 +5,8 @@
     "wishlist": "Wishlist",
     "profile": "Profile",
     "admin": "Administration",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "signOut": "Sign out"
   },
   "common": {
     "loading": "Loading...",
@@ -137,7 +138,8 @@
     "languages": {
       "en": "English",
       "fr": "Français"
-    }
+    },
+    "logout": "Sign out"
   },
   "error": {
     "badRequest": "Bad Request",
@@ -216,6 +218,12 @@
         "labelPlaceholder": "Optional display name",
         "optional": "optional",
         "submit": "Add"
+      },
+      "editButton": "Edit",
+      "editedSuccess": "Library root updated.",
+      "editDialog": {
+        "title": "Edit Library Root",
+        "submit": "Save"
       }
     },
     "scanner": {
@@ -327,7 +335,9 @@
         "reopenedSuccess": "Item reopened."
       },
       "bulkResolve": {
-        "checkboxLabel": "Apply to all {{count}} episodes in the same folder",
+        "checkboxLabel": "Also apply to {{count}} sibling episodes",
+        "activeLabel": "Applying to {{count}} episodes (bulk mode on)",
+        "assignLabel": "Assign to all",
         "successToast": "{{count}} review items resolved successfully",
         "confirmTitle": "Bulk Resolve",
         "confirmMessage": "Apply this action to all {{count}} open review items in the same folder?",
@@ -399,7 +409,8 @@
       "flatView": "Flat View",
       "assignToAll": "Assign to all episodes",
       "showCandidates": "TMDB Candidates for Show",
-      "reassignEnriched": "Reassign (already enriched)"
+      "reassignEnriched": "Reassign (already enriched)",
+      "groups": "groups"
     },
     "tmdbSearch": {
       "search": "Search",

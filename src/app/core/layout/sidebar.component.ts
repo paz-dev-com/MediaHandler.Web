@@ -99,4 +99,8 @@ export class SidebarComponent {
   toggleCollapse(): void {
     this.userCollapsed.update((v) => !v);
   }
+
+  logout(): void {
+    this.auth.logout();
+  }
 }
