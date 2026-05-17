@@ -1,0 +1,151 @@
+<ng-container *transloco="let t">
+  <div class="profile-page p-4">
+    <h1 class="profile-page__title">{{ t('profile.title') }}</h1>
+
+    @if (profileService.loading()) {
+      <app-loading-skeleton variant="list" [count]="3" />
+    } @else if (profileService.error()) {
+      <app-error-message
+        [message]="t(profileService.error()!)"
+        [showRetry]="true"
+        (retry)="onRetry()"
+      />
+    } @else if (profileService.user(); as user) {
+      <div class="profile-page__content">
+        <div class="profile-page__card p-card p-4">
+          <!-- Profile picture section (T048) -->
+          <div class="profile-page__picture-section">
+            <div class="profile-page__picture-container">
+              <img
+                [ngSrc]="effectivePictureUrl()"
+                width="128"
+                height="128"
+                [alt]="t('profile.picture.alt')"
+                class="profile-page__picture"
+                priority
+              />
+              @if (profileService.isUploading()) {
+                <div class="profile-page__picture-loading" aria-live="polite">
+                  <i class="pi pi-spin pi-spinner"></i>
+                </div>
+              }
+            </div>
+            <div class="profile-page__picture-actions">
+              <!-- Hidden file input, triggered by the upload button -->
+              <input
+                #fileInput
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                class="profile-page__file-input"
+                (change)="onFileSelected($event)"
+                [attr.aria-label]="t('profile.picture.upload')"
+              />
+              <p-button
+                [label]="t('profile.picture.upload')"
+                icon="pi pi-upload"
+                size="small"
+                severity="secondary"
+                [outlined]="true"
+                [loading]="profileService.isUploading()"
+                (onClick)="fileInput.click()"
+              />
+              @if (user.profilePicturePath) {
+                <p-button
+                  [label]="t('profile.picture.remove')"
+                  icon="pi pi-trash"
+                  size="small"
+                  severity="danger"
+                  [outlined]="true"
+                  [loading]="profileService.isUploading()"
+                  (onClick)="onRemovePicture()"
+                />
+              }
+            </div>
+            @if (profileService.uploadError()) {
+              <p class="profile-page__upload-error" role="alert">
+                {{ t(profileService.uploadError()!) }}
+              </p>
+            }
+          </div>
+
+          <div class="profile-page__info">
+            <div class="profile-page__field">
+              <span class="profile-page__label">{{ t('profile.displayName') }}</span>
+              <span class="profile-page__value">{{ user.displayName }}</span>
+            </div>
+            <div class="profile-page__field">
+              <span class="profile-page__label">{{ t('profile.email') }}</span>
+              <span class="profile-page__value">{{ user.email }}</span>
+            </div>
+            <div class="profile-page__field">
+              <span class="profile-page__label">{{ t('profile.role') }}</span>
+              <p-tag
+                [value]="t('profile.roles.' + user.role)"
+                [severity]="user.role === 'Admin' ? 'warn' : 'secondary'"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-page__preferences p-card p-4">
+          <h2 class="profile-page__section-title">{{ t('profile.preferences') }}</h2>
+
+          <div class="profile-page__field">
+            <label class="profile-page__label" for="language-select">
+              {{ t('profile.language') }}
+            </label>
+            <p-select
+              inputId="language-select"
+              [options]="languages"
+              optionLabel="label"
+              optionValue="value"
+              [(ngModel)]="selectedLanguage"
+              (onChange)="onLanguageChange($event.value)"
+              styleClass="profile-page__lang-select"
+            />
+          </div>
+        </div>
+
+        <!-- Appearance (theme) -->
+        <div class="profile-page__appearance p-card p-4">
+          <h2 class="profile-page__section-title">{{ t('profile.appearance') }}</h2>
+
+          <div class="profile-page__field">
+            <label class="profile-page__label" for="theme-select">
+              {{ t('profile.theme') }}
+            </label>
+            <div class="profile-page__theme-row">
+              <p-select
+                inputId="theme-select"
+                [options]="themeOptions"
+                [optionLabel]="'labelKey'"
+                optionValue="value"
+                [ngModel]="themeService.theme()"
+                (ngModelChange)="onThemeChange($event)"
+                styleClass="profile-page__theme-select"
+              >
+                <ng-template pTemplate="selectedItem" let-option>
+                  {{ t(option.labelKey) }}
+                </ng-template>
+                <ng-template pTemplate="item" let-option>
+                  {{ t(option.labelKey) }}
+                </ng-template>
+              </p-select>
+              <app-theme-toggle />
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-page__logout">
+          <p-button
+            [label]="t('profile.logout')"
+            icon="pi pi-sign-out"
+            severity="danger"
+            [outlined]="true"
+            (onClick)="onLogout()"
+          />
+        </div>
+      </div>
+    }
+  </div>
+</ng-container>

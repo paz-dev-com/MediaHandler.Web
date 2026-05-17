@@ -1,0 +1,50 @@
+<section class="spotlight" aria-label="{{ 'collection.recentlyAdded' | transloco }}" @carouselEnter>
+  <h2 class="spotlight__heading">{{ 'collection.recentlyAdded' | transloco }}</h2>
+  <div class="spotlight__wrapper">
+    <!-- Scroll left -->
+    <button
+      class="spotlight__arrow spotlight__arrow--left"
+      [class.spotlight__arrow--hidden]="!canScrollLeft()"
+      (click)="scrollLeft()"
+      [attr.aria-label]="'a11y.scrollLeft' | transloco"
+      type="button"
+    >
+      <i class="pi pi-chevron-left" aria-hidden="true"></i>
+    </button>
+
+    <!-- Scrollable track -->
+    <div class="spotlight__track" #trackRef (scroll)="onScroll($event)" tabindex="0" role="list">
+      @for (item of recentItems(); track item.id) {
+        <a
+          [routerLink]="['/media', item.id]"
+          class="spotlight-item"
+          role="listitem"
+          [attr.aria-label]="item.title"
+        >
+          <div class="spotlight-item__poster">
+            @if (getPosterUrl(item); as posterUrl) {
+              <img [src]="posterUrl" [alt]="item.title" width="120" height="180" loading="lazy" />
+            } @else {
+              <div class="spotlight-item__placeholder" aria-hidden="true">
+                <i class="pi pi-image"></i>
+              </div>
+            }
+            <div class="spotlight-item__gradient" aria-hidden="true"></div>
+          </div>
+          <p class="spotlight-item__title">{{ item.title }}</p>
+        </a>
+      }
+    </div>
+
+    <!-- Scroll right -->
+    <button
+      class="spotlight__arrow spotlight__arrow--right"
+      [class.spotlight__arrow--hidden]="!canScrollRight()"
+      (click)="scrollRight()"
+      [attr.aria-label]="'a11y.scrollRight' | transloco"
+      type="button"
+    >
+      <i class="pi pi-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+</section>

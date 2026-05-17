@@ -1,1 +1,973 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'primeicons/primeicons.css';
+@import 'primeflex/primeflex.css';
+
+// ─── Self-hosted Fonts ──────────────────────────────────────────────────────
+
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/bebas-neue-v14-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/inter-v18-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/inter-v18-latin-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/inter-v18-latin-600.woff2') format('woff2');
+}
+
+// ─── Design Tokens ──────────────────────────────────────────────────────────
+
+:root {
+  /* Color — Background */
+  --color-bg-base: #0a0a0f;
+  --color-bg-surface: #141420;
+  --color-bg-elevated: #1e1e2e;
+
+  /* Color — Accent (Indigo) */
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-glow: rgba(99, 102, 241, 0.35);
+
+  /* Color — Text */
+  --color-text-primary: #f5f5f7;
+  --color-text-secondary: #a1a1aa;
+  --color-text-accent: #a5b4fc;
+
+  /* Color — Border & overlay */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-poster-gradient: linear-gradient(
+    to top,
+    rgba(10, 10, 15, 0.96) 0%,
+    rgba(10, 10, 15, 0.45) 55%,
+    transparent 100%
+  );
+
+  /* Typography */
+  --font-display: 'Bebas Neue', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  /* Animation durations */
+  --anim-fast: 150ms;
+  --anim-normal: 300ms;
+  --anim-slow: 500ms;
+  --anim-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --anim-fast: 0ms;
+    --anim-normal: 0ms;
+    --anim-slow: 0ms;
+  }
+}
+
+// ─── Light Theme Tokens ──────────────────────────────────────────────────────
+// Applied when ThemeService sets data-theme="light" on <html>.
+// All --color-* tokens are overridden; --p-surface-* aliases cascade automatically.
+
+:root[data-theme='light'] {
+  /* Color — Background */
+  --color-bg-base: #f4f4f8;
+  --color-bg-surface: #ffffff;
+  --color-bg-elevated: #ededf4;
+
+  /* Color — Accent (Indigo — same across themes) */
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+  --color-accent-glow: rgba(99, 102, 241, 0.2);
+
+  /* Color — Text */
+  --color-text-primary: #0a0a0f;
+  --color-text-secondary: #52525b;
+  --color-text-accent: #4f46e5;
+
+  /* Color — Border & overlay */
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-poster-gradient: linear-gradient(
+    to top,
+    rgba(244, 244, 248, 0.96) 0%,
+    rgba(244, 244, 248, 0.45) 55%,
+    transparent 100%
+  );
+}
+
+// ─── Theme Transition ────────────────────────────────────────────────────────
+// Smooth 200ms crossfade when switching themes.
+// Disabled under prefers-reduced-motion.
+
+:root {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+}
+
+// ─── PrimeNG Surface Token Remapping (dark theme) ───────────────────────────
+// Remap PrimeNG's surface tokens to our cinematic design tokens so that all
+// PrimeNG components automatically use the dark palette.
+// RULE: Never use var(--p-*) directly in component styles — always use var(--color-*).
+:root {
+  // Surface scale — mapped to dark palette
+  --p-surface-0: var(--color-bg-surface);
+  --p-surface-50: var(--color-bg-base);
+  --p-surface-100: var(--color-bg-elevated);
+  --p-surface-200: var(--color-border);
+  --p-surface-300: rgba(255, 255, 255, 0.12);
+  --p-surface-400: rgba(255, 255, 255, 0.18);
+  --p-surface-500: rgba(255, 255, 255, 0.28);
+  --p-surface-600: var(--color-text-secondary);
+  --p-surface-700: var(--color-text-secondary);
+  --p-surface-800: var(--color-text-primary);
+  --p-surface-900: var(--color-text-primary);
+  --p-surface-950: var(--color-text-primary);
+
+  // Text tokens
+  --p-text-color: var(--color-text-primary);
+  --p-text-color-secondary: var(--color-text-secondary);
+  --p-text-muted-color: var(--color-text-secondary);
+
+  // Primary / accent tokens
+  --p-primary-color: var(--color-accent);
+  --p-primary-50: rgba(99, 102, 241, 0.1);
+  --p-primary-100: rgba(99, 102, 241, 0.15);
+  --p-primary-color-text: #ffffff;
+
+  // Form field tokens (input, textarea, select)
+  --p-form-field-background: var(--color-bg-elevated);
+  --p-form-field-filled-background: var(--color-bg-elevated);
+  --p-form-field-border-color: var(--color-border);
+  --p-form-field-hover-border-color: var(--color-accent-hover);
+  --p-form-field-focus-border-color: var(--color-accent);
+  --p-form-field-color: var(--color-text-primary);
+  --p-form-field-placeholder-color: var(--color-text-secondary);
+  --p-form-field-disabled-background: var(--color-bg-base);
+
+  // Overlay / dropdown panel tokens
+  --p-overlay-select-background: var(--color-bg-surface);
+  --p-overlay-select-border-color: var(--color-border);
+  --p-overlay-select-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --p-overlay-popover-background: var(--color-bg-surface);
+  --p-overlay-popover-border-color: var(--color-border);
+  --p-overlay-modal-background: var(--color-bg-surface);
+  --p-overlay-modal-border-color: var(--color-border);
+
+  // List / select option tokens
+  --p-list-option-color: var(--color-text-primary);
+  --p-list-option-focus-color: var(--color-text-primary);
+  --p-list-option-selected-color: var(--color-accent);
+  --p-list-option-focus-background: var(--color-bg-elevated);
+  --p-list-option-selected-background: rgba(99, 102, 241, 0.15);
+  --p-list-option-selected-focus-background: rgba(99, 102, 241, 0.25);
+
+  // Navigation / menubar
+  --p-navigation-item-color: var(--color-text-secondary);
+  --p-navigation-item-focus-color: var(--color-text-primary);
+  --p-navigation-item-active-color: var(--color-accent);
+
+  // Panel / card tokens
+  --p-panel-background: var(--color-bg-surface);
+  --p-panel-border-color: var(--color-border);
+  --p-panel-color: var(--color-text-primary);
+  --p-card-background: var(--color-bg-surface);
+  --p-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  // Content tokens
+  --p-content-background: var(--color-bg-surface);
+  --p-content-hover-background: var(--color-bg-elevated);
+  --p-content-border-color: var(--color-border);
+  --p-content-color: var(--color-text-primary);
+
+  // Chip
+  --p-chip-background: var(--color-bg-elevated);
+  --p-chip-color: var(--color-text-primary);
+  --p-chip-border-color: var(--color-border);
+
+  // Tag
+  --p-tag-secondary-background: var(--color-bg-elevated);
+  --p-tag-secondary-color: var(--color-text-secondary);
+
+  // Toast
+  --p-toast-background: var(--color-bg-surface);
+  --p-toast-border-color: var(--color-border);
+  --p-toast-color: var(--color-text-primary);
+
+  // Paginator
+  --p-paginator-background: var(--color-bg-surface);
+  --p-paginator-border-color: var(--color-border);
+  --p-paginator-color: var(--color-text-secondary);
+
+  // ── Additional alias tokens used by legacy components ──
+  // (prevents undefined-token fallback to PrimeNG light defaults)
+  --p-surface-border: var(--color-border);
+  --p-surface-card: var(--color-bg-surface);
+  --p-surface-overlay: var(--color-bg-elevated);
+  --p-surface-hover: var(--color-bg-elevated);
+  --p-surface-ground: var(--color-bg-base);
+  --p-surface-section: var(--color-bg-surface);
+  --p-border-radius: 6px;
+  --p-border-radius-sm: 4px;
+  --p-border-radius-lg: 8px;
+
+  // Primary contrast
+  --p-primary-contrast-color: #ffffff;
+
+  // Green shades (used for wishlist watched states)
+  --p-green-50: rgba(34, 197, 94, 0.08);
+  --p-green-100: rgba(34, 197, 94, 0.12);
+  --p-green-200: rgba(34, 197, 94, 0.2);
+  --p-green-500: #22c55e;
+
+  // Red shades (used for error states)
+  --p-red-50: rgba(239, 68, 68, 0.08);
+  --p-red-100: rgba(239, 68, 68, 0.12);
+  --p-red-500: #ef4444;
+
+  // Orange / yellow shades (used for review/warning states)
+  --p-orange-50: rgba(249, 115, 22, 0.08);
+  --p-orange-500: #f97316;
+  --p-yellow-50: rgba(234, 179, 8, 0.08);
+  --p-yellow-500: #eab308;
+}
+
+// ─── Global Styles ───────────────────────────────────────────────────────────
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: var(--font-body);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+}
+
+// Scrollbar styling
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+}
+
+// Text selection
+::selection {
+  background: var(--color-accent-glow);
+  color: var(--color-text-primary);
+}
+
+// ─── Focus Visibility (Accessibility) ───────────────────────────────────────
+
+// Global focus-visible ring — all interactive elements
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+// Suppress default focus ring for non-keyboard interactions
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// Keyboard navigation for cards and other non-button interactive elements
+[tabindex]:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+// ─── PrimeNG Component Dark Theme Overrides ──────────────────────────────────
+// Direct class overrides for PrimeNG internals not covered by token remapping.
+// These ensure correct contrast in ALL phases — add here as needed.
+
+// Form inputs
+.p-inputtext,
+.p-textarea {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  &:hover {
+    border-color: var(--color-accent-hover);
+  }
+
+  &:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px var(--color-accent-glow);
+  }
+}
+
+// Select / dropdown
+.p-select,
+.p-multiselect {
+  background: var(--color-bg-elevated);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+
+  .p-select-label,
+  .p-multiselect-label {
+    color: var(--color-text-primary);
+  }
+
+  .p-placeholder {
+    color: var(--color-text-secondary);
+  }
+}
+
+// Dropdown panel (overlay)
+.p-select-overlay,
+.p-multiselect-overlay,
+.p-autocomplete-overlay {
+  background: var(--color-bg-surface);
+  border-color: var(--color-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  .p-select-option,
+  .p-multiselect-option {
+    color: var(--color-text-primary);
+
+    &:hover,
+    &.p-focus {
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+    }
+
+    &.p-selected {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-accent);
+    }
+  }
+
+  .p-select-filter-input {
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+  }
+}
+
+// Chips
+.p-chip {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+
+  .p-chip-label {
+    color: var(--color-text-primary);
+  }
+}
+
+// Paginator
+.p-paginator {
+  background: transparent;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+
+  .p-paginator-page,
+  .p-paginator-next,
+  .p-paginator-prev,
+  .p-paginator-first,
+  .p-paginator-last {
+    color: var(--color-text-secondary);
+    background: transparent;
+
+    &:hover {
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+    }
+
+    &.p-highlight {
+      background: var(--color-accent);
+      color: #ffffff;
+    }
+  }
+}
+
+// Accordion — override with !important because PrimeNG injects its CSS vars
+// at runtime (after static stylesheets), so token remapping alone is not enough.
+.p-accordion,
+p-accordion {
+  .p-accordionpanel {
+    border-color: var(--color-border) !important;
+  }
+
+  .p-accordionheader {
+    background: var(--color-bg-surface) !important;
+    color: var(--color-text-secondary) !important;
+    border-color: var(--color-border) !important;
+
+    &:hover {
+      background: var(--color-bg-elevated) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    .p-accordionheader-toggle-icon {
+      color: var(--color-text-secondary) !important;
+    }
+  }
+
+  .p-accordioncontent-content {
+    background: var(--color-bg-elevated) !important;
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border) !important;
+  }
+}
+
+// Toast notifications — dark cinematic theme with accent left-border + slide-in animation
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+.p-toast {
+  .p-toast-message {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    animation: toastSlideIn var(--anim-normal) var(--anim-easing) both;
+
+    &.p-toast-message-info {
+      border-left-color: var(--color-accent);
+    }
+
+    &.p-toast-message-success {
+      border-left-color: #4ade80;
+    }
+
+    &.p-toast-message-warn {
+      border-left-color: #facc15;
+    }
+
+    &.p-toast-message-error {
+      border-left-color: #f87171;
+    }
+
+    .p-toast-message-text {
+      color: var(--color-text-primary);
+    }
+
+    .p-toast-summary {
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      font-weight: 600;
+    }
+
+    .p-toast-detail {
+      color: var(--color-text-secondary);
+      font-family: var(--font-body);
+    }
+
+    .p-toast-icon-close {
+      color: var(--color-text-secondary);
+
+      &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-bg-elevated);
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-toast .p-toast-message {
+    animation: none;
+  }
+}
+
+// Tooltip
+.p-tooltip .p-tooltip-text {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+// Skeleton (PrimeNG built-in)
+.p-skeleton {
+  background: var(--color-bg-elevated);
+
+  &::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  }
+}
+
+// ─── PrimeFlex utility class overrides ──────────────────────────────────────
+// PrimeFlex classes use var(--p-*) which may still resolve to light values.
+// Explicit overrides here ensure these utility classes work on our dark bg.
+.text-color {
+  color: var(--color-text-primary) !important;
+}
+
+.text-color-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+.surface-0 {
+  background-color: var(--color-bg-surface) !important;
+}
+
+.surface-50 {
+  background-color: var(--color-bg-base) !important;
+}
+
+.surface-100 {
+  background-color: var(--color-bg-elevated) !important;
+}
+
+.surface-card {
+  background-color: var(--color-bg-surface) !important;
+}
+
+.surface-border {
+  border-color: var(--color-border) !important;
+}
+
+// ─── Progress bar ───────────────────────────────────────────────────────────
+.p-progressbar {
+  background: var(--color-bg-elevated);
+
+  .p-progressbar-value {
+    background: var(--color-accent);
+  }
+}
+
+// ─── Progress Spinner ────────────────────────────────────────────────────────
+.p-progressspinner-circle {
+  stroke: var(--color-accent) !important;
+}
+
+// ─── Tags — all severity variants ────────────────────────────────────────────
+// PrimeNG p-tag generates CSS vars per severity. Override them all for dark theme.
+.p-tag {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  // Default / no severity → uses primary
+  &:not([class*='p-tag-']) {
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--color-text-accent);
+  }
+
+  // info → indigo accent
+  &.p-tag-info {
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--color-text-accent); // #a5b4fc — WCAG AA on dark
+  }
+
+  // success → green
+  &.p-tag-success {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+  }
+
+  // warn → amber/yellow
+  &.p-tag-warn {
+    background: rgba(250, 204, 21, 0.15);
+    color: #facc15;
+  }
+
+  // danger / error → red
+  &.p-tag-danger {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+  }
+
+  // secondary → muted surface
+  &.p-tag-secondary {
+    background: var(--color-bg-elevated);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  // contrast → high-contrast white-on-accent
+  &.p-tag-contrast {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+}
+
+// ─── DataTable (p-table) ─────────────────────────────────────────────────────
+.p-datatable {
+  font-family: var(--font-body);
+
+  // Table wrapper
+  .p-datatable-table-container {
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  // Header row
+  .p-datatable-thead > tr > th {
+    background: var(--color-bg-surface);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.6rem 0.875rem;
+  }
+
+  // Body rows
+  .p-datatable-tbody > tr {
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+
+    > td {
+      border-color: var(--color-border);
+      padding: 0.5rem 0.875rem;
+    }
+
+    &:hover > td {
+      background: var(--color-bg-surface);
+    }
+
+    // Row expansion
+    &.p-datatable-row-expansion > td {
+      background: var(--color-bg-base);
+      padding: 0;
+    }
+  }
+
+  // Striped variant (if used)
+  &.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+    background: var(--color-bg-surface);
+  }
+
+  // Expand/collapse toggle button
+  .p-row-toggler {
+    color: var(--color-text-secondary);
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-elevated);
+    }
+  }
+
+  // Footer
+  .p-datatable-tfoot > tr > td {
+    background: var(--color-bg-surface);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border);
+  }
+}
+
+// ─── Message (p-message) ─────────────────────────────────────────────────────
+.p-message {
+  font-family: var(--font-body);
+  border-radius: 6px;
+  border-width: 0 0 0 4px;
+  border-style: solid;
+
+  &.p-message-info {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--color-accent);
+    color: var(--color-text-accent);
+
+    .p-message-icon {
+      color: var(--color-accent);
+    }
+  }
+
+  &.p-message-success {
+    background: rgba(74, 222, 128, 0.1);
+    border-color: #4ade80;
+    color: #4ade80;
+
+    .p-message-icon {
+      color: #4ade80;
+    }
+  }
+
+  &.p-message-warn {
+    background: rgba(250, 204, 21, 0.1);
+    border-color: #facc15;
+    color: #facc15;
+
+    .p-message-icon {
+      color: #facc15;
+    }
+  }
+
+  &.p-message-error {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: #f87171;
+    color: #f87171;
+
+    .p-message-icon {
+      color: #f87171;
+    }
+  }
+
+  .p-message-text {
+    color: inherit;
+  }
+}
+
+// ─── Tabs (p-tabs / p-tablist / p-tab) ──────────────────────────────────────
+// Used in admin layout for sub-page navigation.
+.p-tabs {
+  font-family: var(--font-body);
+
+  .p-tablist {
+    background: transparent;
+    border-bottom: 1px solid var(--color-border);
+
+    // The active ink-bar (animated underline)
+    .p-tablist-active-bar {
+      background: var(--color-accent);
+    }
+  }
+
+  .p-tab {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+      color var(--anim-fast) var(--anim-easing),
+      border-color var(--anim-fast) var(--anim-easing);
+
+    &:hover:not(.p-tab-active) {
+      color: var(--color-text-primary);
+      background: transparent;
+    }
+
+    &.p-tab-active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+      background: transparent;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  .p-tabpanels {
+    background: transparent;
+    padding: 0;
+  }
+}
+
+// ─── TV Show Production Status Badge (US5 T041) ──────────────────────────────
+// Global class to avoid component style budget issues.
+// Used in media-detail-page.component.html.
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-top: 0.5rem;
+
+  &__dot {
+    font-size: 0.45rem;
+  }
+
+  &--in-production {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+  }
+
+  &--ended {
+    background: rgba(161, 161, 170, 0.12);
+    color: var(--color-text-secondary);
+    border: 1px solid rgba(161, 161, 170, 0.2);
+  }
+
+  &--unknown {
+    background: rgba(161, 161, 170, 0.08);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+}
+
+// ─── Button Icon Visibility (US1) ────────────────────────────────────────────
+// PrimeNG p-button text/outlined variants must render their icon glyphs in
+// the correct foreground colour in BOTH dark and light themes.
+// Without explicit overrides the icon element (and PrimeIcon font glyph) may
+// fall back to a colour that is invisible against the surface background.
+
+.p-button {
+  // Ensure icon element always inherits the button's own foreground colour
+  .p-button-icon {
+    color: inherit;
+    font-family: 'primeicons' !important;
+  }
+
+  // Text variant (variant="text") — use primary text token
+  &.p-button-text {
+    color: var(--color-text-secondary);
+
+    .p-button-icon {
+      color: inherit;
+    }
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-elevated);
+    }
+
+    // Primary text variant
+    &.p-button-primary {
+      color: var(--color-accent);
+
+      &:hover {
+        color: var(--color-accent-hover);
+        background: rgba(99, 102, 241, 0.1);
+      }
+    }
+
+    // Secondary text variant
+    &.p-button-secondary {
+      color: var(--color-text-secondary);
+
+      &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-bg-elevated);
+      }
+    }
+  }
+
+  // Outlined variant — ensure icon colour matches label
+  &.p-button-outlined {
+    .p-button-icon {
+      color: inherit;
+    }
+  }
+
+  // Rounded icon-only buttons (.p-button-icon-only)
+  &.p-button-icon-only {
+    .p-button-icon {
+      color: inherit;
+      font-family: 'primeicons' !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+// Light theme button overrides — ensure PrimeNG default light tokens don't
+// override the custom foreground colours set above.
+:root[data-theme='light'] {
+  --p-button-text-primary-color: var(--color-accent);
+  --p-button-text-secondary-color: var(--color-text-secondary);
+  --p-button-outlined-primary-color: var(--color-accent);
+  --p-button-outlined-secondary-color: var(--color-text-secondary);
+}
+
+// ─── Dialog ──────────────────────────────────────────────────────────────────
+// Reinforce modal dark theme (header + content + footer)
+.p-dialog {
+  font-family: var(--font-body);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  .p-dialog-header {
+    background: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border);
+    padding: 1rem 1.25rem 0.875rem;
+
+    .p-dialog-title {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-text-primary);
+    }
+
+    .p-dialog-header-icon {
+      color: var(--color-text-secondary);
+
+      &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-bg-elevated);
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    padding: 1.25rem;
+  }
+
+  .p-dialog-footer {
+    background: var(--color-bg-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 0.875rem 1.25rem;
+  }
+}

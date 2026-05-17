@@ -15,7 +15,7 @@
 - Q: Should users be able to mark an entire TV season as watched/unwatched in one action, or only individual episodes? → A: Mark all per season — a "mark season as watched/unwatched" toggle on each season header.
 - Q: Should the application UI support multiple languages or be English-only? → A: Bilingual (English + French). English by default; French for users located in France. Users can switch language at any time.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Browse Media Collection (Priority: P1)
 
@@ -111,16 +111,16 @@ As a user, I want to maintain a wishlist of films and TV shows I don't own yet b
 
 ### User Story 6 - User Authentication & Profile (Priority: P1)
 
-As a user, I want to log in securely so my collection, watch history, and wishlist are personal and protected. The application uses Okta for authentication. On first login, my user profile is automatically created. I can view my profile and update my preferred language.
+As a user, I want to log in securely so my collection, watch history, and wishlist are personal and protected. The application uses Auth0 for authentication. On first login, my user profile is automatically created. I can view my profile and update my preferred language.
 
 **Why this priority**: Authentication is a prerequisite for all user-specific features (watch tracking, wishlist, personalized collection views). Without it, no personalized functionality works.
 
-**Independent Test**: Can be tested by logging in with Okta credentials, verifying the profile sync completes, and updating the preferred language.
+**Independent Test**: Can be tested by logging in with Auth0 credentials, verifying the profile sync completes, and updating the preferred language.
 
 **Acceptance Scenarios**:
 
-1. **Given** the user is not authenticated, **When** they access the application, **Then** they are redirected to the Okta login page.
-2. **Given** the user successfully authenticates via Okta, **When** they return to the application, **Then** their profile is automatically synced and they land on the collection page.
+1. **Given** the user is not authenticated, **When** they access the application, **Then** they are redirected to the Auth0 login page.
+2. **Given** the user successfully authenticates via Auth0, **When** they return to the application, **Then** their profile is automatically synced and they land on the collection page.
 3. **Given** the user is authenticated, **When** they access their profile, **Then** they see their display name, email, and preferred language.
 4. **Given** the user is on their profile page, **When** they update their preferred language, **Then** the preference is saved, the UI language switches immediately, and TMDB metadata is fetched in the selected language.
 
@@ -131,13 +131,13 @@ As a user, I want to log in securely so my collection, watch history, and wishli
 - What happens when a media item has no poster image? The UI displays a placeholder image.
 - What happens when a media item has no associated NAS files? The detail page indicates "No files found on NAS" clearly.
 - What happens when TMDB search returns no results? A "No results found" message is displayed.
-- What happens when the user's session expires? They are redirected to the Okta login page seamlessly.
+- What happens when the user's session expires? They are redirected to the Auth0 login page seamlessly.
 - What happens when a media file path points to a NAS location that no longer exists? The path is still displayed but can be visually flagged as potentially unavailable.
 - What happens when the API is unreachable? The user sees a clear error message suggesting they retry later.
 - What happens when the user's collection is empty (new user)? The collection page displays an onboarding prompt with a friendly message and a call-to-action directing the user to search and import media from TMDB.
 - What happens when pagination reaches the last page? The "next page" control is disabled.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -157,8 +157,8 @@ As a user, I want to log in securely so my collection, watch history, and wishli
 - **FR-014**: System MUST allow the user to add TMDB search results to a personal wishlist.
 - **FR-015**: System MUST display the user's wishlist with pagination, poster images, titles, release dates, and notes.
 - **FR-016**: System MUST allow the user to mark a wishlist item as acquired or remove it.
-- **FR-017**: System MUST authenticate users via Okta and automatically sync user profiles on login.
-- **FR-018**: System MUST redirect unauthenticated users to the Okta login page.
+- **FR-017**: System MUST authenticate users via Auth0 and automatically sync user profiles on login.
+- **FR-018**: System MUST redirect unauthenticated users to the Auth0 login page.
 - **FR-019**: System MUST allow the user to view and update their preferred language in their profile.
 - **FR-020**: System MUST support bilingual UI in English and French. English is the default language; French is applied automatically for users located in France. The user can switch language at any time and the UI updates immediately.
 - **FR-021**: System MUST handle API errors gracefully, displaying user-friendly error messages.
@@ -172,12 +172,12 @@ As a user, I want to log in securely so my collection, watch history, and wishli
 - **MediaFile**: A physical file on the NAS linked to a media item. Contains file path, size, and format. Can be unlinked (not associated with any media) when freshly scanned.
 - **TV Season**: A season belonging to a TV show. Contains season number, name, overview, air date, poster, and episode count.
 - **TV Episode**: An episode within a season. Contains episode number, name, overview, air date, runtime, and still image.
-- **User**: An authenticated person identified via Okta. Has a display name, email, preferred language, and role (User or Admin).
+- **User**: An authenticated person identified via Auth0. Has a display name, email, preferred language, and role (User or Admin).
 - **UserMedia**: The relationship between a user and a media item that tracks watch status, watched date, personal rating, and notes.
 - **UserEpisode**: The relationship between a user and a TV episode that tracks per-episode watch status.
 - **WishlistItem**: A reference to a TMDB media entry that the user wants to acquire. Tracks TMDB ID, title, poster, release date, acquisition status, and personal notes. Independent from the local media collection.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
@@ -193,7 +193,7 @@ As a user, I want to log in securely so my collection, watch history, and wishli
 ## Assumptions
 
 - The backend service is fully operational and provides all necessary data and operations (media listing, watch tracking, wishlist, TMDB search/import, authentication).
-- Users authenticate via Okta. On first login, the user profile is automatically created.
+- Users authenticate via Auth0. On first login, the user profile is automatically created.
 - NAS file paths are displayed as text that users can copy; the application does not directly open file explorer windows on the user's machine (browser security limitation).
 - TMDB search and import operations are handled by the backend; the web interface sends user requests and displays results.
 - The application targets modern evergreen browsers (Chrome, Firefox, Edge, Safari latest 2 versions).

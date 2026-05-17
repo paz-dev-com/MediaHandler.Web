@@ -1,0 +1,195 @@
+@if (service.loading()) {
+  <app-loading-skeleton variant="list" [count]="6" />
+} @else if (service.error()) {
+  <app-error-message [message]="service.error()!" (retry)="reload()" />
+} @else if (service.media(); as media) {
+  <div class="detail-page">
+    <a routerLink="/" class="detail-page__back" [attr.aria-label]="'common.back' | transloco">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i> {{ 'common.back' | transloco }}
+    </a>
+
+    <!-- ── Cinematic hero section with parallax backdrop ── -->
+    @if (media.backdropPath | tmdbImage: 'w1280'; as backdropUrl) {
+      <div class="detail-page__hero" @heroEnter>
+        <!-- Backdrop image inside parallax container; CSS reads --scroll-offset -->
+        <div class="detail-page__hero-parallax">
+          <img
+            [src]="backdropUrl"
+            [alt]="media.title"
+            width="1280"
+            height="720"
+            loading="lazy"
+            class="detail-page__hero-img"
+          />
+        </div>
+        <!-- Gradient fade from transparent → --color-bg-base -->
+        <div class="detail-page__hero-overlay" aria-hidden="true"></div>
+        <!-- Title overlay in Bebas Neue -->
+        <div class="detail-page__hero-content">
+          <h1 class="detail-page__hero-title">{{ media.title }}</h1>
+        </div>
+      </div>
+    }
+
+    <!-- ── Poster + metadata row ── -->
+    <div class="detail-page__content" @contentEnter>
+      <div class="detail-page__poster-col">
+        @if (media.posterPath | tmdbImage: 'w342'; as posterUrl) {
+          <img
+            [src]="posterUrl"
+            [alt]="media.title"
+            width="342"
+            height="513"
+            loading="lazy"
+            class="detail-page__poster"
+          />
+        } @else {
+          <div class="detail-page__poster-placeholder">
+            <i class="pi pi-image"></i>
+          </div>
+        }
+      </div>
+
+      <div class="detail-page__meta">
+        <div class="detail-page__header">
+          <!-- Use H1 only when there is no hero backdrop to avoid duplicate H1 -->
+          @if (!(media.backdropPath | tmdbImage: 'w1280')) {
+            <h1 class="detail-page__title">{{ media.title }}</h1>
+          } @else {
+            <h2 class="detail-page__title">{{ media.title }}</h2>
+          }
+          @if (media.originalTitle && media.originalTitle !== media.title) {
+            <p class="detail-page__original-title">{{ media.originalTitle }}</p>
+          }
+          <div class="detail-page__tags">
+            <p-tag
+              [value]="
+                media.type === MediaType.Film
+                  ? ('collection.film' | transloco)
+                  : ('collection.tvShow' | transloco)
+              "
+              [severity]="media.type === MediaType.Film ? 'info' : 'success'"
+            />
+            @if (media.userMedia?.isWatched) {
+              <p-tag icon="pi pi-check" value="" severity="secondary" />
+            }
+          </div>
+          <!-- Production status badge — TV shows only (T040) -->
+          @if (isTvShow() && media.status) {
+            <div
+              class="status-badge"
+              [ngClass]="productionStatusClass()"
+              role="status"
+              [attr.aria-label]="productionStatusKey() | transloco"
+            >
+              <i class="pi pi-circle-fill status-badge__dot" aria-hidden="true"></i>
+              <span>{{ productionStatusKey() | transloco }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="detail-page__details">
+          @if (media.releaseDate) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.releaseDate' | transloco }}</span>
+              <span>{{ media.releaseDate | slice: 0 : 10 }}</span>
+            </div>
+          }
+          @if (media.runtime) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.runtime' | transloco }}</span>
+              <span>{{ media.runtime }} {{ 'media.minutes' | transloco }}</span>
+            </div>
+          }
+          @if (media.voteAverage) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.rating' | transloco }}</span>
+              <span>⭐ {{ media.voteAverage | number: '1.1-1' }}</span>
+            </div>
+          }
+          @if (media.language) {
+            <div class="detail-item">
+              <span class="detail-item__label">{{ 'media.language' | transloco }}</span>
+              <span>{{ media.language }}</span>
+            </div>
+          }
+        </div>
+
+        @if (media.genres?.length) {
+          <div class="detail-page__genres">
+            @for (genre of media.genres; track genre) {
+              <p-chip [label]="genre" />
+            }
+          </div>
+        }
+
+        @if (media.overview) {
+          <div class="detail-page__overview">
+            <h3>{{ 'media.overview' | transloco }}</h3>
+            <p>{{ media.overview }}</p>
+          </div>
+        }
+
+        <div class="detail-page__watched-action">
+          <p-button
+            [icon]="media.userMedia?.isWatched ? 'pi pi-eye-slash' : 'pi pi-eye'"
+            [label]="
+              (media.userMedia?.isWatched ? 'media.markUnwatched' : 'media.markWatched') | transloco
+            "
+            [severity]="media.userMedia?.isWatched ? 'secondary' : 'primary'"
+            (onClick)="onWatchedToggle()"
+          />
+          @if (media.userMedia?.watchedAt) {
+            <span class="detail-page__watched-date">
+              {{ 'media.watchedOn' | transloco }} {{ media.userMedia!.watchedAt | slice: 0 : 10 }}
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- TV Show: season list -->
+    @if (media.type === MediaType.TvShow) {
+      <div class="detail-page__seasons">
+        @if (service.seasonsLoading()) {
+          <app-loading-skeleton variant="list" [count]="3" />
+        } @else if (service.seasonsError()) {
+          <app-error-message [message]="service.seasonsError()!" (retry)="reload()" />
+        } @else {
+          <app-season-list
+            [seasons]="service.seasons()"
+            [mediaId]="media.id"
+            [numberOfSeasons]="media.numberOfSeasons"
+            (episodeWatchedToggle)="onEpisodeToggle($event)"
+            (seasonBatchToggle)="onSeasonBatchToggle($event)"
+          />
+        }
+      </div>
+    }
+
+    <!-- Files accordion — always at the bottom -->
+    <div class="detail-page__files-accordion">
+      <button
+        class="detail-page__files-header"
+        (click)="toggleFiles()"
+        [attr.aria-expanded]="filesOpen()"
+        [attr.aria-label]="'media.files' | transloco"
+        type="button"
+      >
+        <h3>{{ 'media.files' | transloco }}</h3>
+        <i
+          class="pi"
+          [class.pi-chevron-down]="!filesOpen()"
+          [class.pi-chevron-up]="filesOpen()"
+        ></i>
+      </button>
+      <div class="detail-page__files-body" [@accordionExpand]="filesOpen() ? 'open' : 'closed'">
+        @if (service.filesError()) {
+          <app-error-message [message]="service.filesError()!" (retry)="reload()" />
+        } @else {
+          <app-media-files [files]="media.files ?? []" />
+        }
+      </div>
+    </div>
+  </div>
+}

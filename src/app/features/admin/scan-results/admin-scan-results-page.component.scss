@@ -1,0 +1,34 @@
+.admin-scan-results-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--color-text-primary);
+  }
+
+  &__scan-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__selector-label {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    font-family: var(--font-body);
+  }
+
+  &__empty {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,76 @@
+<div
+  class="result-card"
+  [class.result-card--hovered]="hovered()"
+  (mouseenter)="hovered.set(true)"
+  (mouseleave)="hovered.set(false)"
+  @cardEnter
+  role="article"
+  [attr.aria-label]="result().title"
+>
+  <!-- Poster -->
+  @if (result().posterPath | tmdbImage: 'w185'; as posterUrl) {
+    <img
+      class="result-card__poster"
+      [src]="posterUrl"
+      [alt]="result().title"
+      width="80"
+      height="120"
+      loading="lazy"
+    />
+  } @else {
+    <div class="result-card__poster-placeholder" aria-hidden="true">
+      <i class="pi pi-image"></i>
+    </div>
+  }
+  <div class="result-card__body">
+    <div class="result-card__header">
+      <h3 class="result-card__title">{{ result().title }}</h3>
+      <div class="result-card__header-badges">
+        <p-tag
+          [value]="'tmdb.mediaType.' + result().mediaType | transloco"
+          [severity]="result().mediaType === 'movie' ? 'info' : 'success'"
+        />
+        @if (isInWishlist()) {
+          <p-tag
+            icon="pi pi-bookmark-fill"
+            [value]="'search.wishlistIndicator' | transloco"
+            severity="warn"
+            [attr.aria-label]="'search.wishlistIndicator' | transloco"
+            styleClass="result-card__wishlist-badge"
+          />
+        }
+      </div>
+    </div>
+    <p class="result-card__meta">
+      @if (result().releaseDate) {
+        <span>{{ result().releaseDate | slice: 0 : 4 }}</span>
+      }
+      @if (result().voteAverage) {
+        <span>
+          <i class="pi pi-star-fill" aria-hidden="true"></i>
+          {{ result().voteAverage | number: '1.1-1' }}
+        </span>
+      }
+    </p>
+    @if (result().overview) {
+      <p class="result-card__overview">{{ result().overview }}</p>
+    }
+    <div class="result-card__actions">
+      <p-button
+        [label]="'tmdb.import' | transloco"
+        icon="pi pi-download"
+        size="small"
+        [loading]="importing()"
+        (onClick)="onImport()"
+      />
+      <p-button
+        [label]="'wishlist.addToWishlist' | transloco"
+        icon="pi pi-bookmark"
+        size="small"
+        severity="secondary"
+        [loading]="wishlisting()"
+        (onClick)="onWishlist()"
+      />
+    </div>
+  </div>
+</div>

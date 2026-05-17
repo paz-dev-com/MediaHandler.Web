@@ -1,0 +1,213 @@
+<div class="admin-enrichment-page" *transloco="let t">
+  <p-confirmDialog />
+
+  <!-- Page Header -->
+  <div class="admin-enrichment-page__header">
+    <h2 class="admin-enrichment-page__title">{{ t('admin.enrichment.title') }}</h2>
+    <p-button
+      [label]="t('admin.enrichment.startButton')"
+      icon="pi pi-sync"
+      [disabled]="isRunning || loading()"
+      [loading]="loading()"
+      (onClick)="startEnrichment(t)"
+    />
+  </div>
+
+  <!-- Description -->
+  <p-card styleClass="admin-enrichment-page__description-card">
+    <p class="admin-enrichment-page__description">{{ t('admin.enrichment.description') }}</p>
+    <p class="admin-enrichment-page__description-detail">
+      {{ t('admin.enrichment.descriptionDetail') }}
+    </p>
+  </p-card>
+
+  <!-- Pre-flight Summary Panel -->
+  @if (summary()) {
+    @if (hasSummaryData) {
+      <p-card
+        [header]="t('admin.enrichment.summaryTitle')"
+        styleClass="admin-enrichment-page__summary-card"
+      >
+        <div class="admin-enrichment-page__summary-grid">
+          <div class="admin-enrichment-page__stat">
+            <span class="admin-enrichment-page__stat-value">{{ summary()!.newCount }}</span>
+            <span class="admin-enrichment-page__stat-label">{{
+              t('admin.enrichment.summary.newCount')
+            }}</span>
+          </div>
+          <div class="admin-enrichment-page__stat">
+            <span class="admin-enrichment-page__stat-value">{{ summary()!.changedCount }}</span>
+            <span class="admin-enrichment-page__stat-label">{{
+              t('admin.enrichment.summary.changedCount')
+            }}</span>
+          </div>
+          <div class="admin-enrichment-page__stat">
+            <span class="admin-enrichment-page__stat-value">{{ summary()!.skippedCount }}</span>
+            <span class="admin-enrichment-page__stat-label">{{
+              t('admin.enrichment.summary.skippedCount')
+            }}</span>
+          </div>
+          <div class="admin-enrichment-page__stat">
+            <span class="admin-enrichment-page__stat-value">{{ summary()!.totalEligible }}</span>
+            <span class="admin-enrichment-page__stat-label">{{
+              t('admin.enrichment.summary.totalEligible')
+            }}</span>
+          </div>
+        </div>
+      </p-card>
+    } @else {
+      <p-message severity="info" [text]="t('admin.enrichment.nothingToEnrich')" />
+    }
+  }
+
+  <!-- Running State -->
+  @if (isRunning) {
+    <p-card styleClass="admin-enrichment-page__status-card">
+      <div class="admin-enrichment-page__running">
+        <div class="admin-enrichment-page__status-header">
+          <span class="admin-enrichment-page__status-label">{{
+            t('admin.enrichment.statusLabel')
+          }}</span>
+          <p-tag
+            severity="warn"
+            [value]="t('admin.enrichment.statusRunning')"
+            icon="pi pi-spin pi-sync"
+          />
+        </div>
+        @if (enrichmentStatus()?.currentItem) {
+          <p class="admin-enrichment-page__current-item">{{ enrichmentStatus()!.currentItem }}</p>
+        }
+        <p-progressBar mode="indeterminate" [style]="{ height: '6px' }" />
+      </div>
+    </p-card>
+  }
+
+  <!-- History Table -->
+  <p-card
+    [header]="t('admin.enrichment.historyTitle')"
+    styleClass="admin-enrichment-page__history-card"
+  >
+    <p-table
+      [value]="enrichmentHistory()"
+      [lazy]="true"
+      [paginator]="true"
+      [rows]="historyMeta().pageSize"
+      [totalRecords]="historyMeta().total"
+      [loading]="historyLoading()"
+      (onLazyLoad)="onHistoryLazyLoad($event)"
+      dataKey="enrichmentRunId"
+      [expandedRowKeys]="expandedHistoryRows"
+      [rowHover]="true"
+      [rowsPerPageOptions]="[20, 50]"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"></th>
+          <th>{{ t('admin.enrichment.historyColumns.status') }}</th>
+          <th>{{ t('admin.enrichment.historyColumns.startedAt') }}</th>
+          <th>{{ t('admin.enrichment.historyColumns.finishedAt') }}</th>
+          <th>{{ t('admin.enrichment.historyColumns.enriched') }}</th>
+          <th>{{ t('admin.enrichment.historyColumns.failed') }}</th>
+          <th>{{ t('admin.enrichment.historyColumns.skipped') }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-run let-expanded="expanded">
+        <tr>
+          <td>
+            @if (run.enrichedCount > 0 || run.failedCount > 0 || run.errorDetails?.length > 0) {
+              <p-button
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                [text]="true"
+                size="small"
+                (onClick)="toggleHistoryRow(run.enrichmentRunId, expanded)"
+              />
+            }
+          </td>
+          <td>
+            <p-tag [value]="run.status" [severity]="getStatusSeverity(run.status)" />
+          </td>
+          <td>{{ run.startedAt | date: 'short' }}</td>
+          <td>{{ run.finishedAt ? (run.finishedAt | date: 'short') : '—' }}</td>
+          <td>{{ run.enrichedCount }}</td>
+          <td>{{ run.failedCount }}</td>
+          <td>{{ run.skippedCount }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="rowexpansion" let-run>
+        <tr>
+          <td colspan="7">
+            @if (runDetailsLoading()) {
+              <div class="admin-enrichment-page__details-loading">
+                <p-progressSpinner [style]="{ width: '2rem', height: '2rem' }" />
+              </div>
+            } @else if (runDetails().length > 0) {
+              <!-- Per-media details table -->
+              <div class="admin-enrichment-page__media-details">
+                <h4>{{ t('admin.enrichment.mediaDetails.header') }}</h4>
+                <p-table [value]="runDetails()" styleClass="p-datatable-sm" [rowHover]="true">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ t('admin.enrichment.mediaDetails.title') }}</th>
+                      <th>{{ t('admin.enrichment.mediaDetails.tmdbId') }}</th>
+                      <th>{{ t('admin.enrichment.mediaDetails.type') }}</th>
+                      <th>{{ t('admin.enrichment.mediaDetails.status') }}</th>
+                      <th>{{ t('admin.enrichment.mediaDetails.fileCount') }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-detail>
+                    <tr>
+                      <td>{{ detail.title ?? '—' }}</td>
+                      <td>{{ detail.tmdbId ?? '—' }}</td>
+                      <td><p-tag [value]="detail.type" severity="info" /></td>
+                      <td>
+                        <p-tag
+                          [value]="t('admin.enrichment.mediaDetails.status' + detail.status)"
+                          [severity]="getMediaDetailSeverity(detail.status)"
+                        />
+                      </td>
+                      <td>{{ detail.fileCount }}</td>
+                    </tr>
+                    @if (detail.error) {
+                      <tr>
+                        <td colspan="5">
+                          <p-message severity="error" [text]="detail.error" />
+                        </td>
+                      </tr>
+                    }
+                  </ng-template>
+                </p-table>
+              </div>
+            } @else if (run.errorDetails?.length > 0) {
+              <!-- Fallback: error details only -->
+              <div class="admin-enrichment-page__error-details">
+                <h4>{{ t('admin.enrichment.errorDetails') }}</h4>
+                @for (err of run.errorDetails; track err.mediaId) {
+                  <p-message
+                    severity="error"
+                    [text]="(err.title ?? err.mediaId) + ': ' + err.error"
+                  />
+                }
+              </div>
+            }
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">
+            <p-message severity="info" [text]="t('admin.enrichment.historyEmpty')" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Failed State -->
+  @if (enrichmentStatus()?.status === EnrichmentStatus.Failed) {
+    <p-message severity="error" [text]="t('admin.enrichment.statusFailed')" />
+  }
+</div>

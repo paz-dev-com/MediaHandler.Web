@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+# Cancel in-progress runs on the same branch when a new push arrives
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Code Quality & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Setup ────────────────────────────────────────────────────────────
+      # actions/checkout and actions/setup-node are not whitelisted by the org.
+      # We replicate their behaviour with plain shell commands + actions/cache.
+
+      - name: Checkout repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git -c protocol.version=2 fetch --depth=1 origin "${{ github.sha }}"
+          git reset --hard FETCH_HEAD
+          git clean -df
+
+      - name: Setup Node.js 22
+        run: |
+          # Install Node.js 22 via NodeSource (reliable, no external action needed)
+          curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - > /dev/null 2>&1
+          sudo apt-get install -y nodejs --quiet
+          node --version
+          npm --version
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── 1. Format check (Prettier) ───────────────────────────────────────
+
+      - name: Check Prettier formatting
+        run: npx prettier --check .
+
+      # ── 2. Generate environment files ────────────────────────────────────
+      # Real credentials come from GitHub Secrets.
+      # Placeholder values are used as fallback so compilation never fails
+      # on forks or branches without configured secrets.
+
+      - name: Generate environment files
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://api.example.com/api/v1' }}
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN || 'ci-placeholder.auth0.com' }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID || 'ci-placeholder-client-id' }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE || '' }}
+        run: |
+          printf "API_BASE_URL=%s\nAUTH0_DOMAIN=%s\nAUTH0_CLIENT_ID=%s\nAUTH0_REDIRECT_URI=%s\nAUTH0_AUDIENCE=%s\n" \
+            "$API_BASE_URL" "$AUTH0_DOMAIN" "$AUTH0_CLIENT_ID" \
+            "http://localhost:4200/auth/callback" "$AUTH0_AUDIENCE" > .env
+          node scripts/generate-env.mjs
+
+      # ── 3. TypeScript type check ──────────────────────────────────────────
+      # Fast check without full compilation — Angular template errors
+      # are caught by the build step below.
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit -p tsconfig.app.json
+
+      # ── 4. Production build ───────────────────────────────────────────────
+      # Full Angular build including Ivy template compilation and
+      # bundle size budget validation.
+
+      - name: Build (production)
+        run: npx ng build --configuration production
+
+      # ── 5. Unit tests ─────────────────────────────────────────────────────
+
+      - name: Unit tests
+        run: npx ng test --watch=false

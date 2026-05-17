@@ -1,0 +1,19 @@
+@if (variant() === 'card') {
+  <div class="skeleton-grid">
+    @for (_ of items(); track $index) {
+      <div class="skeleton-card shimmer"></div>
+    }
+  </div>
+} @else {
+  <div class="skeleton-list">
+    @for (_ of items(); track $index) {
+      <div class="skeleton-list-item">
+        <div class="skeleton-list-item__avatar shimmer"></div>
+        <div class="skeleton-list-item__lines">
+          <div class="skeleton-line skeleton-line--70 shimmer"></div>
+          <div class="skeleton-line skeleton-line--40 shimmer"></div>
+        </div>
+      </div>
+    }
+  </div>
+}

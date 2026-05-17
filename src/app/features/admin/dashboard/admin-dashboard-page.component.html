@@ -1,0 +1,9 @@
+<div class="admin-dashboard" *transloco="let t">
+  <h1 class="admin-dashboard__title">{{ t('admin.dashboard.title') }}</h1>
+
+  <div class="admin-dashboard__grid">
+    <p-card [header]="t('admin.dashboard.systemHealth')">
+      <app-health-panel />
+    </p-card>
+  </div>
+</div>

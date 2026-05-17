@@ -1,0 +1,17 @@
+<div class="empty-state">
+  <!-- Dark cinematic illustration -->
+  <div class="empty-state__icon-wrap">
+    <div class="empty-state__icon-ring">
+      <i class="pi pi-video empty-state__icon"></i>
+    </div>
+  </div>
+
+  <h2 class="empty-state__title">{{ 'collection.empty.title' | transloco }}</h2>
+  <p class="empty-state__description">{{ 'collection.empty.description' | transloco }}</p>
+
+  <p-button
+    [label]="'collection.empty.cta' | transloco"
+    icon="pi pi-search"
+    routerLink="/tmdb-search"
+  />
+</div>

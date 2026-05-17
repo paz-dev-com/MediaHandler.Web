@@ -1,0 +1,35 @@
+<div class="collection-page">
+  <h1 class="collection-page__title">{{ 'collection.title' | transloco }}</h1>
+
+  <app-collection-stats [stats]="service.stats()" />
+
+  <app-collection-filters [filters]="service.filters()" (filtersChange)="onFiltersChange($event)" />
+
+  @if (!service.loading() && service.media().length > 0) {
+    <app-spotlight-carousel [items]="service.media()" />
+  }
+
+  @if (service.loading()) {
+    <app-loading-skeleton variant="card" [count]="12" />
+  } @else if (service.error()) {
+    <app-error-message [message]="service.error()!" (retry)="service.loadMedia()" />
+  } @else if (service.isEmpty()) {
+    <app-empty-collection />
+  } @else {
+    <div class="media-grid" [@cardListStagger]="service.media().length">
+      @for (item of service.media(); track item.id) {
+        <app-media-card [media]="item" (watchedToggle)="onWatchedToggle($event)" />
+      }
+    </div>
+
+    @if (service.totalCount() > service.pagination().pageSize) {
+      <p-paginator
+        [rows]="service.pagination().pageSize"
+        [totalRecords]="service.totalCount()"
+        [first]="(service.pagination().page - 1) * service.pagination().pageSize"
+        (onPageChange)="onPageChange($event)"
+        styleClass="mt-4"
+      />
+    }
+  }
+</div>

@@ -1,0 +1,49 @@
+<div class="search-page">
+  <h1 class="search-page__title">{{ 'tmdb.searchTitle' | transloco }}</h1>
+  <!-- Search input with focus-glow -->
+  <div class="search-page__input-wrap">
+    <div class="search-page__input-icon-wrap" [class.is-focused]="inputFocused()">
+      <i class="pi pi-search search-page__search-icon" aria-hidden="true"></i>
+      <input
+        pInputText
+        type="search"
+        [placeholder]="'tmdb.searchPlaceholder' | transloco"
+        [value]="searchQuery()"
+        (input)="onQueryChange($any($event.target).value)"
+        (focus)="inputFocused.set(true)"
+        (blur)="inputFocused.set(false)"
+        class="search-page__input"
+        [attr.aria-label]="'tmdb.searchPlaceholder' | transloco"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  @if (searchService.loading()) {
+    <app-loading-skeleton variant="list" [count]="5" />
+  } @else if (searchService.error()) {
+    <app-error-message
+      [message]="searchService.error()! | transloco"
+      [showRetry]="true"
+      (retry)="searchService.search(searchQuery())"
+    />
+  } @else if (searchService.results().length === 0 && searchQuery().length > 0) {
+    <div class="search-page__empty" role="status">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <p>{{ 'tmdb.noResults' | transloco }}</p>
+    </div>
+  } @else if (searchService.results().length > 0) {
+    <!-- @resultsEnter staggered card entrance keyed on result count -->
+    <div class="search-page__results" [@resultsEnter]="searchService.results().length">
+      @for (result of searchService.results(); track result.id) {
+        <app-tmdb-result-card
+          [result]="result"
+          [importing]="isImporting(result.id)"
+          [wishlisting]="isWishlisting(result.id)"
+          [isInWishlist]="wishlistTmdbIds().has(result.id)"
+          (importClick)="onImport($event)"
+          (wishlistClick)="onWishlist($event)"
+        />
+      }
+    </div>
+  }
+</div>

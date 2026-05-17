@@ -1,0 +1,314 @@
+<div class="scan-decision-table" *transloco="let t">
+  <!-- View Mode Toggle + Filters -->
+  <div class="scan-decision-table__toolbar">
+    <div class="scan-decision-table__filters">
+      <p-select
+        [options]="decisionTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="selectedDecisionType"
+        (ngModelChange)="onDecisionTypeChange($event)"
+        [placeholder]="t('admin.scanResults.filterDecisionType')"
+        class="scan-decision-table__filter"
+      />
+      <p-select
+        [options]="mediaTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="selectedMediaType"
+        (ngModelChange)="onMediaTypeChange($event)"
+        [placeholder]="t('admin.scanResults.filterMediaType')"
+        class="scan-decision-table__filter"
+      />
+      @if (libraryRoots.length > 0) {
+        <p-select
+          [options]="libraryRootOptions"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="selectedLibraryRootId"
+          (ngModelChange)="onLibraryRootChange($event)"
+          [placeholder]="t('admin.scanResults.filterLibraryRoot')"
+          class="scan-decision-table__filter"
+        />
+      }
+    </div>
+    <p-button
+      [label]="
+        useGroupedView ? t('admin.scanResults.flatView') : t('admin.scanResults.groupedView')
+      "
+      [icon]="useGroupedView ? 'pi pi-list' : 'pi pi-th-large'"
+      severity="secondary"
+      size="small"
+      (onClick)="toggleViewMode()"
+    />
+  </div>
+
+  <!-- Grouped View (default) -->
+  @if (useGroupedView) {
+    @if (loading()) {
+      <div class="scan-decision-table__loading">
+        <p-progressSpinner strokeWidth="4" [style]="{ width: '40px', height: '40px' }" />
+      </div>
+    } @else if (groupedDecisions().length === 0) {
+      <p-message severity="info" [text]="t('admin.scanResults.empty')" />
+    } @else {
+      <div class="scan-decision-table__groups">
+        @for (group of pagedGroups(); track group.showName) {
+          <div class="scan-decision-table__group">
+            <!-- Group Header -->
+            <div
+              class="scan-decision-table__group-header"
+              (click)="toggleGroup(group.showName)"
+              (keydown.enter)="toggleGroup(group.showName)"
+              (keydown.space)="toggleGroup(group.showName)"
+              tabindex="0"
+              role="button"
+            >
+              <i
+                class="pi"
+                [class.pi-chevron-down]="isGroupExpanded(group.showName)"
+                [class.pi-chevron-right]="!isGroupExpanded(group.showName)"
+              ></i>
+              @if (getPosterUrl(group.assignedPosterPath); as posterUrl) {
+                <img
+                  [src]="posterUrl"
+                  [alt]="group.showName"
+                  class="scan-decision-table__group-poster"
+                />
+              }
+              <span class="scan-decision-table__group-name">{{ group.showName }}</span>
+              <p-chip
+                [label]="t('admin.scanResults.episodeCount', { count: group.episodeCount })"
+              />
+              <p-tag
+                [value]="
+                  group.assignedTmdbId
+                    ? (group.assignedTitle ?? t('admin.scanResults.tmdbAssigned'))
+                    : t('admin.scanResults.tmdbNotAssigned')
+                "
+                [severity]="getGroupAssignedSeverity(group)"
+              />
+            </div>
+
+            <!-- Group Content (expanded) -->
+            @if (isGroupExpanded(group.showName)) {
+              <!-- Show-level TMDB candidates -->
+              @if (getGroupCandidates(group).length > 0) {
+                <div class="scan-decision-table__group-candidates">
+                  <h4 class="scan-decision-table__section-title">
+                    {{ t('admin.scanResults.showCandidates') }}
+                  </h4>
+                  @for (candidate of getGroupCandidates(group); track candidate.tmdbId) {
+                    <div class="scan-decision-table__candidate-row">
+                      @if (getPosterUrl(candidate.posterPath); as posterUrl) {
+                        <img
+                          [src]="posterUrl"
+                          [alt]="candidate.title"
+                          class="scan-decision-table__candidate-poster"
+                        />
+                      }
+                      <span class="scan-decision-table__candidate-title">{{
+                        candidate.title
+                      }}</span>
+                      @if (candidate.year) {
+                        <span>({{ candidate.year }})</span>
+                      }
+                      @if (candidate.score !== null) {
+                        <span>{{ candidate.score | number: '1.0-2' }}</span>
+                      }
+                      <p-button
+                        [label]="t('admin.scanResults.assignToAll')"
+                        icon="pi pi-check-circle"
+                        size="small"
+                        severity="primary"
+                        [loading]="assigningGroup() === group.showName"
+                        (onClick)="onAssignToAll(group, candidate.tmdbId, candidate.kind, t)"
+                      />
+                    </div>
+                  }
+                </div>
+              }
+              <!-- Search TMDB at show level -->
+              <div class="scan-decision-table__group-actions">
+                <p-button
+                  [label]="t('admin.scanResults.searchTmdb')"
+                  icon="pi pi-search"
+                  severity="secondary"
+                  size="small"
+                  (onClick)="openGroupSearch(group); $event.stopPropagation()"
+                />
+              </div>
+
+              <!-- Group Episodes — use native button for chevron to avoid PrimeNG overhead -->
+              <div class="scan-decision-table__group-episodes">
+                @for (episode of group.episodes; track episode.id) {
+                  <div class="scan-decision-table__episode-row">
+                    <button
+                      class="scan-decision-table__chevron-btn"
+                      type="button"
+                      (click)="toggleEpisode(episode.id); $event.stopPropagation()"
+                    >
+                      <i
+                        class="pi"
+                        [class.pi-chevron-down]="isEpisodeExpanded(episode.id)"
+                        [class.pi-chevron-right]="!isEpisodeExpanded(episode.id)"
+                      ></i>
+                    </button>
+                    <span class="scan-decision-table__path" [title]="episode.filePath">{{
+                      episode.filePath
+                    }}</span>
+                    <p-tag
+                      [value]="t('admin.scanResults.decisionTypes.' + episode.decisionType)"
+                      [severity]="getDecisionTypeSeverity(episode.decisionType)"
+                    />
+                    <span>{{ episode.decidedAt | date: 'short' }}</span>
+                  </div>
+                  @if (isEpisodeExpanded(episode.id)) {
+                    <div class="scan-decision-table__episode-detail">
+                      <app-scan-decision-detail [decision]="episode" />
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Groups pagination -->
+      @if (groupsTotalPages() > 1) {
+        <div class="scan-decision-table__groups-pagination">
+          <button
+            class="scan-decision-table__page-btn"
+            type="button"
+            [disabled]="groupsPage() === 1"
+            (click)="goToGroupsPage(groupsPage() - 1)"
+          >
+            <i class="pi pi-chevron-left"></i>
+          </button>
+          <span class="scan-decision-table__page-info">
+            {{ groupsPage() }} / {{ groupsTotalPages() }} ({{ groupedDecisions().length }}
+            {{ t('admin.scanResults.groups') }})
+          </span>
+          <button
+            class="scan-decision-table__page-btn"
+            type="button"
+            [disabled]="groupsPage() === groupsTotalPages()"
+            (click)="goToGroupsPage(groupsPage() + 1)"
+          >
+            <i class="pi pi-chevron-right"></i>
+          </button>
+        </div>
+      }
+    }
+  } @else {
+    <!-- Flat Table View -->
+    <p-table
+      [value]="decisions()"
+      [lazy]="true"
+      [paginator]="true"
+      [rows]="meta().pageSize"
+      [totalRecords]="meta().total"
+      [loading]="loading()"
+      (onLazyLoad)="onLazyLoad($event)"
+      dataKey="id"
+      [expandedRowKeys]="expandedRows"
+      [rowHover]="true"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"></th>
+          <th>{{ t('admin.scanResults.columns.filePath') }}</th>
+          <th>{{ t('admin.scanResults.columns.decisionType') }}</th>
+          <th>{{ t('admin.scanResults.columns.assignedEntry') }}</th>
+          <th>{{ t('admin.scanResults.columns.decidedAt') }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-decision let-expanded="expanded">
+        <tr>
+          <td>
+            <p-button
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              [text]="true"
+              size="small"
+              (onClick)="toggleRow(decision.id, expanded)"
+            />
+          </td>
+          <td class="scan-decision-table__path">
+            <span [title]="decision.filePath">{{ decision.filePath }}</span>
+          </td>
+          <td>
+            <p-tag
+              [value]="t('admin.scanResults.decisionTypes.' + decision.decisionType)"
+              [severity]="getDecisionTypeSeverity(decision.decisionType)"
+            />
+          </td>
+          <td>
+            @if (decision.assignedTitle) {
+              <div class="scan-decision-table__assigned">
+                @if (getPosterUrl(decision.assignedPosterPath); as posterUrl) {
+                  <img
+                    [src]="posterUrl"
+                    [alt]="decision.assignedTitle"
+                    class="scan-decision-table__poster"
+                  />
+                }
+                <span class="scan-decision-table__assigned-title">
+                  {{ decision.assignedTitle }}
+                  @if (decision.assignedYear) {
+                    <span class="scan-decision-table__assigned-year"
+                      >({{ decision.assignedYear }})</span
+                    >
+                  }
+                </span>
+              </div>
+            } @else {
+              <span class="scan-decision-table__unassigned">—</span>
+            }
+          </td>
+          <td>
+            <span>{{ decision.decidedAt | date: 'short' }}</span>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="rowexpansion" let-decision>
+        <tr>
+          <td colspan="5">
+            <app-scan-decision-detail [decision]="decision" />
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <p-message severity="info" [text]="t('admin.scanResults.empty')" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+
+  <!-- Show-level TMDB Search Dialog -->
+  <p-dialog
+    [header]="t('admin.scanResults.searchTmdbTitle')"
+    [visible]="!!groupSearchFor()"
+    (visibleChange)="!$event && groupSearchFor.set(null)"
+    [modal]="true"
+    [style]="{ width: '40rem' }"
+    [closable]="true"
+    [draggable]="false"
+  >
+    @if (groupSearchFor()) {
+      <app-tmdb-search-panel
+        [initialQuery]="groupSearchFor()!.showName"
+        [mediaTypeFilter]="null"
+        (selected)="onGroupTmdbSelected($event, t)"
+      />
+    }
+  </p-dialog>
+</div>

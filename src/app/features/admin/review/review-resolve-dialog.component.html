@@ -1,0 +1,225 @@
+<p-dialog
+  *transloco="let t"
+  [header]="t('admin.review.resolveDialog.title')"
+  [visible]="!!item"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: '52rem', 'max-height': '90vh' }"
+  [closable]="!resolving()"
+  [draggable]="false"
+  [dismissableMask]="!resolving()"
+>
+  @if (item) {
+    <div class="rrd">
+      <!-- ── File metadata ───────────────────────────────────────────── -->
+      <div class="rrd__file-card">
+        <div class="rrd__file-path">
+          <i class="pi pi-file rrd__file-icon"></i>
+          <span>{{ item.filePath }}</span>
+        </div>
+        <div class="rrd__file-meta">
+          @if (item.parsedTitle) {
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">{{ t('admin.review.resolveDialog.parsedTitle') }}</span>
+              <span class="rrd__meta-value">{{ item.parsedTitle }}</span>
+            </div>
+          }
+          @if (item.parsedSeason != null) {
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">S</span>
+              <span class="rrd__meta-value">{{ item.parsedSeason }}</span>
+            </div>
+          }
+          @if (item.parsedEpisode != null) {
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">E</span>
+              <span class="rrd__meta-value">{{ item.parsedEpisode }}</span>
+            </div>
+          }
+          @if (item.parsedYear) {
+            <div class="rrd__meta-chip">
+              <span class="rrd__meta-label">{{ t('admin.review.resolveDialog.parsedYear') }}</span>
+              <span class="rrd__meta-value">{{ item.parsedYear }}</span>
+            </div>
+          }
+          <p-tag [value]="item.reason" severity="warn" />
+          <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
+        </div>
+      </div>
+
+      <!-- ── Bulk resolve banner (shown only when siblings exist) ──── -->
+      @if (siblingCount() > 0) {
+        <button
+          class="rrd__bulk-banner"
+          [class.rrd__bulk-banner--active]="bulkResolve()"
+          type="button"
+          (click)="bulkResolve.set(!bulkResolve())"
+        >
+          <i
+            class="pi"
+            [class.pi-check-square]="bulkResolve()"
+            [class.pi-square]="!bulkResolve()"
+          ></i>
+          <div class="rrd__bulk-text">
+            <span class="rrd__bulk-title">
+              {{
+                bulkResolve()
+                  ? t('admin.review.bulkResolve.activeLabel', { count: siblingCount() + 1 })
+                  : t('admin.review.bulkResolve.checkboxLabel', { count: siblingCount() })
+              }}
+            </span>
+            <span class="rrd__bulk-hint">
+              {{ t('admin.review.bulkResolve.rootFolderHint', { folder: parentFolderPath() }) }}
+            </span>
+          </div>
+          <span class="rrd__bulk-badge">
+            {{ siblingCount() + 1 }}
+          </span>
+        </button>
+      }
+
+      <!-- ── TMDB Candidates ─────────────────────────────────────────── -->
+      @if (item.candidates && item.candidates.length > 0 && !showTmdbSearch()) {
+        <div class="rrd__section">
+          <div class="rrd__section-header">
+            <span class="rrd__section-title">{{ t('admin.review.resolveDialog.candidates') }}</span>
+            <button class="rrd__link-btn" type="button" (click)="showTmdbSearch.set(true)">
+              <i class="pi pi-search"></i>
+              {{ t('admin.review.resolveDialog.searchTmdb') }}
+            </button>
+          </div>
+          <div class="rrd__candidates">
+            @for (candidate of item.candidates; track candidate.tmdbId) {
+              <button
+                class="rrd__candidate"
+                [class.rrd__candidate--selected]="isSelected(candidate)"
+                type="button"
+                (click)="selectCandidate(candidate)"
+              >
+                @if (candidate.posterPath) {
+                  <img
+                    [src]="getPosterUrl(candidate.posterPath)"
+                    [alt]="candidate.title"
+                    class="rrd__poster"
+                  />
+                } @else {
+                  <div class="rrd__poster rrd__poster--empty">
+                    <i class="pi pi-image"></i>
+                  </div>
+                }
+                <div class="rrd__candidate-body">
+                  <span class="rrd__candidate-title">{{ candidate.title }}</span>
+                  <div class="rrd__candidate-meta">
+                    @if (candidate.year) {
+                      <span class="rrd__candidate-year">{{ candidate.year }}</span>
+                    }
+                    <p-tag [value]="candidate.kind" severity="info" />
+                    @if (candidate.score !== null) {
+                      <span class="rrd__candidate-score">
+                        {{ t('admin.review.resolveDialog.score') }}:
+                        {{ candidate.score | number: '1.0-2' }}
+                      </span>
+                    }
+                  </div>
+                </div>
+                @if (isSelected(candidate)) {
+                  <i class="pi pi-check-circle rrd__selected-icon"></i>
+                }
+              </button>
+            }
+          </div>
+        </div>
+      } @else {
+        <!-- No candidates or TMDB search open — show search panel inline -->
+        <div class="rrd__section">
+          @if (!showTmdbSearch() && (!item.candidates || item.candidates.length === 0)) {
+            <div class="rrd__no-candidates">
+              <i class="pi pi-search rrd__no-candidates-icon"></i>
+              <span>{{ t('admin.review.resolveDialog.noCandidates') }}</span>
+              <p-button
+                [label]="t('admin.review.resolveDialog.searchTmdb')"
+                icon="pi pi-search"
+                size="small"
+                (onClick)="showTmdbSearch.set(true)"
+              />
+            </div>
+          }
+          @if (showTmdbSearch()) {
+            <div class="rrd__section-header">
+              <span class="rrd__section-title">{{
+                t('admin.review.resolveDialog.tmdbSearch')
+              }}</span>
+              @if (item.candidates && item.candidates.length > 0) {
+                <button class="rrd__link-btn" type="button" (click)="showTmdbSearch.set(false)">
+                  <i class="pi pi-arrow-left"></i>
+                  {{ t('admin.review.resolveDialog.candidates') }}
+                </button>
+              }
+            </div>
+            <app-tmdb-search-panel
+              [initialQuery]="item.parsedTitle ?? ''"
+              [mediaTypeFilter]="tmdbMediaTypeFilter()"
+              (selected)="onTmdbSearchSelected($event, t)"
+            />
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <ng-template pTemplate="footer">
+    @if (item) {
+      <div class="rrd__footer">
+        <!-- Primary: Assign -->
+        <p-button
+          [label]="
+            bulkResolve()
+              ? t('admin.review.bulkResolve.assignLabel')
+              : t('admin.review.resolveDialog.assign')
+          "
+          icon="pi pi-check"
+          [disabled]="!selectedCandidate() || resolving()"
+          [loading]="resolving()"
+          (onClick)="onAssign(t)"
+        />
+        <!-- Show TMDB search toggle (only when candidates exist) -->
+        @if (item.candidates && item.candidates.length > 0) {
+          <p-button
+            [label]="t('admin.review.resolveDialog.searchTmdb')"
+            icon="pi pi-search"
+            severity="secondary"
+            [disabled]="resolving()"
+            (onClick)="showTmdbSearch.set(!showTmdbSearch())"
+          />
+        }
+        <div class="rrd__footer-spacer"></div>
+        <!-- Secondary actions -->
+        <p-button
+          [label]="t('admin.review.resolveDialog.dismiss')"
+          icon="pi pi-eye-slash"
+          severity="secondary"
+          [disabled]="resolving()"
+          [loading]="resolving()"
+          (onClick)="onAction(ReviewResolutionAction.Dismiss, t)"
+        />
+        <p-button
+          [label]="t('admin.review.resolveDialog.delete')"
+          icon="pi pi-trash"
+          severity="danger"
+          [disabled]="resolving()"
+          [loading]="resolving()"
+          (onClick)="onAction(ReviewResolutionAction.Delete, t)"
+        />
+        @if (item.status !== 'Open') {
+          <p-button
+            [label]="t('admin.review.resolveDialog.reopen')"
+            icon="pi pi-refresh"
+            severity="contrast"
+            [disabled]="resolving()"
+            (onClick)="onAction(ReviewResolutionAction.Reopen, t)"
+          />
+        }
+      </div>
+    }
+  </ng-template>
+</p-dialog>

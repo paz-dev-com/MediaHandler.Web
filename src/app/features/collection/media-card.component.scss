@@ -1,0 +1,342 @@
+:host {
+  display: block;
+}
+
+.media-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: 8px;
+  outline: none;
+
+  // Keyboard focus ring
+  &:focus-visible .media-card {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.media-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition:
+    transform var(--anim-fast) var(--anim-easing),
+    box-shadow var(--anim-fast) var(--anim-easing);
+  will-change: transform;
+
+  // Hover micro-interaction: scale + Indigo glow
+  .media-card-link:hover & {
+    transform: scale(1.04);
+    box-shadow:
+      0 0 0 1px var(--color-accent-glow),
+      0 8px 32px var(--color-accent-glow);
+  }
+
+  &__poster {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    background: var(--color-bg-elevated);
+    // Use padding-based border-radius clipping to avoid clipping icon glyphs
+    // on the watch-action button (T011 — icon visibility fix)
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform var(--anim-normal) var(--anim-easing);
+
+      .media-card-link:hover & {
+        transform: scale(1.06);
+      }
+    }
+  }
+
+  &__poster-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-elevated);
+
+    i {
+      font-size: 3rem;
+      opacity: 0.4;
+    }
+  }
+
+  // Gradient overlay — always present, opacity increases on hover
+  &__gradient {
+    position: absolute;
+    inset: 0;
+    background: var(--color-poster-gradient);
+    opacity: 0.7;
+    transition: opacity var(--anim-fast) var(--anim-easing);
+    pointer-events: none;
+
+    .media-card-link:hover & {
+      opacity: 1;
+    }
+  }
+
+  // Type + watched badges (top-left)
+  &__badges {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    z-index: 2;
+  }
+
+  // Watch toggle (top-right) — T011: icon must be visible in both themes
+  &__watch-action {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    z-index: 3; // Above gradient overlay
+    opacity: 0;
+    transition: opacity var(--anim-fast) var(--anim-easing);
+
+    .media-card-link:hover & {
+      opacity: 1;
+    }
+
+    // Ensure PrimeNG text button icons are visible on the poster gradient bg
+    ::ng-deep .p-button {
+      color: #f5f5f7 !important;
+
+      .p-button-icon {
+        color: inherit !important;
+        font-family: 'primeicons' !important;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: #ffffff !important;
+      }
+    }
+  }
+
+  // Info overlay at bottom — slides up on hover
+  &__overlay {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 0.75rem;
+    transform: translateY(4px);
+    transition: transform var(--anim-fast) var(--anim-easing);
+    z-index: 1;
+
+    .media-card-link:hover & {
+      transform: translateY(0);
+    }
+  }
+
+  // Title in Bebas Neue
+  &__title {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    color: var(--color-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  &__meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__year {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-accent);
+
+    i {
+      font-size: 0.625rem;
+    }
+  }
+}
+
+.media-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: 8px;
+  outline: none;
+
+  // Keyboard focus ring
+  &:focus-visible .media-card {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.media-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition:
+    transform var(--anim-fast) var(--anim-easing),
+    box-shadow var(--anim-fast) var(--anim-easing);
+  will-change: transform;
+
+  // Hover micro-interaction: scale + Indigo glow
+  .media-card-link:hover & {
+    transform: scale(1.04);
+    box-shadow:
+      0 0 0 1px var(--color-accent-glow),
+      0 8px 32px var(--color-accent-glow);
+  }
+
+  &__poster {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    background: var(--color-bg-elevated);
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform var(--anim-normal) var(--anim-easing);
+
+      .media-card-link:hover & {
+        transform: scale(1.06);
+      }
+    }
+  }
+
+  &__poster-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-elevated);
+
+    i {
+      font-size: 3rem;
+      opacity: 0.4;
+    }
+  }
+
+  // Gradient overlay — always present, opacity increases on hover
+  &__gradient {
+    position: absolute;
+    inset: 0;
+    background: var(--color-poster-gradient);
+    opacity: 0.7;
+    transition: opacity var(--anim-fast) var(--anim-easing);
+    pointer-events: none;
+
+    .media-card-link:hover & {
+      opacity: 1;
+    }
+  }
+
+  // Type + watched badges (top-left)
+  &__badges {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    z-index: 2;
+  }
+
+  // Watch toggle (top-right)
+  &__watch-action {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity var(--anim-fast) var(--anim-easing);
+
+    .media-card-link:hover & {
+      opacity: 1;
+    }
+  }
+
+  // Info overlay at bottom — slides up on hover
+  &__overlay {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 0.75rem;
+    transform: translateY(4px);
+    transition: transform var(--anim-fast) var(--anim-easing);
+    z-index: 1;
+
+    .media-card-link:hover & {
+      transform: translateY(0);
+    }
+  }
+
+  // Title in Bebas Neue
+  &__title {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    color: var(--color-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  &__meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__year {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-accent);
+
+    i {
+      font-size: 0.625rem;
+    }
+  }
+}

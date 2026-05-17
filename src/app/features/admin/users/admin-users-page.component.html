@@ -1,0 +1,79 @@
+<div class="admin-users-page" *transloco="let t">
+  <div class="admin-users-page__header">
+    <h2 class="admin-users-page__title">{{ t('admin.users.title') }}</h2>
+    <div class="admin-users-page__search">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          [placeholder]="t('admin.users.searchPlaceholder')"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </span>
+    </div>
+  </div>
+
+  <p-table
+    [value]="users()"
+    [lazy]="true"
+    [loading]="loading()"
+    [paginator]="true"
+    [rows]="meta().pageSize"
+    [totalRecords]="meta().total"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-striped"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ t('admin.users.columns.name') }}</th>
+        <th>{{ t('admin.users.columns.email') }}</th>
+        <th>{{ t('admin.users.columns.role') }}</th>
+        <th>{{ t('admin.users.columns.status') }}</th>
+        <th>{{ t('admin.users.columns.active') }}</th>
+        <th>{{ t('admin.users.columns.createdAt') }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>{{ user.displayName ?? '—' }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <p-select
+            [options]="roleOptions"
+            [ngModel]="user.role"
+            optionLabel="label"
+            optionValue="value"
+            (ngModelChange)="onRoleChange(user, $event)"
+            [style]="{ 'min-width': '8rem' }"
+            appendTo="body"
+          />
+        </td>
+        <td>
+          <p-tag
+            [value]="user.isActive ? t('admin.users.active') : t('admin.users.inactive')"
+            [severity]="getActiveTagSeverity(user.isActive)"
+          />
+        </td>
+        <td>
+          <p-toggleswitch
+            [ngModel]="user.isActive"
+            (ngModelChange)="onActiveToggle(user, $event)"
+          />
+        </td>
+        <td>{{ user.createdAt | date: 'short' }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center p-4">
+          {{ t('admin.users.empty') }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

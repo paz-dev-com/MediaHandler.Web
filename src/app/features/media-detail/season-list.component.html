@@ -1,0 +1,105 @@
+<div class="season-list">
+  <h3>{{ 'media.seasons' | transloco }}</h3>
+
+  @if (!seasons().length) {
+    <p class="season-list__empty">{{ 'media.noSeasons' | transloco }}</p>
+  } @else {
+    <div class="season-accordion">
+      @for (season of seasons(); track season.id) {
+        <div class="season-panel">
+          <!-- ── Season header (custom button, replaces p-accordion-header) ── -->
+          <button
+            class="season-header"
+            [class.is-expanded]="isExpanded(season.id)"
+            (click)="toggleSeason(season.id)"
+            [attr.aria-expanded]="isExpanded(season.id)"
+            [attr.aria-controls]="'season-content-' + season.id"
+            type="button"
+          >
+            <div class="season-header__info">
+              <span class="season-header__name">{{ season.name }}</span>
+              <div class="season-header__meta">
+                <span class="season-header__progress">
+                  {{ season.watchedCount }}/{{ season.episodeCount ?? season.episodes.length }}
+                  {{
+                    'season.watchedCount'
+                      | transloco
+                        : {
+                            watched: season.watchedCount,
+                            total: season.episodeCount ?? season.episodes.length,
+                          }
+                  }}
+                </span>
+                @if (season.airDate) {
+                  <span class="season-header__date">{{ season.airDate | slice: 0 : 4 }}</span>
+                }
+              </div>
+            </div>
+            <div class="season-header__actions">
+              <p-button
+                [icon]="isSeasonFullyWatched(season) ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                [label]="
+                  (isSeasonFullyWatched(season)
+                    ? 'season.markAllUnwatched'
+                    : 'season.markAllWatched'
+                  ) | transloco
+                "
+                size="small"
+                severity="secondary"
+                variant="text"
+                (onClick)="onBatchToggle($event, season)"
+              />
+              <i
+                class="pi season-header__chevron"
+                [class.pi-chevron-down]="!isExpanded(season.id)"
+                [class.pi-chevron-up]="isExpanded(season.id)"
+                aria-hidden="true"
+              ></i>
+            </div>
+          </button>
+
+          <!-- Progress bar always visible below header -->
+          @if ((season.episodeCount ?? season.episodes.length) > 0) {
+            <p-progressbar [value]="getSeasonProgress(season)" styleClass="season-progress" />
+          }
+
+          <!-- ── Episode list — always in DOM, animated via state binding ── -->
+          <div
+            class="season-content"
+            [id]="'season-content-' + season.id"
+            role="region"
+            [@accordionExpand]="isExpanded(season.id) ? 'expanded' : 'collapsed'"
+          >
+            @for (episode of season.episodes; track episode.id) {
+              <app-episode-item
+                [episode]="episode"
+                [season]="season.seasonNumber"
+                (watchedToggle)="onEpisodeToggle($event, season.id)"
+              />
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Missing seasons indicator (T043) — shown when numberOfSeasons > owned seasons -->
+    @if (missingSeasonNumbers().length > 0) {
+      <div class="missing-seasons">
+        <p class="missing-seasons__label">
+          <i class="pi pi-info-circle" aria-hidden="true"></i>
+          {{ 'media.season.missing' | transloco: { count: missingSeasonNumbers().length } }}
+        </p>
+        <div class="missing-seasons__list">
+          @for (num of missingSeasonNumbers(); track num) {
+            <div class="missing-season-card" role="listitem">
+              <i class="pi pi-minus-circle missing-season-card__icon" aria-hidden="true"></i>
+              <span class="missing-season-card__label">
+                {{ 'season.seasonNumber' | transloco: { number: num } }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>

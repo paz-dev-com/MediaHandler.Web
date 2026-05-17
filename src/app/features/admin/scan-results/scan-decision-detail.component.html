@@ -1,0 +1,128 @@
+<div class="scan-decision-detail" *transloco="let t">
+  <!-- Parsed Metadata -->
+  <div class="scan-decision-detail__meta">
+    @if (decision.parsedTitle) {
+      <div class="scan-decision-detail__field">
+        <span class="scan-decision-detail__label">{{ t('admin.scanResults.parsedTitle') }}</span>
+        <span>{{ decision.parsedTitle }}</span>
+      </div>
+    }
+    @if (decision.parsedYear) {
+      <div class="scan-decision-detail__field">
+        <span class="scan-decision-detail__label">{{ t('admin.scanResults.parsedYear') }}</span>
+        <span>{{ decision.parsedYear }}</span>
+      </div>
+    }
+    @if (decision.parsedSeason !== null) {
+      <div class="scan-decision-detail__field">
+        <span class="scan-decision-detail__label">{{ t('admin.scanResults.season') }}</span>
+        <span>{{ decision.parsedSeason }}</span>
+      </div>
+    }
+    @if (decision.parsedEpisode !== null) {
+      <div class="scan-decision-detail__field">
+        <span class="scan-decision-detail__label">{{ t('admin.scanResults.episode') }}</span>
+        <span>{{ decision.parsedEpisode }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- TMDB Candidates -->
+  @if (decision.candidates && decision.candidates.length > 0) {
+    <div class="scan-decision-detail__section">
+      <h4 class="scan-decision-detail__section-title">
+        {{ t('admin.scanResults.candidates') }}
+      </h4>
+      <div class="scan-decision-detail__candidates">
+        @for (candidate of decision.candidates; track candidate.tmdbId) {
+          <div class="scan-decision-detail__candidate">
+            @if (candidate.posterPath) {
+              <img
+                [src]="getPosterUrl(candidate.posterPath)"
+                [alt]="candidate.title"
+                class="scan-decision-detail__poster"
+              />
+            } @else {
+              <div class="scan-decision-detail__poster scan-decision-detail__poster--placeholder">
+                <i class="pi pi-image"></i>
+              </div>
+            }
+            <div class="scan-decision-detail__candidate-info">
+              <span class="scan-decision-detail__candidate-title">{{ candidate.title }}</span>
+              @if (candidate.year) {
+                <span class="scan-decision-detail__candidate-year">({{ candidate.year }})</span>
+              }
+              <p-tag [value]="candidate.kind" severity="info" />
+              @if (candidate.score !== null) {
+                <span class="scan-decision-detail__score">
+                  {{ t('admin.scanResults.score') }}: {{ candidate.score | number: '1.0-2' }}
+                </span>
+              }
+            </div>
+            <div class="scan-decision-detail__candidate-actions">
+              <p-button
+                [label]="t('admin.scanResults.reassign')"
+                icon="pi pi-refresh"
+                size="small"
+                severity="secondary"
+                [loading]="reassigning()"
+                (onClick)="onReassign(candidate.tmdbId, candidate.kind, t)"
+              />
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <p class="scan-decision-detail__no-candidates">
+      {{ t('admin.scanResults.noCandidates') }}
+    </p>
+  }
+
+  <!-- Actions -->
+  <div class="scan-decision-detail__actions">
+    <p-button
+      [label]="t('admin.scanResults.searchTmdb')"
+      icon="pi pi-search"
+      severity="secondary"
+      (onClick)="showTmdbSearch.set(!showTmdbSearch())"
+    />
+    @if (decision.assignedTmdbId) {
+      <p-button
+        [label]="t('admin.rename.button')"
+        icon="pi pi-pencil"
+        severity="secondary"
+        size="small"
+        (onClick)="openRenameDialog()"
+      />
+    }
+  </div>
+
+  <!-- TMDB Search Panel Dialog -->
+  <p-dialog
+    [header]="t('admin.scanResults.searchTmdbTitle')"
+    [visible]="showTmdbSearch()"
+    (visibleChange)="showTmdbSearch.set($event)"
+    [modal]="true"
+    [style]="{ width: '40rem' }"
+    [closable]="true"
+    [draggable]="false"
+  >
+    @if (showTmdbSearch()) {
+      <app-tmdb-search-panel
+        [initialQuery]="decision.parsedTitle ?? ''"
+        [mediaTypeFilter]="decision.kind"
+        (selected)="onTmdbSearchSelected($event, t)"
+      />
+    }
+  </p-dialog>
+
+  <!-- Rename File Dialog -->
+  <app-rename-dialog
+    [mode]="'single'"
+    [fileId]="decision.mediaFileId"
+    [visible]="renameDialogVisible()"
+    (visibleChange)="renameDialogVisible.set($event)"
+    (renamed)="onFileRenamed()"
+  />
+</div>

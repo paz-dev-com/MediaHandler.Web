@@ -1,0 +1,40 @@
+.tv-show-group-list {
+  padding: 1rem;
+  font-family: var(--font-body);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  &__show-name {
+    font-weight: 600;
+    flex: 1;
+    color: var(--color-text-primary);
+  }
+
+  &__actions {
+    margin-left: auto;
+  }
+
+  &__body {
+    padding: 0.5rem 0;
+  }
+
+  &__assigned-info {
+    margin-bottom: 0.5rem;
+  }
+
+  &__tmdb-id {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin-left: 0.25rem;
+  }
+
+  &__episode-count {
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+}

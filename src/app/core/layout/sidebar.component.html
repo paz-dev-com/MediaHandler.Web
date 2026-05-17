@@ -1,0 +1,110 @@
+<!-- Desktop / tablet sidebar -->
+@if (mode() !== 'mobile') {
+  <nav
+    class="sidebar"
+    [attr.data-mode]="mode()"
+    [@sidebarState]="mode()"
+    [attr.aria-label]="'a11y.mainNav' | transloco"
+    role="navigation"
+  >
+    <!-- Collapse toggle -->
+    <button
+      class="sidebar__toggle"
+      (click)="toggleCollapse()"
+      [attr.aria-label]="
+        mode() === 'expanded' ? ('a11y.closeNav' | transloco) : ('a11y.openNav' | transloco)
+      "
+      [title]="mode() === 'expanded' ? ('a11y.closeNav' | transloco) : ('a11y.openNav' | transloco)"
+    >
+      <i [class]="mode() === 'expanded' ? 'pi pi-chevron-left' : 'pi pi-chevron-right'"></i>
+    </button>
+
+    <!-- Navigation links -->
+    <ul class="sidebar__nav" role="list">
+      @for (item of navItems(); track item.route) {
+        <li>
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="sidebar__link--active"
+            [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+            class="sidebar__link"
+            [attr.aria-label]="item.labelKey | transloco"
+            [pTooltip]="mode() === 'collapsed' ? (item.labelKey | transloco) : ''"
+            tooltipPosition="right"
+          >
+            <i [class]="item.icon"></i>
+            @if (mode() === 'expanded') {
+              <span class="sidebar__label">{{ item.labelKey | transloco }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+
+    <!-- Theme toggle + logout — bottom of sidebar -->
+    <div class="sidebar__footer">
+      <!-- User info section (T054 — US7) -->
+      @if (isAuthenticated()) {
+        <div
+          class="sidebar__user-info"
+          [class.sidebar__user-info--collapsed]="mode() === 'collapsed'"
+        >
+          <img
+            [ngSrc]="navPictureUrl()"
+            width="36"
+            height="36"
+            [alt]="'nav.userPicture.alt' | transloco"
+            class="sidebar__user-avatar"
+          />
+          @if (mode() === 'expanded') {
+            <span class="sidebar__user-name">{{ displayName() }}</span>
+          }
+        </div>
+      }
+      <app-theme-toggle
+        class="sidebar__theme-toggle"
+        [class.sidebar__theme-toggle--expanded]="mode() === 'expanded'"
+      />
+      <button
+        class="sidebar__logout"
+        type="button"
+        (click)="logout()"
+        [pTooltip]="mode() === 'collapsed' ? ('nav.signOut' | transloco) : ''"
+        tooltipPosition="right"
+        [attr.aria-label]="'nav.signOut' | transloco"
+      >
+        <i class="pi pi-sign-out"></i>
+        @if (mode() === 'expanded') {
+          <span class="sidebar__label">{{ 'nav.signOut' | transloco }}</span>
+        }
+      </button>
+    </div>
+  </nav>
+}
+
+<!-- Mobile bottom navigation bar -->
+@if (mode() === 'mobile') {
+  <nav
+    class="bottom-nav"
+    [@bottomNavEnter]
+    [attr.aria-label]="'a11y.mainNav' | transloco"
+    role="navigation"
+  >
+    @for (item of navItems(); track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bottom-nav__item--active"
+        [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+        class="bottom-nav__item"
+        [attr.aria-label]="item.labelKey | transloco"
+      >
+        <i [class]="item.icon"></i>
+        <span class="bottom-nav__label">{{ item.labelKey | transloco }}</span>
+      </a>
+    }
+    <!-- Theme toggle as last bottom nav item -->
+    <div class="bottom-nav__item bottom-nav__item--toggle">
+      <app-theme-toggle />
+    </div>
+  </nav>
+}

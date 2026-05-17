@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-hidden="true">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="64" fill="currentColor" opacity="0.12"/>
+  <!-- Head -->
+  <circle cx="64" cy="48" r="22" fill="currentColor" opacity="0.45"/>
+  <!-- Body / shoulders silhouette -->
+  <ellipse cx="64" cy="100" rx="36" ry="28" fill="currentColor" opacity="0.45"/>
+</svg>
+

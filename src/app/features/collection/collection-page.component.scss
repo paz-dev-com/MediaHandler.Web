@@ -1,0 +1,41 @@
+.collection-page {
+  max-width: 1600px;
+  margin: 0 auto;
+
+  &__title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+  }
+}
+
+.media-grid {
+  display: grid;
+  gap: 1rem;
+  // Mobile: 2 columns
+  grid-template-columns: repeat(2, 1fr);
+
+  // Tablet: 3 columns
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Tablet wide: 4 columns
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  // Desktop: 5 columns
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  // Wide desktop: 6 columns
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

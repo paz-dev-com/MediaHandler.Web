@@ -1,0 +1,36 @@
+<div class="scan-launcher" *transloco="let t">
+  <h3 class="scan-launcher__title">{{ t('admin.scanner.launcherTitle') }}</h3>
+
+  <div class="scan-launcher__controls">
+    <p-multiselect
+      [options]="roots()"
+      [ngModel]="selectedRootIds()"
+      optionLabel="path"
+      optionValue="id"
+      [placeholder]="t('admin.scanner.selectRoots')"
+      [loading]="rootsLoading()"
+      [style]="{ 'min-width': '20rem' }"
+      (ngModelChange)="selectedRootIds.set($event)"
+      appendTo="body"
+    />
+
+    <p-select
+      [options]="modeOptions"
+      [ngModel]="selectedMode()"
+      optionLabel="label"
+      optionValue="value"
+      [placeholder]="t('admin.scanner.selectMode')"
+      [style]="{ 'min-width': '12rem' }"
+      (ngModelChange)="selectedMode.set($event)"
+      appendTo="body"
+    />
+
+    <p-button
+      [label]="t('admin.scanner.startScan')"
+      icon="pi pi-play"
+      [loading]="scanLoading()"
+      [disabled]="!selectedRootIds().length || scanLoading()"
+      (onClick)="onStartScan()"
+    />
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="admin-scan-results-page" *transloco="let t">
+  <p-toolbar>
+    <ng-template pTemplate="start">
+      <h2 class="admin-scan-results-page__title">{{ t('admin.scanResults.title') }}</h2>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <div class="admin-scan-results-page__toolbar-end">
+        <div class="admin-scan-results-page__scan-selector">
+          <label class="admin-scan-results-page__selector-label">
+            {{ t('admin.scanResults.selectScan') }}
+          </label>
+          @if (historyLoading()) {
+            <p-progressSpinner [style]="{ width: '1.5rem', height: '1.5rem' }" />
+          }
+          <p-select
+            [options]="scanRunOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="selectedScanId()"
+            (ngModelChange)="onScanRunChange($event)"
+            [placeholder]="t('admin.scanResults.selectScanPlaceholder')"
+            [style]="{ minWidth: '280px' }"
+          />
+        </div>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  @if (!selectedScanId()) {
+    <div class="admin-scan-results-page__empty">
+      <p-message severity="info" [text]="t('admin.scanResults.noScanSelected')" />
+    </div>
+  } @else {
+    <app-scan-decision-table [scanId]="scanIdForTable()" [libraryRoots]="libraryRoots()" />
+  }
+</div>
