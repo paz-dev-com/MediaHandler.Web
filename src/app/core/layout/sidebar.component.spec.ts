@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { BREAKPOINTS } from '@shared/constants/breakpoints';
 import { AuthService } from '@core/auth/auth.service';
+import { ProfileService } from '@features/profile/profile.service';
 import { ThemeService } from '@shared/services/theme.service';
 import { SidebarComponent } from './sidebar.component';
 
@@ -28,10 +29,12 @@ describe('SidebarComponent', () => {
   let bpSubject: BehaviorSubject<BreakpointState>;
   // Use a writable signal so computed(navItems) reacts to changes
   let isAdminSignal: ReturnType<typeof signal<boolean>>;
+  let isAuthenticatedSignal: ReturnType<typeof signal<boolean>>;
 
   beforeEach(async () => {
     bpSubject = new BehaviorSubject<BreakpointState>(makeBpState(false, false));
     isAdminSignal = signal(false);
+    isAuthenticatedSignal = signal(false);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -50,7 +53,13 @@ describe('SidebarComponent', () => {
         },
         {
           provide: AuthService,
-          useValue: { isAdmin: isAdminSignal.asReadonly() },
+          useValue: {
+            isAdmin: isAdminSignal.asReadonly(),
+            isAuthenticated: isAuthenticatedSignal.asReadonly(),
+            user: signal(null).asReadonly(),
+            auth0Picture: signal(null).asReadonly(),
+            logout: vi.fn(),
+          },
         },
         {
           provide: ThemeService,
@@ -59,6 +68,13 @@ describe('SidebarComponent', () => {
             theme: signal<'dark' | 'light' | 'system'>('dark').asReadonly(),
             toggle: vi.fn(),
             setTheme: vi.fn(),
+          },
+        },
+        {
+          provide: ProfileService,
+          useValue: {
+            user: signal(null).asReadonly(),
+            resolveProfilePictureUrl: (path: string | null | undefined) => path ?? null,
           },
         },
       ],

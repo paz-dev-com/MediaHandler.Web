@@ -71,6 +71,7 @@ export class ScanLauncherComponent implements OnInit {
   onStartScan(): void {
     const rootIds = this.selectedRootIds();
     if (!rootIds.length) return;
-    this.scanService.startScan(rootIds, this.selectedMode());
+    const language = this.transloco.getActiveLang();
+    this.scanService.startScan(rootIds, this.selectedMode(), language);
   }
 }

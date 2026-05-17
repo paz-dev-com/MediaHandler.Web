@@ -31,4 +31,8 @@ export interface Media {
   userMedia: UserMedia | null;
   createdAt: string;
   updatedAt: string;
+  /** TV series production status (e.g. 'Returning Series', 'Ended') */
+  status: string | null;
+  /** Total number of seasons according to TMDB */
+  numberOfSeasons: number | null;
 }

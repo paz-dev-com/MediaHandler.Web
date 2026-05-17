@@ -6,7 +6,11 @@
     "profile": "Profile",
     "admin": "Administration",
     "skipToContent": "Skip to main content",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "userPicture": {
+      "alt": "Your profile picture"
+    },
+    "loggedInAs": "Logged in as"
   },
   "common": {
     "loading": "Loading...",
@@ -71,13 +75,22 @@
     "minutes": "min",
     "seasonsError": "Failed to load seasons. Please try again.",
     "filesError": "Failed to load files.",
-    "seasonsLoading": "Loading seasons…"
+    "seasonsLoading": "Loading seasons…",
+    "status": {
+      "inProduction": "Still in Production",
+      "ended": "Ended",
+      "unknown": "Unknown Status"
+    },
+    "season": {
+      "missing": "{{count}} season(s) missing from your collection"
+    }
   },
   "season": {
     "episodeCount": "{{count}} episodes",
     "watchedCount": "{{watched}}/{{total}} watched",
     "markAllWatched": "Mark season watched",
-    "markAllUnwatched": "Mark season unwatched"
+    "markAllUnwatched": "Mark season unwatched",
+    "seasonNumber": "Season {{number}}"
   },
   "episode": {
     "season": "S{{season}}",
@@ -102,6 +115,9 @@
       "movie": "Movie",
       "tv": "TV Show"
     }
+  },
+  "search": {
+    "wishlistIndicator": "In your wishlist"
   },
   "wishlist": {
     "title": "Wishlist",
@@ -139,7 +155,15 @@
       "en": "English",
       "fr": "Français"
     },
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "picture": {
+      "upload": "Upload photo",
+      "remove": "Remove photo",
+      "uploading": "Uploading...",
+      "errorType": "Only JPEG, PNG and WebP files are accepted.",
+      "errorSize": "File must be less than 2 MB.",
+      "alt": "Profile picture"
+    }
   },
   "error": {
     "badRequest": "Bad Request",
@@ -217,7 +241,14 @@
         "labelLabel": "Label",
         "labelPlaceholder": "Optional display name",
         "optional": "optional",
-        "submit": "Add"
+        "submit": "Add",
+        "rootFolderLabel": "Root Folder",
+        "rootFolderPlaceholder": "Select a root folder",
+        "subPathLabel": "Sub-path",
+        "subPathPlaceholder": "/Movies",
+        "composedPathLabel": "Full Path",
+        "noLocationsMessage": "No root locations found. Enter the full path manually.",
+        "loadingLocations": "Loading available locations…"
       },
       "editButton": "Edit",
       "editedSuccess": "Library root updated.",

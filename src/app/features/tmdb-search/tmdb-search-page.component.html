@@ -39,6 +39,7 @@
           [result]="result"
           [importing]="isImporting(result.id)"
           [wishlisting]="isWishlisting(result.id)"
+          [isInWishlist]="wishlistTmdbIds().has(result.id)"
           (importClick)="onImport($event)"
           (wishlistClick)="onWishlist($event)"
         />

@@ -15,6 +15,7 @@ const makeUser = (role: UserRole): User => ({
   preferredLanguage: 'fr',
   role,
   isActive: true,
+  profilePicturePath: null,
 });
 
 describe('AuthService', () => {

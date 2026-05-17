@@ -6,7 +6,11 @@
     "profile": "Profil",
     "admin": "Administration",
     "skipToContent": "Aller au contenu principal",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "userPicture": {
+      "alt": "Votre photo de profil"
+    },
+    "loggedInAs": "Connecté en tant que"
   },
   "common": {
     "loading": "Chargement...",
@@ -71,13 +75,22 @@
     "minutes": "min",
     "seasonsError": "Impossible de charger les saisons. Veuillez réessayer.",
     "filesError": "Impossible de charger les fichiers.",
-    "seasonsLoading": "Chargement des saisons…"
+    "seasonsLoading": "Chargement des saisons…",
+    "status": {
+      "inProduction": "Toujours en production",
+      "ended": "Terminée",
+      "unknown": "Statut inconnu"
+    },
+    "season": {
+      "missing": "{{count}} saison(s) manquante(s) dans votre collection"
+    }
   },
   "season": {
     "episodeCount": "{{count}} épisodes",
     "watchedCount": "{{watched}}/{{total}} vus",
     "markAllWatched": "Marquer la saison vue",
-    "markAllUnwatched": "Marquer la saison non vue"
+    "markAllUnwatched": "Marquer la saison non vue",
+    "seasonNumber": "Saison {{number}}"
   },
   "episode": {
     "season": "S{{season}}",
@@ -102,6 +115,9 @@
       "movie": "Film",
       "tv": "Série TV"
     }
+  },
+  "search": {
+    "wishlistIndicator": "Dans votre liste de souhaits"
   },
   "wishlist": {
     "title": "Liste de souhaits",
@@ -139,7 +155,15 @@
       "en": "English",
       "fr": "Français"
     },
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "picture": {
+      "upload": "Télécharger une photo",
+      "remove": "Supprimer la photo",
+      "uploading": "Téléchargement...",
+      "errorType": "Seuls les fichiers JPEG, PNG et WebP sont acceptés.",
+      "errorSize": "Le fichier doit faire moins de 2 Mo.",
+      "alt": "Photo de profil"
+    }
   },
   "error": {
     "badRequest": "Requête invalide",
@@ -229,7 +253,14 @@
         "labelLabel": "Étiquette",
         "labelPlaceholder": "Nom d'affichage facultatif",
         "optional": "facultatif",
-        "submit": "Ajouter"
+        "submit": "Ajouter",
+        "rootFolderLabel": "Dossier racine",
+        "rootFolderPlaceholder": "Sélectionnez un dossier racine",
+        "subPathLabel": "Sous-chemin",
+        "subPathPlaceholder": "/Films",
+        "composedPathLabel": "Chemin complet",
+        "noLocationsMessage": "Aucun emplacement racine trouvé. Saisissez le chemin complet manuellement.",
+        "loadingLocations": "Chargement des emplacements disponibles…"
       },
       "editButton": "Modifier",
       "editedSuccess": "Répertoire mis à jour.",

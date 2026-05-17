@@ -25,10 +25,21 @@
   <div class="result-card__body">
     <div class="result-card__header">
       <h3 class="result-card__title">{{ result().title }}</h3>
-      <p-tag
-        [value]="'tmdb.mediaType.' + result().mediaType | transloco"
-        [severity]="result().mediaType === 'movie' ? 'info' : 'success'"
-      />
+      <div class="result-card__header-badges">
+        <p-tag
+          [value]="'tmdb.mediaType.' + result().mediaType | transloco"
+          [severity]="result().mediaType === 'movie' ? 'info' : 'success'"
+        />
+        @if (isInWishlist()) {
+          <p-tag
+            icon="pi pi-bookmark-fill"
+            [value]="'search.wishlistIndicator' | transloco"
+            severity="warn"
+            [attr.aria-label]="'search.wishlistIndicator' | transloco"
+            styleClass="result-card__wishlist-badge"
+          />
+        }
+      </div>
     </div>
     <p class="result-card__meta">
       @if (result().releaseDate) {

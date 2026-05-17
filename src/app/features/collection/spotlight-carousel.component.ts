@@ -17,7 +17,7 @@ import { TmdbImagePipe } from '@shared/pipes/tmdb-image.pipe';
 @Component({
   selector: 'app-spotlight-carousel',
   standalone: true,
-  imports: [RouterLink, TranslocoModule, TmdbImagePipe],
+  imports: [RouterLink, TranslocoModule],
   templateUrl: './spotlight-carousel.component.html',
   styleUrl: './spotlight-carousel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

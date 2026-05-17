@@ -1,9 +1,10 @@
-import { DecimalPipe, SlicePipe } from '@angular/common';
+import { DecimalPipe, NgClass, SlicePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
+  computed,
   inject,
   OnInit,
   signal,
@@ -40,6 +41,7 @@ import { SeasonListComponent } from './season-list.component';
   imports: [
     RouterLink,
     TranslocoModule,
+    NgClass,
     ButtonModule,
     TagModule,
     ChipModule,
@@ -85,6 +87,37 @@ export class MediaDetailPageComponent implements OnInit {
 
   /** Controls the files accordion open/closed state. */
   readonly filesOpen = signal(false);
+
+  /** True when the current media is a TV show. */
+  readonly isTvShow = computed(() => this.service.media()?.type === MediaType.TvShow);
+
+  /**
+   * Transloco key for the TV show production status badge.
+   * TMDB statuses: 'Returning Series', 'Ended', 'Canceled', 'In Production', etc.
+   */
+  readonly productionStatusKey = computed(() => {
+    const status = this.service.media()?.status;
+    if (!status) return 'media.status.unknown';
+    const lc = status.toLowerCase();
+    if (lc.includes('returning') || lc.includes('production') || lc === 'in production') {
+      return 'media.status.inProduction';
+    }
+    if (lc === 'ended' || lc === 'canceled' || lc === 'cancelled') {
+      return 'media.status.ended';
+    }
+    return 'media.status.unknown';
+  });
+
+  /**
+   * CSS modifier class for the status badge so color-coding works
+   * without string interpolation in the template.
+   */
+  readonly productionStatusClass = computed(() => {
+    const key = this.productionStatusKey();
+    if (key === 'media.status.inProduction') return 'status-badge--in-production';
+    if (key === 'media.status.ended') return 'status-badge--ended';
+    return 'status-badge--unknown';
+  });
 
   /** Whether the user explicitly prefers reduced motion. */
   private readonly reducedMotion =

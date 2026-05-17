@@ -74,6 +74,18 @@
               <p-tag icon="pi pi-check" value="" severity="secondary" />
             }
           </div>
+          <!-- Production status badge — TV shows only (T040) -->
+          @if (isTvShow() && media.status) {
+            <div
+              class="status-badge"
+              [ngClass]="productionStatusClass()"
+              role="status"
+              [attr.aria-label]="productionStatusKey() | transloco"
+            >
+              <i class="pi pi-circle-fill status-badge__dot" aria-hidden="true"></i>
+              <span>{{ productionStatusKey() | transloco }}</span>
+            </div>
+          }
         </div>
 
         <div class="detail-page__details">
@@ -147,6 +159,7 @@
           <app-season-list
             [seasons]="service.seasons()"
             [mediaId]="media.id"
+            [numberOfSeasons]="media.numberOfSeasons"
             (episodeWatchedToggle)="onEpisodeToggle($event)"
             (seasonBatchToggle)="onSeasonBatchToggle($event)"
           />

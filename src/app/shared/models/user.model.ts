@@ -26,4 +26,6 @@ export interface User {
   preferredLanguage: string;
   role: UserRole;
   isActive: boolean;
+  /** Custom profile picture path from the backend uploads directory */
+  profilePicturePath: string | null;
 }

@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AuthService } from '@core/auth/auth.service';
+import { ProfileService } from '@features/profile/profile.service';
 import { BREAKPOINTS } from '@shared/constants/breakpoints';
 import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle.component';
@@ -23,7 +25,14 @@ interface NavItem {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, TranslocoModule, TooltipModule, ThemeToggleComponent],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    NgOptimizedImage,
+    TranslocoModule,
+    TooltipModule,
+    ThemeToggleComponent,
+  ],
   animations: [
     // Desktop sidebar width transition: 220px ↔ 60px
     trigger('sidebarState', [
@@ -49,6 +58,10 @@ interface NavItem {
 export class SidebarComponent {
   private readonly auth = inject(AuthService);
   private readonly bp = inject(BreakpointObserver);
+  private readonly profileService = inject(ProfileService);
+
+  /** Exposed for template — whether the user is authenticated. */
+  readonly isAuthenticated = computed(() => this.auth.isAuthenticated());
 
   /** User's manual collapse preference (desktop/tablet only). */
   private readonly userCollapsed = signal(false);
@@ -99,6 +112,25 @@ export class SidebarComponent {
   toggleCollapse(): void {
     this.userCollapsed.update((v) => !v);
   }
+
+  /** Display name: backend displayName → auth0 name → 'User' */
+  readonly displayName = computed(() => {
+    const backendUser = this.auth.user();
+    if (backendUser?.displayName) return backendUser.displayName;
+    return 'User';
+  });
+
+  /**
+   * Navigation profile picture URL: custom backend path > auth0 provider > placeholder.
+   * Mirrors the effectivePictureUrl logic in profile-page.component.ts.
+   * Resolves relative API paths (e.g. /uploads/...) to absolute URLs.
+   */
+  readonly navPictureUrl = computed(() => {
+    const backendUser = this.auth.user();
+    const auth0Pic = this.auth.auth0Picture();
+    const customUrl = this.profileService.resolveProfilePictureUrl(backendUser?.profilePicturePath);
+    return customUrl ?? auth0Pic ?? '/assets/images/avatar-placeholder.svg';
+  });
 
   logout(): void {
     this.auth.logout();
