@@ -470,6 +470,11 @@
       "startButton": "Start TMDB Enrichment",
       "confirmTitle": "Start Enrichment",
       "confirmMessage": "Are you sure you want to start a batch TMDB enrichment scan?",
+      "confirmMessageWithLanguage": "Are you sure you want to start a batch TMDB enrichment scan? Metadata will be fetched in {{language}}.",
+      "language": {
+        "en": "English",
+        "fr": "French"
+      },
       "status": "Enrichment Status",
       "statusLabel": "Status",
       "statusRunning": "Running",
