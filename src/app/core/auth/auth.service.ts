@@ -25,6 +25,9 @@ export class AuthService {
   readonly isAuthenticated = toSignal(this.auth0.isAuthenticated$, { initialValue: false });
   readonly user = computed(() => this._user());
 
+  /** Auth0 ID-token picture URL (Google/Okta provider picture). Null when not authenticated or no picture. */
+  readonly auth0Picture = computed(() => this._auth0User()?.picture ?? null);
+
   /** True when the Auth0 JWT contains the 'Admin' role in the namespaced claim. */
   readonly isAdmin = computed(() => {
     // First check the backend user profile (most reliable — role comes from DB)

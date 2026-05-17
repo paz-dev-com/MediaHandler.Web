@@ -1,5 +1,5 @@
 import { SlicePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
@@ -41,6 +41,12 @@ export class SeasonListComponent {
   /** Accept null/undefined gracefully — defaults to empty array. */
   readonly seasons = input<TvSeason[]>([]);
   readonly mediaId = input.required<string>();
+  /**
+   * Total number of seasons from TMDB (media.numberOfSeasons).
+   * Used to compute missing season numbers.
+   */
+  readonly numberOfSeasons = input<number | null>(null);
+
   readonly episodeWatchedToggle = output<{
     mediaId: string;
     seasonId: string;
@@ -53,6 +59,17 @@ export class SeasonListComponent {
     episodeIds: string[];
     isWatched: boolean;
   }>();
+
+  /**
+   * Season numbers that are in TMDB's total count but not in the user's collection.
+   * Only computed when numberOfSeasons is provided and > 0.
+   */
+  readonly missingSeasonNumbers = computed(() => {
+    const total = this.numberOfSeasons() ?? 0;
+    if (total <= 0) return [];
+    const owned = new Set(this.seasons().map((s) => s.seasonNumber));
+    return Array.from({ length: total }, (_, i) => i + 1).filter((n) => !owned.has(n));
+  });
 
   /** Set of currently expanded season IDs. */
   private readonly expandedSeasonIds = signal<Set<string>>(new Set());

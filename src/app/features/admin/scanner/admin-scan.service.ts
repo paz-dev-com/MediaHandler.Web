@@ -34,9 +34,13 @@ export class AdminScanService {
   readonly loading = signal<boolean>(false);
   readonly historyLoading = signal<boolean>(false);
 
-  startScan(libraryRootIds: string[], mode: ScanMode): void {
+  startScan(libraryRootIds: string[], mode: ScanMode, language?: string): void {
     this.loading.set(true);
-    this.api.post<ScanRunDetail>(`${API_URL}`, { libraryRootIds, mode }).subscribe({
+    const body: Record<string, unknown> = { libraryRootIds, mode };
+    if (language) {
+      body['language'] = language;
+    }
+    this.api.post<ScanRunDetail>(`${API_URL}`, body).subscribe({
       next: (resp) => {
         this.activeScan.set(resp.data);
         this.loading.set(false);

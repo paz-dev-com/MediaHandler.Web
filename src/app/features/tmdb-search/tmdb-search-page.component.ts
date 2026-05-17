@@ -3,6 +3,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -66,7 +67,16 @@ export class TmdbSearchPageComponent implements OnInit, OnDestroy {
   readonly inputFocused = signal(false);
   private readonly query$ = new Subject<string>();
 
+  /** Set of TMDB IDs that are currently in the user's wishlist — drives reactive indicator badges. */
+  readonly wishlistTmdbIds = computed(
+    () => new Set(this.wishlistService.items().map((i) => i.tmdbId)),
+  );
+
   ngOnInit(): void {
+    // Ensure wishlist items are loaded so indicator badges are reactive
+    if (!this.wishlistService.items().length) {
+      this.wishlistService.loadItems();
+    }
     this.query$
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((q) => this.searchService.search(q));

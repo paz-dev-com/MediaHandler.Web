@@ -6,6 +6,7 @@ import {
   EventEmitter,
   OnInit,
   Output,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -19,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { AdminLibraryRootService } from './admin-library-root.service';
+import { AdminFilesService } from '@shared/services/admin-files.service';
 import { LibraryRoot } from '@shared/models/library-root.model';
 import { LibraryRootKind } from '@shared/models/enums';
 
@@ -39,10 +41,12 @@ interface KindOption {
     ButtonModule,
   ],
   templateUrl: './add-library-root-dialog.component.html',
+  styleUrl: './add-library-root-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddLibraryRootDialogComponent implements OnInit {
   private readonly rootService = inject(AdminLibraryRootService);
+  private readonly filesService = inject(AdminFilesService);
   private readonly messageService = inject(MessageService);
   private readonly transloco = inject(TranslocoService);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -54,7 +58,22 @@ export class AddLibraryRootDialogComponent implements OnInit {
   /** Non-null when in edit mode */
   editingRoot: LibraryRoot | null = null;
 
-  path = '';
+  // Root folder dropdown state
+  readonly locations = signal<string[]>([]);
+  readonly isLoadingLocations = signal(false);
+  readonly hasNoLocations = signal(false);
+  readonly selectedRoot = signal<string | null>(null);
+  readonly subPath = signal('');
+  /** Composed full path: selectedRoot + subPath, or subPath alone in fallback mode */
+  readonly composedPath = computed(() => {
+    const root = this.selectedRoot();
+    const sub = this.subPath();
+    if (!root) return sub;
+    // Ensure exactly one slash between root and sub-path
+    const normalizedSub = sub.startsWith('/') ? sub : sub ? '/' + sub : '';
+    return root + normalizedSub;
+  });
+
   selectedKind: LibraryRootKind | null = null;
   label = '';
 
@@ -92,15 +111,18 @@ export class AddLibraryRootDialogComponent implements OnInit {
 
   open(): void {
     this.editingRoot = null;
-    this.path = '';
+    this.selectedRoot.set(null);
+    this.subPath.set('');
     this.selectedKind = null;
     this.label = '';
     this.visible.set(true);
+    this.loadLocations();
   }
 
   openForEdit(root: LibraryRoot): void {
     this.editingRoot = root;
-    this.path = root.path;
+    this.selectedRoot.set(null);
+    this.subPath.set(root.path);
     this.selectedKind = root.kind;
     this.label = root.label ?? '';
     this.visible.set(true);
@@ -132,8 +154,9 @@ export class AddLibraryRootDialogComponent implements OnInit {
         life: 3000,
       });
     } else {
-      if (!this.path) return;
-      this.rootService.addRoot(this.path, this.selectedKind, this.label || undefined);
+      const path = this.composedPath();
+      if (!path) return;
+      this.rootService.addRoot(path, this.selectedKind, this.label || undefined);
       this.messageService.add({
         severity: 'success',
         summary: t('admin.libraryRoots.addedSuccess'),
@@ -144,5 +167,27 @@ export class AddLibraryRootDialogComponent implements OnInit {
     this.visible.set(false);
     this.editingRoot = null;
     this.closed.emit();
+  }
+
+  private loadLocations(): void {
+    this.isLoadingLocations.set(true);
+    this.hasNoLocations.set(false);
+    this.filesService
+      .getLocations()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (locs) => {
+          this.locations.set(locs);
+          this.hasNoLocations.set(locs.length === 0);
+          this.isLoadingLocations.set(false);
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.locations.set([]);
+          this.hasNoLocations.set(true);
+          this.isLoadingLocations.set(false);
+          this.cdr.markForCheck();
+        },
+      });
   }
 }

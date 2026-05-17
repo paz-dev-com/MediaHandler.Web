@@ -28,9 +28,12 @@
 
     <ng-template pTemplate="body" let-scan>
       <tr>
-        <td>{{ scan.mode }}</td>
+        <td>{{ t('admin.scanner.modes.' + scan.mode) }}</td>
         <td>
-          <p-tag [value]="scan.status" [severity]="getStatusSeverity(scan.status)" />
+          <p-tag
+            [value]="t('admin.scanner.status.' + scan.status)"
+            [severity]="getStatusSeverity(scan.status)"
+          />
         </td>
         <td>{{ scan.startedAt | date: 'short' }}</td>
         <td>{{ scan.finishedAt ? (scan.finishedAt | date: 'short') : '—' }}</td>

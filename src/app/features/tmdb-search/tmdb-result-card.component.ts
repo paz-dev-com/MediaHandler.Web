@@ -45,6 +45,8 @@ export class TmdbResultCardComponent {
   readonly result = input.required<TmdbSearchResult>();
   readonly importing = input(false);
   readonly wishlisting = input(false);
+  /** Whether this result is already in the user's wishlist — drives indicator badge. */
+  readonly isInWishlist = input(false);
 
   /** Hover state drives CSS micro-interactions (glow, overlay). */
   readonly hovered = signal(false);

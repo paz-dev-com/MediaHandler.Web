@@ -20,15 +20,13 @@
               <span class="season-header__name">{{ season.name }}</span>
               <div class="season-header__meta">
                 <span class="season-header__progress">
-                  {{ season.watchedCount }}/{{
-                    season.episodeCount ?? (season.episodes ?? []).length
-                  }}
+                  {{ season.watchedCount }}/{{ season.episodeCount ?? season.episodes.length }}
                   {{
                     'season.watchedCount'
                       | transloco
                         : {
                             watched: season.watchedCount,
-                            total: season.episodeCount ?? (season.episodes ?? []).length,
+                            total: season.episodeCount ?? season.episodes.length,
                           }
                   }}
                 </span>
@@ -72,7 +70,7 @@
             role="region"
             [@accordionExpand]="isExpanded(season.id) ? 'expanded' : 'collapsed'"
           >
-            @for (episode of season.episodes ?? []; track episode.id) {
+            @for (episode of season.episodes; track episode.id) {
               <app-episode-item
                 [episode]="episode"
                 [season]="season.seasonNumber"
@@ -83,5 +81,25 @@
         </div>
       }
     </div>
+
+    <!-- Missing seasons indicator (T043) — shown when numberOfSeasons > owned seasons -->
+    @if (missingSeasonNumbers().length > 0) {
+      <div class="missing-seasons">
+        <p class="missing-seasons__label">
+          <i class="pi pi-info-circle" aria-hidden="true"></i>
+          {{ 'media.season.missing' | transloco: { count: missingSeasonNumbers().length } }}
+        </p>
+        <div class="missing-seasons__list">
+          @for (num of missingSeasonNumbers(); track num) {
+            <div class="missing-season-card" role="listitem">
+              <i class="pi pi-minus-circle missing-season-card__icon" aria-hidden="true"></i>
+              <span class="missing-season-card__label">
+                {{ 'season.seasonNumber' | transloco: { number: num } }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    }
   }
 </div>

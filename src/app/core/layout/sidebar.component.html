@@ -43,6 +43,24 @@
 
     <!-- Theme toggle + logout — bottom of sidebar -->
     <div class="sidebar__footer">
+      <!-- User info section (T054 — US7) -->
+      @if (isAuthenticated()) {
+        <div
+          class="sidebar__user-info"
+          [class.sidebar__user-info--collapsed]="mode() === 'collapsed'"
+        >
+          <img
+            [ngSrc]="navPictureUrl()"
+            width="36"
+            height="36"
+            [alt]="'nav.userPicture.alt' | transloco"
+            class="sidebar__user-avatar"
+          />
+          @if (mode() === 'expanded') {
+            <span class="sidebar__user-name">{{ displayName() }}</span>
+          }
+        </div>
+      }
       <app-theme-toggle
         class="sidebar__theme-toggle"
         [class.sidebar__theme-toggle--expanded]="mode() === 'expanded'"

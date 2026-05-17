@@ -10,13 +10,16 @@
             [style]="{ width: '1.5rem', height: '1.5rem' }"
           />
         }
-        <p-tag [value]="scan.status" [severity]="getStatusSeverity(scan.status)" />
+        <p-tag
+          [value]="t('admin.scanner.status.' + scan.status)"
+          [severity]="getStatusSeverity(scan.status)"
+        />
       </div>
     </div>
 
     <div class="scan-status__meta">
       <span class="scan-status__meta-item">
-        <strong>{{ t('admin.scanner.mode') }}:</strong> {{ scan.mode }}
+        <strong>{{ t('admin.scanner.mode') }}:</strong> {{ t('admin.scanner.modes.' + scan.mode) }}
       </span>
       <span class="scan-status__meta-item">
         <strong>{{ t('admin.scanner.startedAt') }}:</strong>

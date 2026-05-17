@@ -13,8 +13,59 @@
     } @else if (profileService.user(); as user) {
       <div class="profile-page__content">
         <div class="profile-page__card p-card p-4">
-          <div class="profile-page__avatar">
-            <i class="pi pi-user"></i>
+          <!-- Profile picture section (T048) -->
+          <div class="profile-page__picture-section">
+            <div class="profile-page__picture-container">
+              <img
+                [ngSrc]="effectivePictureUrl()"
+                width="128"
+                height="128"
+                [alt]="t('profile.picture.alt')"
+                class="profile-page__picture"
+                priority
+              />
+              @if (profileService.isUploading()) {
+                <div class="profile-page__picture-loading" aria-live="polite">
+                  <i class="pi pi-spin pi-spinner"></i>
+                </div>
+              }
+            </div>
+            <div class="profile-page__picture-actions">
+              <!-- Hidden file input, triggered by the upload button -->
+              <input
+                #fileInput
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                class="profile-page__file-input"
+                (change)="onFileSelected($event)"
+                [attr.aria-label]="t('profile.picture.upload')"
+              />
+              <p-button
+                [label]="t('profile.picture.upload')"
+                icon="pi pi-upload"
+                size="small"
+                severity="secondary"
+                [outlined]="true"
+                [loading]="profileService.isUploading()"
+                (onClick)="fileInput.click()"
+              />
+              @if (user.profilePicturePath) {
+                <p-button
+                  [label]="t('profile.picture.remove')"
+                  icon="pi pi-trash"
+                  size="small"
+                  severity="danger"
+                  [outlined]="true"
+                  [loading]="profileService.isUploading()"
+                  (onClick)="onRemovePicture()"
+                />
+              }
+            </div>
+            @if (profileService.uploadError()) {
+              <p class="profile-page__upload-error" role="alert">
+                {{ t(profileService.uploadError()!) }}
+              </p>
+            }
           </div>
 
           <div class="profile-page__info">

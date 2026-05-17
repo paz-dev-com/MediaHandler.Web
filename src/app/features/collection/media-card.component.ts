@@ -1,4 +1,3 @@
-import { SlicePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,7 +25,7 @@ import { TooltipModule } from 'primeng/tooltip';
   templateUrl: './media-card.component.html',
   styleUrl: './media-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, TranslocoModule, ButtonModule, TagModule, TooltipModule, SlicePipe],
+  imports: [RouterLink, TranslocoModule, ButtonModule, TagModule, TooltipModule],
   animations: [
     trigger('cardEnter', [
       state('hidden', style({ opacity: 0, transform: 'translateY(24px)' })),
