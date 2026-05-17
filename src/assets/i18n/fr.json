@@ -470,6 +470,11 @@
       "startButton": "Démarrer l'enrichissement TMDB",
       "confirmTitle": "Démarrer l'enrichissement",
       "confirmMessage": "Êtes-vous sûr de vouloir lancer un enrichissement TMDB en lot ?",
+      "confirmMessageWithLanguage": "Êtes-vous sûr de vouloir lancer un enrichissement TMDB en lot ? Les métadonnées seront récupérées en {{language}}.",
+      "language": {
+        "en": "anglais",
+        "fr": "français"
+      },
       "status": "Statut de l'enrichissement",
       "statusLabel": "Statut",
       "statusRunning": "En cours",

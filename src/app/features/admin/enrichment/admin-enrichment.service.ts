@@ -37,9 +37,9 @@ export class AdminEnrichmentService {
 
   private readonly stopPolling$ = new Subject<void>();
 
-  startEnrichment(): void {
+  startEnrichment(language?: string): void {
     this.loading.set(true);
-    this.api.post<EnrichmentRun>('admin/enrichment/start', null).subscribe({
+    this.api.post<EnrichmentRun>('admin/enrichment/start', { language }).subscribe({
       next: (response) => {
         this.enrichmentStatus.set(response.data);
         this.loading.set(false);

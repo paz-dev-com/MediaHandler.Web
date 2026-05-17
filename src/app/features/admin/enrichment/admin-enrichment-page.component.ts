@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -40,6 +40,7 @@ export class AdminEnrichmentPageComponent implements OnInit {
   private readonly enrichmentService = inject(AdminEnrichmentService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
+  private readonly translocoService = inject(TranslocoService);
 
   readonly enrichmentStatus = this.enrichmentService.enrichmentStatus;
   readonly summary = this.enrichmentService.summary;
@@ -76,13 +77,15 @@ export class AdminEnrichmentPageComponent implements OnInit {
     this.enrichmentService.getHistory(1, 20);
   }
 
-  startEnrichment(t: (key: string) => string): void {
+  startEnrichment(t: (key: string, params?: Record<string, unknown>) => string): void {
+    const language = this.translocoService.getActiveLang();
+    const languageName = t('admin.enrichment.language.' + language);
     this.confirmationService.confirm({
-      message: t('admin.enrichment.confirmMessage'),
+      message: t('admin.enrichment.confirmMessageWithLanguage', { language: languageName }),
       header: t('admin.enrichment.confirmTitle'),
       icon: 'pi pi-sync',
       accept: () => {
-        this.enrichmentService.startEnrichment();
+        this.enrichmentService.startEnrichment(language);
         this.messageService.add({
           severity: 'info',
           summary: t('admin.enrichment.startButton'),

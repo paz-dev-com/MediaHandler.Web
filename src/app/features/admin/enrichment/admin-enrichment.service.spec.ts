@@ -77,6 +77,17 @@ describe('AdminEnrichmentService', () => {
       expect(service.enrichmentStatus()).toEqual(mockRunning);
     });
 
+    it('should include language in POST body when provided', () => {
+      service.startEnrichment('fr');
+
+      const req = httpMock.expectOne(`${BASE_URL}/admin/enrichment/start`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ language: 'fr' });
+      req.flush({ data: mockRunning, meta: null });
+
+      expect(service.enrichmentStatus()).toEqual(mockRunning);
+    });
+
     it('should set loading to false on error', () => {
       service.startEnrichment();
 
