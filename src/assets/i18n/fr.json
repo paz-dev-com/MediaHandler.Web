@@ -53,7 +53,8 @@
       "films": "Films",
       "tvShows": "Séries TV",
       "watched": "Vus",
-      "unwatched": "Non vus"
+      "unwatched": "Non vus",
+      "incompleteTvShows": "{{count}} série(s) incomplète(s)"
     },
     "recentlyAdded": "Ajoutés récemment"
   },
@@ -83,7 +84,12 @@
     },
     "season": {
       "missing": "{{count}} saison(s) manquante(s) dans votre collection"
-    }
+    },
+    "incomplete": {
+      "label": "Série incomplète",
+      "tooltip": "{{count}} saison(s) manquante(s)"
+    },
+    "copyFallbackLabel": "Accès au presse-papiers refusé — copiez le chemin manuellement :"
   },
   "season": {
     "episodeCount": "{{count}} épisodes",
@@ -374,7 +380,15 @@
         "confirmMessage": "Appliquer cette action à tous les {{count}} éléments ouverts dans le même dossier ?",
         "rootFolderLabel": "Dossier racine : {{folder}}",
         "rootFolderHint": "S'applique à tous les éléments sous : {{folder}}"
-      }
+      },
+      "filterFileName": "Filtrer par nom de fichier",
+      "batchAssign": "Assignation groupée",
+      "selectAll": "Tout sélectionner",
+      "selectedCount": "{{count}} élément(s) sélectionné(s)",
+      "batchAssignTitle": "Assigner au média",
+      "searchMedia": "Rechercher un film ou une série...",
+      "batchSuccess": "{{count}} élément(s) assigné(s) avec succès",
+      "batchPartialFail": "{{success}} réussi(s), {{failed}} échoué(s)"
     },
     "scanResults": {
       "title": "Résultats de scan",
@@ -526,6 +540,17 @@
         "statusEnriched": "Enrichi",
         "statusFailed": "Échoué",
         "statusSkipped": "Ignoré"
+      },
+      "detail": {
+        "progress": "{{processed}} sur {{total}} éléments traités",
+        "status": {
+          "Pending": "En attente",
+          "InProgress": "En cours",
+          "Completed": "Terminé",
+          "Failed": "Échoué"
+        },
+        "seasonsEnriched": "{{n}} saison(s)",
+        "episodesEnriched": "{{n}} épisode(s)"
       }
     },
     "rename": {
@@ -582,5 +607,12 @@
     "scrollLeft": "Défiler à gauche",
     "scrollRight": "Défiler à droite",
     "toggleTheme": "Basculer entre le thème clair et sombre"
+  },
+  "table": {
+    "sortAscending": "Trier par ordre croissant",
+    "sortDescending": "Trier par ordre décroissant",
+    "clearFilter": "Effacer le filtre",
+    "filterPlaceholder": "Filtrer...",
+    "noResults": "Aucun résultat trouvé"
   }
 }

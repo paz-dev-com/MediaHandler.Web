@@ -9,6 +9,7 @@ import { PaginationMeta } from '@core/api/api-response.model';
 import {
   EnrichmentMediaDetail,
   EnrichmentRun,
+  EnrichmentRunDetails,
   EnrichmentSummaryDetail,
 } from '@shared/models/enrichment.model';
 import { EnrichmentStatus } from '@shared/models/enums';
@@ -34,8 +35,14 @@ export class AdminEnrichmentService {
   readonly historyLoading = signal(false);
   readonly runDetails = signal<EnrichmentMediaDetail[]>([]);
   readonly runDetailsLoading = signal(false);
+  /** Live per-item details polled during an active enrichment run */
+  readonly liveRunDetails = signal<EnrichmentRunDetails | null>(null);
 
   private readonly stopPolling$ = new Subject<void>();
+  private currentHistoryPage = 1;
+  private currentHistoryPageSize = 20;
+  private currentHistorySortField: string | undefined;
+  private currentHistorySortOrder: 'asc' | 'desc' | undefined;
 
   startEnrichment(language?: string): void {
     this.loading.set(true);
@@ -70,9 +77,17 @@ export class AdminEnrichmentService {
     });
   }
 
-  getHistory(page = 1, pageSize = 20): void {
+  getHistory(page = 1, pageSize = 20, sortField?: string, sortOrder?: 'asc' | 'desc'): void {
+    this.currentHistoryPage = page;
+    this.currentHistoryPageSize = pageSize;
+    this.currentHistorySortField = sortField;
+    this.currentHistorySortOrder = sortOrder;
+
     this.historyLoading.set(true);
-    this.api.get<EnrichmentRun[]>('admin/enrichment/history', { page, pageSize }).subscribe({
+    const params: Record<string, string | number> = { page, pageSize };
+    if (sortField) params['sortField'] = sortField;
+    if (sortOrder) params['sortOrder'] = sortOrder;
+    this.api.get<EnrichmentRun[]>('admin/enrichment/history', params).subscribe({
       next: (response) => {
         this.enrichmentHistory.set(response.data ?? []);
         const apiMeta = response.meta as PaginationMeta | null;
@@ -115,11 +130,38 @@ export class AdminEnrichmentService {
         takeUntil(this.stopPolling$),
       )
       .subscribe((run) => {
+        // Poll live details when run is active
+        if (run && !TERMINAL_STATES.includes(run.status)) {
+          this.fetchLiveRunDetails(run.enrichmentRunId);
+        }
+
         if (run && TERMINAL_STATES.includes(run.status)) {
           this.stopPolling$.next();
+          this.liveRunDetails.set(null);
           // Refresh history when enrichment completes
-          this.getHistory();
+          this.getHistory(
+            this.currentHistoryPage,
+            this.currentHistoryPageSize,
+            this.currentHistorySortField,
+            this.currentHistorySortOrder,
+          );
         }
+      });
+  }
+
+  private fetchLiveRunDetails(runId: string): void {
+    this.api
+      .get<EnrichmentRunDetails>(`admin/enrichment/${runId}/details`)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          if (response.data) {
+            this.liveRunDetails.set(response.data);
+          }
+        },
+        error: () => {
+          // Graceful degradation — keep liveRunDetails as-is
+        },
       });
   }
 }

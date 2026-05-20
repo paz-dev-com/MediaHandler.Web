@@ -46,6 +46,7 @@ export class ScanDecisionDetailComponent {
 
   @Input({ required: true }) decision!: ScanItemDecision;
   @Output() fileRenamed = new EventEmitter<void>();
+  @Output() itemAssigned = new EventEmitter<ScanItemDecision>();
 
   readonly reassigning = signal(false);
   readonly showTmdbSearch = signal(false);
@@ -72,14 +73,14 @@ export class ScanDecisionDetailComponent {
     const mediaType = this.inferDecisionKind(candidateMediaType);
     this.reassigning.set(true);
     this.decisionService.reassign(this.decision.id, tmdbId, mediaType).subscribe({
-      next: () => {
+      next: (updated) => {
         this.reassigning.set(false);
         this.messageService.add({
           severity: 'success',
           summary: t('admin.scanResults.reassignSuccess'),
           life: 3000,
         });
-        this.decisionService.refreshDecisions();
+        this.itemAssigned.emit(updated);
       },
       error: () => {
         this.reassigning.set(false);

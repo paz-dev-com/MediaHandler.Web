@@ -35,7 +35,14 @@ export class ScanHistoryTableComponent implements OnInit {
     const pageSize = (event.rows as number) ?? 20;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
-    this.scanService.getScanHistory(page, pageSize);
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
+    this.scanService.getScanHistory(
+      page,
+      pageSize,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+    );
   }
 
   navigateToResults(scanId: string): void {

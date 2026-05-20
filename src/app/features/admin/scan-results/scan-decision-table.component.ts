@@ -9,6 +9,7 @@ import {
   SimpleChanges,
   computed,
   inject,
+  output,
   signal,
 } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
@@ -75,6 +76,8 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) scanId!: string;
   @Input() libraryRoots: LibraryRoot[] = [];
+
+  readonly itemAssigned = output<ScanItemDecision>();
 
   readonly decisions = this.decisionService.decisions;
   readonly groupedDecisions = this.decisionService.groupedDecisions;
@@ -290,7 +293,8 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
           summary: t('admin.scanResults.assignToAll'),
           life: 3000,
         });
-        this.loadData(1, this.meta().pageSize);
+        // Reload current page (not page 1) to preserve position
+        this.loadData(this.meta().page, this.meta().pageSize);
       },
       error: () => this.assigningGroup.set(null),
     });
@@ -298,6 +302,14 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
 
   openGroupSearch(group: ScanDecisionShowGroup): void {
     this.groupSearchFor.set(group);
+  }
+
+  onDetailItemAssigned(updated: ScanItemDecision): void {
+    // Update in-place so the table stays on the same page
+    this.decisionService.decisions.update((list) =>
+      list.map((row) => (row.id === updated.id ? { ...row, ...updated } : row)),
+    );
+    this.itemAssigned.emit(updated);
   }
 
   onGroupTmdbSelected(result: TmdbSearchResult, t: (k: string) => string): void {

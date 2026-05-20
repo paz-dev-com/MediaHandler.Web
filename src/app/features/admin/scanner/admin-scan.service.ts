@@ -34,6 +34,11 @@ export class AdminScanService {
   readonly loading = signal<boolean>(false);
   readonly historyLoading = signal<boolean>(false);
 
+  private currentHistoryPage = 1;
+  private currentHistoryPageSize = 20;
+  private currentHistorySortField: string | undefined;
+  private currentHistorySortOrder: 'asc' | 'desc' | undefined;
+
   startScan(libraryRootIds: string[], mode: ScanMode, language?: string): void {
     this.loading.set(true);
     const body: Record<string, unknown> = { libraryRootIds, mode };
@@ -70,14 +75,32 @@ export class AdminScanService {
     this.api.post<void>(`${API_URL}/${id}/cancel`, {}).subscribe({
       next: () => {
         this.activeScan.set(null);
-        this.getScanHistory(1, 20);
+        this.getScanHistory(
+          this.currentHistoryPage,
+          this.currentHistoryPageSize,
+          this.currentHistorySortField,
+          this.currentHistorySortOrder,
+        );
       },
     });
   }
 
-  getScanHistory(page: number, pageSize: number): void {
+  getScanHistory(
+    page: number,
+    pageSize: number,
+    sortField?: string,
+    sortOrder?: 'asc' | 'desc',
+  ): void {
+    this.currentHistoryPage = page;
+    this.currentHistoryPageSize = pageSize;
+    this.currentHistorySortField = sortField;
+    this.currentHistorySortOrder = sortOrder;
+
     this.historyLoading.set(true);
-    this.api.get<ScanRunSummary[]>(`${API_URL}`, { page, pageSize }).subscribe({
+    const params: Record<string, string | number> = { page, pageSize };
+    if (sortField) params['sortField'] = sortField;
+    if (sortOrder) params['sortOrder'] = sortOrder;
+    this.api.get<ScanRunSummary[]>(`${API_URL}`, params).subscribe({
       next: (resp) => {
         this.scanHistory.set(resp.data ?? []);
         const meta = resp.meta;
@@ -120,7 +143,12 @@ export class AdminScanService {
         const isTerminal = !resp.data || TERMINAL_STATES.includes(resp.data.status);
         if (isTerminal) {
           this.stopPolling$.next();
-          this.getScanHistory(1, 20);
+          this.getScanHistory(
+            this.currentHistoryPage,
+            this.currentHistoryPageSize,
+            this.currentHistorySortField,
+            this.currentHistorySortOrder,
+          );
         }
       });
   }

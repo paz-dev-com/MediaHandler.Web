@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AdminEnrichmentService } from './admin-enrichment.service';
+import { EnrichmentDetailPanelComponent } from './enrichment-detail-panel.component';
 import { EnrichmentRun } from '@shared/models/enrichment.model';
 import { EnrichmentStatus } from '@shared/models/enums';
 
@@ -30,6 +31,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     CardModule,
     ConfirmDialogModule,
     TableModule,
+    EnrichmentDetailPanelComponent,
   ],
   templateUrl: './admin-enrichment-page.component.html',
   styleUrl: './admin-enrichment-page.component.scss',
@@ -50,6 +52,7 @@ export class AdminEnrichmentPageComponent implements OnInit {
   readonly historyLoading = this.enrichmentService.historyLoading;
   readonly runDetails = this.enrichmentService.runDetails;
   readonly runDetailsLoading = this.enrichmentService.runDetailsLoading;
+  readonly liveRunDetails = this.enrichmentService.liveRunDetails;
   readonly EnrichmentStatus = EnrichmentStatus;
 
   expandedHistoryRows: Record<string, boolean> = {};
@@ -98,7 +101,14 @@ export class AdminEnrichmentPageComponent implements OnInit {
     const pageSize = (event.rows as number) ?? this.historyMeta().pageSize;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
-    this.enrichmentService.getHistory(page, pageSize);
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
+    this.enrichmentService.getHistory(
+      page,
+      pageSize,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+    );
   }
 
   getStatusSeverity(status: EnrichmentStatus): TagSeverity {

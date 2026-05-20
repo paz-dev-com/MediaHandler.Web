@@ -24,4 +24,5 @@ export interface CollectionStats {
   totalUnwatched: number;
   totalFiles: number;
   totalUnlinkedFiles: number;
+  incompleteTvShowCount: number;
 }

@@ -4,6 +4,7 @@ import {
   DestroyRef,
   ElementRef,
   HostListener,
+  computed,
   inject,
   input,
   output,
@@ -44,6 +45,23 @@ export class MediaCardComponent {
   readonly inViewport = signal(false);
   /** Tracks hover state for CSS micro-interactions. */
   readonly hovered = signal(false);
+
+  /** True when this TV show has at least one season missing from the collection */
+  readonly isIncomplete = computed(() => {
+    const m = this.media();
+    return (
+      m.type === MediaType.TvShow &&
+      m.numberOfSeasons != null &&
+      (m.ownedSeasonCount ?? 0) < m.numberOfSeasons
+    );
+  });
+
+  /** Number of seasons missing from the collection */
+  readonly missingSeasonsCount = computed(() => {
+    if (!this.isIncomplete()) return 0;
+    const m = this.media();
+    return m.numberOfSeasons! - (m.ownedSeasonCount ?? 0);
+  });
 
   private observer: IntersectionObserver | null = null;
 

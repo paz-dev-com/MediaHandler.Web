@@ -4,6 +4,7 @@ import {
   Component,
   DestroyRef,
   OnInit,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -12,13 +13,16 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { AdminReviewService } from './admin-review.service';
 import { ReviewResolveDialogComponent } from './review-resolve-dialog.component';
+import { BatchAssignDialogComponent } from './batch-assign-dialog.component';
 import { ReviewItem } from '@shared/models/review.model';
 import { ReviewReason, ReviewStatus } from '@shared/models/enums';
 
@@ -44,7 +48,9 @@ interface ReasonFilterOption {
     InputTextModule,
     TagModule,
     ButtonModule,
+    CheckboxModule,
     ReviewResolveDialogComponent,
+    BatchAssignDialogComponent,
   ],
   templateUrl: './admin-review-page.component.html',
   styleUrl: './admin-review-page.component.scss',
@@ -53,6 +59,7 @@ interface ReasonFilterOption {
 export class AdminReviewPageComponent implements OnInit {
   private readonly reviewService = inject(AdminReviewService);
   private readonly transloco = inject(TranslocoService);
+  private readonly messageService = inject(MessageService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -63,7 +70,13 @@ export class AdminReviewPageComponent implements OnInit {
   readonly selectedStatusFilter = signal<ReviewStatus | null>(null);
   readonly selectedReasonFilter = signal<ReviewReason | null>(null);
   readonly scanRunIdFilter = signal<string>('');
+  readonly fileNameFilter = signal<string>('');
   readonly selectedItem = signal<ReviewItem | null>(null);
+
+  // Batch selection state
+  readonly selectedItems = signal<ReviewItem[]>([]);
+  readonly isAnySelected = computed(() => this.selectedItems().length > 0);
+  readonly isBatchDialogVisible = signal(false);
 
   statusFilterOptions: StatusFilterOption[] = [];
   reasonFilterOptions: ReasonFilterOption[] = [];
@@ -129,12 +142,17 @@ export class AdminReviewPageComponent implements OnInit {
     const pageSize = (event.rows as number) ?? this.meta().pageSize;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
     this.reviewService.getItems(
       this.selectedStatusFilter() ?? undefined,
       this.selectedReasonFilter() ?? undefined,
       this.scanRunIdFilter() || undefined,
       page,
       pageSize,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+      this.fileNameFilter() || undefined,
     );
   }
 
@@ -146,6 +164,9 @@ export class AdminReviewPageComponent implements OnInit {
       this.scanRunIdFilter() || undefined,
       1,
       this.meta().pageSize,
+      undefined,
+      undefined,
+      this.fileNameFilter() || undefined,
     );
   }
 
@@ -157,6 +178,9 @@ export class AdminReviewPageComponent implements OnInit {
       this.scanRunIdFilter() || undefined,
       1,
       this.meta().pageSize,
+      undefined,
+      undefined,
+      this.fileNameFilter() || undefined,
     );
   }
 
@@ -168,11 +192,84 @@ export class AdminReviewPageComponent implements OnInit {
       scanRunId || undefined,
       1,
       this.meta().pageSize,
+      undefined,
+      undefined,
+      this.fileNameFilter() || undefined,
+    );
+  }
+
+  onFileNameFilterChange(fileName: string): void {
+    this.fileNameFilter.set(fileName);
+    this.reviewService.getItems(
+      this.selectedStatusFilter() ?? undefined,
+      this.selectedReasonFilter() ?? undefined,
+      this.scanRunIdFilter() || undefined,
+      1,
+      this.meta().pageSize,
+      undefined,
+      undefined,
+      fileName || undefined,
     );
   }
 
   onRowSelect(item: ReviewItem): void {
     this.selectedItem.set(item);
+  }
+
+  onSelectionChange(items: ReviewItem[]): void {
+    this.selectedItems.set(items);
+  }
+
+  onSelectAll(checked: boolean): void {
+    this.selectedItems.set(checked ? [...this.items()] : []);
+  }
+
+  openBatchAssign(): void {
+    this.isBatchDialogVisible.set(true);
+  }
+
+  onBatchConfirmed(targetMediaId: string): void {
+    const ids = this.selectedItems().map((i) => i.id);
+    this.reviewService.batchAssign({ reviewItemIds: ids, targetMediaId }).subscribe({
+      next: (response) => {
+        const results = response.data?.results ?? [];
+        const successCount = results.filter((r) => r.success).length;
+        const failedCount = results.filter((r) => !r.success).length;
+        const summary =
+          failedCount > 0
+            ? this.transloco.translate('admin.review.batchPartialFail', {
+                success: successCount,
+                failed: failedCount,
+              })
+            : this.transloco.translate('admin.review.batchSuccess', { count: successCount });
+
+        this.messageService.add({
+          severity: failedCount > 0 ? 'warn' : 'success',
+          summary,
+          life: 4000,
+        });
+
+        this.selectedItems.set([]);
+        this.isBatchDialogVisible.set(false);
+        this.reviewService.getItems(
+          this.selectedStatusFilter() ?? undefined,
+          this.selectedReasonFilter() ?? undefined,
+          this.scanRunIdFilter() || undefined,
+          1,
+          this.meta().pageSize,
+          undefined,
+          undefined,
+          this.fileNameFilter() || undefined,
+        );
+      },
+      error: () => {
+        this.isBatchDialogVisible.set(false);
+      },
+    });
+  }
+
+  onBatchDismissed(): void {
+    this.isBatchDialogVisible.set(false);
   }
 
   onDialogResolved(): void {

@@ -33,6 +33,27 @@
               (onClick)="copyPath(file.filePath)"
             />
           </div>
+          @if (fallbackPaths()[file.filePath]) {
+            <div class="media-files__fallback">
+              <p class="media-files__fallback-label">{{ 'media.copyFallbackLabel' | transloco }}</p>
+              <div class="media-files__fallback-row">
+                <textarea
+                  readonly
+                  [value]="file.filePath"
+                  class="media-files__fallback-textarea"
+                  [attr.aria-label]="'media.copyFallbackLabel' | transloco"
+                  rows="2"
+                ></textarea>
+                <p-button
+                  icon="pi pi-times"
+                  size="small"
+                  variant="text"
+                  severity="secondary"
+                  (onClick)="clearFallback(file.filePath)"
+                />
+              </div>
+            </div>
+          }
         </li>
       }
     </ul>

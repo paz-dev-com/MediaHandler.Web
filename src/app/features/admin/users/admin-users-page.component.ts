@@ -92,7 +92,15 @@ export class AdminUsersPageComponent implements OnInit, OnDestroy {
     const pageSize = (event.rows as number) ?? this.meta().pageSize;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
-    this.userService.getUsers(page, pageSize, this.searchQuery() || undefined);
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
+    this.userService.getUsers(
+      page,
+      pageSize,
+      this.searchQuery() || undefined,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+    );
   }
 
   onRoleChange(user: AdminUser, role: string): void {

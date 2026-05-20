@@ -32,6 +32,17 @@
     </div>
   </div>
 
+  <div class="admin-library-roots-page__path-filter">
+    <input
+      pInputText
+      type="text"
+      [placeholder]="t('table.filterPlaceholder')"
+      [ngModel]="pathFilter()"
+      (ngModelChange)="onPathFilterChange($event)"
+      [style]="{ 'min-width': '16rem' }"
+    />
+  </div>
+
   <p-table
     [value]="roots()"
     [lazy]="true"
@@ -42,15 +53,20 @@
     [rowsPerPageOptions]="[10, 20, 50]"
     (onLazyLoad)="onLazyLoad($event)"
     styleClass="p-datatable-striped"
+    [sortMode]="'single'"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ t('admin.libraryRoots.columns.path') }}</th>
+        <th [pSortableColumn]="'path'">
+          {{ t('admin.libraryRoots.columns.path') }}<p-sortIcon field="path" />
+        </th>
         <th>{{ t('admin.libraryRoots.columns.kind') }}</th>
         <th>{{ t('admin.libraryRoots.columns.label') }}</th>
         <th>{{ t('admin.libraryRoots.columns.status') }}</th>
         <th>{{ t('admin.libraryRoots.columns.enabled') }}</th>
-        <th>{{ t('admin.libraryRoots.columns.createdAt') }}</th>
+        <th [pSortableColumn]="'createdAt'">
+          {{ t('admin.libraryRoots.columns.createdAt') }}<p-sortIcon field="createdAt" />
+        </th>
         <th>{{ t('admin.libraryRoots.columns.actions') }}</th>
       </tr>
     </ng-template>

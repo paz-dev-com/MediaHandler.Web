@@ -30,4 +30,11 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
+
+  &__item--warning {
+    .stats-bar__value,
+    .stats-bar__label {
+      color: var(--yellow-500, #eab308);
+    }
+  }
 }
