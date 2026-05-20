@@ -2,8 +2,9 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ApiService } from '@core/api/api.service';
-import { PaginationMeta } from '@core/api/api-response.model';
+import { ApiResponse, PaginationMeta } from '@core/api/api-response.model';
 import { ReviewItem, BulkResolveResult } from '@shared/models/review.model';
+import { BatchAssignRequest, BatchAssignResult } from '@shared/models/batch-assign.model';
 import {
   MediaType,
   ReviewReason,
@@ -30,6 +31,9 @@ export class AdminReviewService {
   private currentScanRunId: string | undefined;
   private currentPage = 1;
   private currentPageSize = 20;
+  private currentSortField: string | undefined;
+  private currentSortOrder: 'asc' | 'desc' | undefined;
+  private currentFileName: string | undefined;
 
   getItems(
     status?: ReviewStatus,
@@ -37,12 +41,18 @@ export class AdminReviewService {
     scanRunId?: string,
     page = 1,
     pageSize = 20,
+    sortField?: string,
+    sortOrder?: 'asc' | 'desc',
+    fileName?: string,
   ): void {
     this.currentStatus = status;
     this.currentReason = reason;
     this.currentScanRunId = scanRunId;
     this.currentPage = page;
     this.currentPageSize = pageSize;
+    this.currentSortField = sortField;
+    this.currentSortOrder = sortOrder;
+    this.currentFileName = fileName;
 
     this.loading.set(true);
 
@@ -55,6 +65,15 @@ export class AdminReviewService {
     }
     if (scanRunId !== undefined) {
       params['scanRunId'] = scanRunId;
+    }
+    if (sortField) {
+      params['sortField'] = sortField;
+    }
+    if (sortOrder) {
+      params['sortOrder'] = sortOrder;
+    }
+    if (fileName) {
+      params['fileName'] = fileName;
     }
 
     this.api.get<ReviewItem[]>('admin/review-items', params).subscribe({
@@ -116,6 +135,10 @@ export class AdminReviewService {
     );
   }
 
+  batchAssign(request: BatchAssignRequest): Observable<ApiResponse<BatchAssignResult>> {
+    return this.api.post<BatchAssignResult>('admin/review-items/batch-assign', request);
+  }
+
   private refresh(): void {
     this.getItems(
       this.currentStatus,
@@ -123,6 +146,9 @@ export class AdminReviewService {
       this.currentScanRunId,
       this.currentPage,
       this.currentPageSize,
+      this.currentSortField,
+      this.currentSortOrder,
+      this.currentFileName,
     );
   }
 }

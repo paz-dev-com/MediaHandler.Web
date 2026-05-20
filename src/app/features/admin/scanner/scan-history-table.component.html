@@ -11,12 +11,19 @@
     [rowsPerPageOptions]="[10, 20, 50]"
     (onLazyLoad)="onLazyLoad($event)"
     styleClass="p-datatable-striped"
+    [sortMode]="'single'"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ t('admin.scanner.columns.mode') }}</th>
-        <th>{{ t('admin.scanner.columns.status') }}</th>
-        <th>{{ t('admin.scanner.columns.startedAt') }}</th>
+        <th [pSortableColumn]="'mode'">
+          {{ t('admin.scanner.columns.mode') }}<p-sortIcon field="mode" />
+        </th>
+        <th [pSortableColumn]="'status'">
+          {{ t('admin.scanner.columns.status') }}<p-sortIcon field="status" />
+        </th>
+        <th [pSortableColumn]="'startedAt'">
+          {{ t('admin.scanner.columns.startedAt') }}<p-sortIcon field="startedAt" />
+        </th>
         <th>{{ t('admin.scanner.columns.finishedAt') }}</th>
         <th>{{ t('admin.scanner.columns.discovered') }}</th>
         <th>{{ t('admin.scanner.columns.added') }}</th>

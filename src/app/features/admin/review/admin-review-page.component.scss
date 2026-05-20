@@ -41,4 +41,19 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  &__batch-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--surface-b, var(--color-bg-elevated));
+    border-radius: var(--border-radius);
+  }
+
+  &__batch-count {
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+    flex: 1;
+  }
 }

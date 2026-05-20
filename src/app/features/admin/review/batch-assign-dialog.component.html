@@ -1,0 +1,69 @@
+<p-dialog
+  [visible]="visible()"
+  [header]="'admin.review.batchAssignTitle' | transloco"
+  [modal]="true"
+  [style]="{ width: '36rem' }"
+  [closable]="true"
+  (onHide)="onDismiss()"
+  *transloco="let t"
+>
+  <div class="batch-assign-dialog">
+    <p class="batch-assign-dialog__summary">
+      {{ t('admin.review.selectedCount', { count: selectedCount() }) }}
+    </p>
+
+    <div class="batch-assign-dialog__search">
+      <input
+        pInputText
+        type="text"
+        [placeholder]="t('admin.review.searchMedia')"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="onSearchChange($event)"
+        class="batch-assign-dialog__search-input"
+      />
+      @if (isSearching()) {
+        <p-progressSpinner
+          [style]="{ width: '1.5rem', height: '1.5rem' }"
+          styleClass="batch-assign-dialog__spinner"
+        />
+      }
+    </div>
+
+    @if (searchResults().length > 0) {
+      <p-listbox
+        [options]="searchResults()"
+        [(ngModel)]="$any(selectedMedia)"
+        optionLabel="title"
+        [style]="{ 'max-height': '300px', overflow: 'auto' }"
+        styleClass="batch-assign-dialog__results"
+      >
+        <ng-template let-item pTemplate="item">
+          <div class="batch-assign-dialog__result-item">
+            <span class="batch-assign-dialog__result-title">{{ item.title }}</span>
+            <span class="batch-assign-dialog__result-type">{{ item.type }}</span>
+          </div>
+        </ng-template>
+      </p-listbox>
+    }
+
+    @if (selectedMedia()) {
+      <p class="batch-assign-dialog__selected-info">→ {{ selectedMedia()!.title }}</p>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="batch-assign-dialog__footer">
+      <p-button
+        [label]="t('common.cancel')"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="onDismiss()"
+      />
+      <p-button
+        [label]="t('common.confirm')"
+        [disabled]="!selectedMedia()"
+        (onClick)="onConfirm()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

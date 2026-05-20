@@ -35,4 +35,6 @@ export interface Media {
   status: string | null;
   /** Total number of seasons according to TMDB */
   numberOfSeasons: number | null;
+  /** Number of seasons owned in the collection (TV shows only) */
+  ownedSeasonCount: number | null;
 }

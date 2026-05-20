@@ -165,7 +165,10 @@
                   </div>
                   @if (isEpisodeExpanded(episode.id)) {
                     <div class="scan-decision-table__episode-detail">
-                      <app-scan-decision-detail [decision]="episode" />
+                      <app-scan-decision-detail
+                        [decision]="episode"
+                        (itemAssigned)="onDetailItemAssigned($event)"
+                      />
                     </div>
                   }
                 }
@@ -278,7 +281,10 @@
       <ng-template pTemplate="rowexpansion" let-decision>
         <tr>
           <td colspan="5">
-            <app-scan-decision-detail [decision]="decision" />
+            <app-scan-decision-detail
+              [decision]="decision"
+              (itemAssigned)="onDetailItemAssigned($event)"
+            />
           </td>
         </tr>
       </ng-template>

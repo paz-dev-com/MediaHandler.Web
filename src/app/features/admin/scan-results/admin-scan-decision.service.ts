@@ -37,6 +37,9 @@ export class AdminScanDecisionService {
   private currentLibraryRootId: string | undefined;
   private currentPage = 1;
   private currentPageSize = 20;
+  private currentSortField: string | undefined;
+  private currentSortOrder: 'asc' | 'desc' | undefined;
+  private currentFileName: string | undefined;
 
   getDecisions(
     scanId: string,
@@ -45,6 +48,9 @@ export class AdminScanDecisionService {
     libraryRootId?: string,
     page = 1,
     pageSize = 20,
+    sortField?: string,
+    sortOrder?: 'asc' | 'desc',
+    fileName?: string,
   ): void {
     this.currentScanId = scanId;
     this.currentDecisionType = decisionType;
@@ -52,6 +58,9 @@ export class AdminScanDecisionService {
     this.currentLibraryRootId = libraryRootId;
     this.currentPage = page;
     this.currentPageSize = pageSize;
+    this.currentSortField = sortField;
+    this.currentSortOrder = sortOrder;
+    this.currentFileName = fileName;
 
     this.loading.set(true);
 
@@ -59,6 +68,9 @@ export class AdminScanDecisionService {
     if (decisionType !== undefined) params['decisionType'] = decisionType;
     if (mediaType !== undefined) params['mediaType'] = mediaType;
     if (libraryRootId !== undefined) params['libraryRootId'] = libraryRootId;
+    if (sortField) params['sortField'] = sortField;
+    if (sortOrder) params['sortOrder'] = sortOrder;
+    if (fileName) params['fileName'] = fileName;
 
     this.api.get<ScanItemDecision[]>(`admin/scan/${scanId}/decisions`, params).subscribe({
       next: (response) => {
@@ -138,6 +150,9 @@ export class AdminScanDecisionService {
         this.currentLibraryRootId,
         this.currentPage,
         this.currentPageSize,
+        this.currentSortField,
+        this.currentSortOrder,
+        this.currentFileName,
       );
     }
   }

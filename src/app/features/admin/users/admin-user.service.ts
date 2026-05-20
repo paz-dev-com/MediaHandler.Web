@@ -28,17 +28,33 @@ export class AdminUserService {
   private currentPage = 1;
   private currentPageSize = 20;
   private currentSearch: string | undefined;
+  private currentSortField: string | undefined;
+  private currentSortOrder: 'asc' | 'desc' | undefined;
 
-  getUsers(page: number, pageSize: number, search?: string): void {
+  getUsers(
+    page: number,
+    pageSize: number,
+    search?: string,
+    sortField?: string,
+    sortOrder?: 'asc' | 'desc',
+  ): void {
     this.currentPage = page;
     this.currentPageSize = pageSize;
     this.currentSearch = search;
+    this.currentSortField = sortField;
+    this.currentSortOrder = sortOrder;
 
     this.loading.set(true);
 
     const params: Record<string, string | number | boolean | null | undefined> = { page, pageSize };
     if (search) {
       params['search'] = search;
+    }
+    if (sortField) {
+      params['sortField'] = sortField;
+    }
+    if (sortOrder) {
+      params['sortOrder'] = sortOrder;
     }
 
     this.api.get<AdminUser[]>('admin/users', params).subscribe({
@@ -79,6 +95,12 @@ export class AdminUserService {
   }
 
   private refresh(): void {
-    this.getUsers(this.currentPage, this.currentPageSize, this.currentSearch);
+    this.getUsers(
+      this.currentPage,
+      this.currentPageSize,
+      this.currentSearch,
+      this.currentSortField,
+      this.currentSortOrder,
+    );
   }
 }

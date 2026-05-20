@@ -12,6 +12,15 @@
       <span class="stats-bar__value">{{ stats()!.totalTvShows }}</span>
       <span class="stats-bar__label">{{ 'collection.stats.tvShows' | transloco }}</span>
     </div>
+    @if (stats()!.incompleteTvShowCount > 0) {
+      <div class="stats-bar__item stats-bar__item--warning">
+        <span class="stats-bar__value">{{ stats()!.incompleteTvShowCount }}</span>
+        <span class="stats-bar__label">{{
+          'collection.stats.incompleteTvShows'
+            | transloco: { count: stats()!.incompleteTvShowCount }
+        }}</span>
+      </div>
+    }
     <div class="stats-bar__item">
       <span class="stats-bar__value">{{ stats()!.totalWatched }}</span>
       <span class="stats-bar__label">{{ 'collection.stats.watched' | transloco }}</span>

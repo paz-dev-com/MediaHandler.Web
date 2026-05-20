@@ -22,6 +22,7 @@ import { AdminLibraryRootService } from '../library-roots/admin-library-root.ser
 import { AdminScanDecisionService } from './admin-scan-decision.service';
 import { ScanDecisionTableComponent } from './scan-decision-table.component';
 import { ScanRunSummary } from '@shared/models/admin-scan.model';
+import { ScanItemDecision } from '@shared/models/scan-decision.model';
 
 interface ScanRunOption {
   label: string;
@@ -56,6 +57,8 @@ export class AdminScanResultsPageComponent implements OnInit {
   readonly historyLoading = this.scanService.historyLoading;
   readonly libraryRoots = this.libraryRootService.roots;
   readonly scanIdForTable = computed(() => this.selectedScanId() ?? '');
+
+  private savedScrollY = 0;
 
   // toObservable must be created in injection context (field initializer)
   private readonly scanHistory$: Observable<ScanRunSummary[]> = toObservable(
@@ -99,5 +102,16 @@ export class AdminScanResultsPageComponent implements OnInit {
 
   onScanRunChange(scanId: string | null): void {
     this.selectedScanId.set(scanId);
+  }
+
+  onItemAssigned(updated: ScanItemDecision): void {
+    // Save scroll before update (actual scroll save happens at assignment time in the table)
+    this.savedScrollY = window.scrollY;
+    // Update the decision in-place in the service signal
+    this.scanDecisionService.decisions.update((list) =>
+      list.map((row) => (row.id === updated.id ? { ...row, ...updated } : row)),
+    );
+    // Restore scroll position
+    window.scrollTo({ top: this.savedScrollY, behavior: 'instant' });
   }
 }

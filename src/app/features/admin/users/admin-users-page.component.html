@@ -25,12 +25,19 @@
     [rowsPerPageOptions]="[10, 20, 50]"
     (onLazyLoad)="onLazyLoad($event)"
     styleClass="p-datatable-striped"
+    [sortMode]="'single'"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ t('admin.users.columns.name') }}</th>
-        <th>{{ t('admin.users.columns.email') }}</th>
-        <th>{{ t('admin.users.columns.role') }}</th>
+        <th [pSortableColumn]="'displayName'">
+          {{ t('admin.users.columns.name') }}<p-sortIcon field="displayName" />
+        </th>
+        <th [pSortableColumn]="'email'">
+          {{ t('admin.users.columns.email') }}<p-sortIcon field="email" />
+        </th>
+        <th [pSortableColumn]="'role'">
+          {{ t('admin.users.columns.role') }}<p-sortIcon field="role" />
+        </th>
         <th>{{ t('admin.users.columns.status') }}</th>
         <th>{{ t('admin.users.columns.active') }}</th>
         <th>{{ t('admin.users.columns.createdAt') }}</th>

@@ -78,6 +78,9 @@
           <p class="admin-enrichment-page__current-item">{{ enrichmentStatus()!.currentItem }}</p>
         }
         <p-progressBar mode="indeterminate" [style]="{ height: '6px' }" />
+
+        <!-- Live detail panel — renders nothing when liveRunDetails() is null (graceful fallback) -->
+        <app-enrichment-detail-panel [details]="liveRunDetails()" />
       </div>
     </p-card>
   }
@@ -100,12 +103,17 @@
       [rowHover]="true"
       [rowsPerPageOptions]="[20, 50]"
       styleClass="p-datatable-sm"
+      [sortMode]="'single'"
     >
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 3rem"></th>
-          <th>{{ t('admin.enrichment.historyColumns.status') }}</th>
-          <th>{{ t('admin.enrichment.historyColumns.startedAt') }}</th>
+          <th [pSortableColumn]="'status'">
+            {{ t('admin.enrichment.historyColumns.status') }}<p-sortIcon field="status" />
+          </th>
+          <th [pSortableColumn]="'startedAt'">
+            {{ t('admin.enrichment.historyColumns.startedAt') }}<p-sortIcon field="startedAt" />
+          </th>
           <th>{{ t('admin.enrichment.historyColumns.finishedAt') }}</th>
           <th>{{ t('admin.enrichment.historyColumns.enriched') }}</th>
           <th>{{ t('admin.enrichment.historyColumns.failed') }}</th>

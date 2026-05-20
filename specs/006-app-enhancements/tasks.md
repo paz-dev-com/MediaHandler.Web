@@ -3,21 +3,20 @@
 **Input**: Design documents from `specs/006-app-enhancements/`
 **Prerequisites**: plan.md ✅ spec.md ✅ research.md ✅ data-model.md ✅ contracts/api-contracts.md ✅ quickstart.md ✅
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing.  
-**Tests**: No test tasks generated — not explicitly requested in the feature specification.  
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing.
+**Tests**: No test tasks generated — not explicitly requested in the feature specification.
 **Backend repo**: `../MediaHandler.API/` (companion solution at `/home/tpfeifer/Repos/MediaHandler/MediaHandler.API/`)
 
 ## Format: `[ID] [P?] [Story?] Description`
 
-- **[P]**: Can run in parallel with other [P] tasks in the same phase (different files, no blocking dependencies)``
+- **[P]**: Can run in parallel with other [P] tasks in the same phase (different files, no blocking dependencies)
 - **[US#]**: User story label (US1–US8 map to spec.md priority order)
 - Paths starting with `src/` are relative to the Angular workspace root (`MediaHandler.Web/`)
 - Paths starting with `../MediaHandler.API/` refer to the companion .NET backend
-  ``
 
 ---
 
-## Phase 1: Setup``
+## Phase 1: Setup
 
 **Purpose**: Confirm the working environment and ensure both frontend and backend projects are accessible and buildable before any story work begins.
 
@@ -27,7 +26,7 @@
 
 ## Phase 2: Foundational — Backend API Changes
 
-**Purpose**: Backend changes that MUST be shipped before P1 scan-language (US2), P2 TV-show status (US5), and P3 profile picture (US6/US7) frontends can be fully tested against the live API.  
+**Purpose**: Backend changes that MUST be shipped before P1 scan-language (US2), P2 TV-show status (US5), and P3 profile picture (US6/US7) frontends can be fully tested against the live API.
 **⚠️ CRITICAL**: US2 (scan language), US5 (TV status), US6 (profile picture), and US7 (nav user info) all have a hard dependency on one or more tasks in this phase.
 
 - [x] T002 Extend `StartScanRequest` record in `../MediaHandler.API/` `ScanRequests.cs` to add `string? Language = null`; extend `StartScanCommand` in `StartScanCommand.cs` to add `string? Language = null`; update `AdminScanController.StartScan()` to pass `request.Language` through to the command, and propagate it through `ScanStartParameters` so the TMDB matcher receives it — verify with `dotnet build` and a local scan run
@@ -211,8 +210,8 @@
 
 > **Backend Dependency**: T067–T068 (backend language propagation) must be deployed for full end-to-end testing. T069–T071 (frontend) can be coded independently and verified by inspecting the outgoing network request.
 
-- [ ] T067 Add `StartEnrichmentRequest` record to `../MediaHandler.API/MediaHandler.API/Contracts/Admin/ScanRequests.cs` with `string? Language = null`; extend `StartEnrichmentCommand` in `../MediaHandler.API/MediaHandler.Application/Features/Dashboard/Commands/StartEnrichment/StartEnrichmentCommand.cs` to add `string? Language = null`; update `AdminEnrichmentController.StartEnrichment()` in `../MediaHandler.API/MediaHandler.API/Controllers/AdminEnrichmentController.cs` to accept `[FromBody] StartEnrichmentRequest? request = null` and pass `request?.Language` to `new StartEnrichmentCommand(request?.Language)`; update `StartEnrichmentCommandHandler` to forward `request.Language` to `coordinator.StartAsync(run.Id, request.Language, cancellationToken)` — verify with `dotnet build` and confirm the request body is accepted without breaking existing callers that send no body
-- [ ] T068 Update `IEnrichmentCoordinator.StartAsync()` signature in `../MediaHandler.API/MediaHandler.Application/Common/Interfaces/IEnrichmentCoordinator.cs` to `Task StartAsync(Guid enrichmentRunId, string? language = null, CancellationToken ct = default)`; update `EnrichmentCoordinator.StartAsync()` and `ExecuteEnrichmentAsync()` in `../MediaHandler.API/MediaHandler.Infrastructure/Services/EnrichmentCoordinator.cs` to receive and thread `language` through; replace both hardcoded `"en-US"` locale strings in `EnrichMediaFieldsAsync()` (line 270) and `UpsertTvSeasonsAsync()` (line 343) with a resolved locale derived from `language` (map `"fr"` → `"fr-FR"`, `"en"` → `"en-US"`, fallback null/unknown → `"en-US"`) — depends on T067; verify with `dotnet build` and confirm TMDB calls use the correct locale when language is `"fr"`
+- [x] T067 Add `StartEnrichmentRequest` record to `../MediaHandler.API/MediaHandler.API/Contracts/Admin/ScanRequests.cs` with `string? Language = null`; extend `StartEnrichmentCommand` in `../MediaHandler.API/MediaHandler.Application/Features/Dashboard/Commands/StartEnrichment/StartEnrichmentCommand.cs` to add `string? Language = null`; update `AdminEnrichmentController.StartEnrichment()` in `../MediaHandler.API/MediaHandler.API/Controllers/AdminEnrichmentController.cs` to accept `[FromBody] StartEnrichmentRequest? request = null` and pass `request?.Language` to `new StartEnrichmentCommand(request?.Language)`; update `StartEnrichmentCommandHandler` to forward `request.Language` to `coordinator.StartAsync(run.Id, request.Language, cancellationToken)` — verify with `dotnet build` and confirm the request body is accepted without breaking existing callers that send no body
+- [x] T068 Update `IEnrichmentCoordinator.StartAsync()` signature in `../MediaHandler.API/MediaHandler.Application/Common/Interfaces/IEnrichmentCoordinator.cs` to `Task StartAsync(Guid enrichmentRunId, string? language = null, CancellationToken ct = default)`; update `EnrichmentCoordinator.StartAsync()` and `ExecuteEnrichmentAsync()` in `../MediaHandler.API/MediaHandler.Infrastructure/Services/EnrichmentCoordinator.cs` to receive and thread `language` through; replace both hardcoded `"en-US"` locale strings in `EnrichMediaFieldsAsync()` (line 270) and `UpsertTvSeasonsAsync()` (line 343) with a resolved locale derived from `language` (map `"fr"` → `"fr-FR"`, `"en"` → `"en-US"`, fallback null/unknown → `"en-US"`) — depends on T067; verify with `dotnet build` and confirm TMDB calls use the correct locale when language is `"fr"`
 - [x] T069 [P] Update `src/app/features/admin/enrichment/admin-enrichment.service.ts`: change `startEnrichment()` signature to `startEnrichment(language?: string): void`; replace the `this.api.post<EnrichmentRun>('admin/enrichment/start', null)` call with `this.api.post<EnrichmentRun>('admin/enrichment/start', { language })` so the language is included in the POST request body — depends on T067 for full integration; verify the network payload in DevTools shows `{"language":"fr"}` when called with `"fr"`
 - [x] T070 Update `src/app/features/admin/enrichment/admin-enrichment-page.component.ts`: add `TranslocoService` import from `@jsverse/transloco`; inject `private readonly translocoService = inject(TranslocoService)`; in the `accept` callback of `startEnrichment(t)`, read `const language = this.translocoService.getActiveLang()` and pass it to `this.enrichmentService.startEnrichment(language)`; update the confirmation `message` to use `t('admin.enrichment.confirmMessageWithLanguage', { language: t('admin.enrichment.language.' + this.translocoService.getActiveLang()) })` so the dialog displays the target language — depends on T069 and T071; verify POST body includes `"language":"fr"` when UI is in French
 - [x] T071 [P] Add enrichment language i18n keys to `src/assets/i18n/en.json` under `admin.enrichment`: `"confirmMessageWithLanguage": "Are you sure you want to start a batch TMDB enrichment scan? Metadata will be fetched in {{language}}."`, `"language": { "en": "English", "fr": "French" }`; add matching French translations to `src/assets/i18n/fr.json`: `"confirmMessageWithLanguage": "Êtes-vous sûr de vouloir lancer un enrichissement TMDB en lot ? Les métadonnées seront récupérées en {{language}}."`, `"language": { "en": "anglais", "fr": "français" }` — these keys are consumed by T070; verify the confirmation dialog renders the active language name correctly in both EN and FR
@@ -375,3 +374,253 @@ Developer C (Backend):   Phase 2 entire (T002–T008) → assist Phase 11 (Polis
 - All modified and new Angular components MUST use `ChangeDetectionStrategy.OnPush` and signal-first state management
 - No new npm dependencies — all changes use existing Angular 21, PrimeNG 21, Transloco 8, Auth0 Angular 2 APIs
 - Profile picture file size limit: 2 MB; accepted formats: JPEG, PNG, WebP (validate both on frontend and backend)
+
+---
+
+## Phase 13: Foundational Backend — Sort/Filter & New Endpoints (Unblocks US-9, US-11, US-12, US-14)
+
+**Purpose**: Backend-only changes that MUST be shipped before US-9 frontend sort/filter, US-11 live counters, US-12 batch assign, and US-14 completeness badge can be fully tested against the live API.
+
+> **Note**: `PagedResult<T>` already exists at `../MediaHandler.API/MediaHandler.Application/Common/Models/PagedResult.cs`. All six admin list endpoints already implement `page`/`pageSize` pagination. These tasks extend them with `sortField`/`sortOrder` and column-specific filter parameters. `GET /api/v1/media/stats` already exists but lacks `incompleteTvShowCount`.
+
+- [x] T072 [P] Add `string? sortField` and `string? sortOrder` ("asc"/"desc") parameters to `GetUsersQuery` in `../MediaHandler.API/MediaHandler.Application/Features/Admin/Queries/GetUsers/GetUsersQueryHandler.cs`; update `AdminController.GetUsers()` in `../MediaHandler.API/MediaHandler.API/Controllers/AdminController.cs` to accept `[FromQuery] string? sortField = null` and `[FromQuery] string? sortOrder = "asc"` and forward them to the query; apply a `sortField` switch on the EF Core `IQueryable` to order by `DisplayName`, `Email`, `Role`, or `IsActive`, with `sortOrder` controlling ascending/descending direction — verify with `dotnet build`
+- [x] T073 [P] Add `string? sortField`, `string? sortOrder`, and `string? fileName` text filter parameters to `ListReviewItemsQuery` in `../MediaHandler.API/MediaHandler.Application/Features/Review/Queries/ListReviewItems/ListReviewItemsQuery.cs`; update `AdminReviewController.ListReviewItems()` in `../MediaHandler.API/MediaHandler.API/Controllers/AdminReviewController.cs` to accept and forward the new parameters; apply case-insensitive `Contains` on `ReviewItem.FileName` when `fileName` is provided; apply sort switch on `FileName`, `Status`, `CreatedAt` — verify with `dotnet build`
+- [x] T074 [P] Add `string? sortField` and `string? sortOrder` parameters to `ListScanHistoryQuery` in `../MediaHandler.API/MediaHandler.Application/Features/Scan/Queries/ListScanHistory/ListScanHistoryQuery.cs`; update `AdminScanController.ListHistory()` in `../MediaHandler.API/MediaHandler.API/Controllers/AdminScanController.cs` to accept and forward them; apply sort switch on `StartedAt`, `Status`, `Mode` in the EF Core query — verify with `dotnet build`
+- [x] T075 [P] Add `string? sortField`, `string? sortOrder`, and `string? fileName` text filter parameters to `ListScanDecisionsQuery` in `../MediaHandler.API/MediaHandler.Application/Features/Dashboard/Queries/ListScanDecisions/ListScanDecisionsQuery.cs`; update the scan decisions action in `../MediaHandler.API/MediaHandler.API/Controllers/AdminScanDecisionsController.cs` to accept and forward them; apply case-insensitive `Contains` on `FileName` and sort switch on `FileName`, `Status`, `ScannedAt` — verify with `dotnet build`
+- [x] T076 [P] Add `string? sortField` and `string? sortOrder` parameters to `ListEnrichmentHistoryQuery` in `../MediaHandler.API/MediaHandler.Application/Features/Dashboard/Queries/ListEnrichmentHistory/ListEnrichmentHistoryQuery.cs`; update `AdminEnrichmentController.ListHistory()` in `../MediaHandler.API/MediaHandler.API/Controllers/AdminEnrichmentController.cs` to accept and forward them; apply sort switch on `StartedAt`, `Status` — verify with `dotnet build`
+- [x] T077 [P] Add `string? sortField`, `string? sortOrder`, and `string? path` text filter parameters to `ListLibraryRootsQuery` in `../MediaHandler.API/MediaHandler.Application/Features/LibraryRoots/Queries/ListLibraryRoots/ListLibraryRootsQuery.cs`; update `AdminLibraryRootsController.List()` in `../MediaHandler.API/MediaHandler.API/Controllers/AdminLibraryRootsController.cs` to accept and forward them; apply case-insensitive `Contains` on `Path` when provided; add sort switch on `Path`, `CreatedAt` — verify with `dotnet build`
+- [x] T078 Update `../MediaHandler.API/MediaHandler.Infrastructure/Services/ScanRunCoordinator.cs`: in the main file processing loop (`RunScanAsync` or equivalent), increment `scanRun.TotalDiscovered++` for every file discovered; increment `scanRun.Added++`, `scanRun.Updated++`, or `scanRun.NeedsReview++` immediately after each file outcome is classified; flush to the database every 10 processed files using `if (processedCount % 10 == 0) { await context.SaveChangesAsync(CancellationToken.None); }` so the `GET /api/v1/admin/scan/active` endpoint reports live counts during the scan — verify `dotnet build` and run a test scan to confirm counters are > 0 before scan completion
+- [x] T079 Create `BatchAssignReviewItemsCommand` and its handler in `../MediaHandler.API/MediaHandler.Application/Features/Review/Commands/BatchAssignReviewItems/BatchAssignReviewItemsCommand.cs`: define command record `BatchAssignReviewItemsCommand(Guid[] ReviewItemIds, Guid TargetMediaId) : IRequest<Result<BatchAssignReviewItemsResponse>>`; handler iterates each ID, resolves the `ReviewItem` by setting `AssignedMediaId = TargetMediaId` and marking `Status = Resolved` (mirroring the existing `ResolveReviewItemCommand` logic), catches per-item exceptions; define `BatchAssignItemResult(Guid ReviewItemId, bool Success, string? ErrorMessage)` and `BatchAssignReviewItemsResponse(IReadOnlyList<BatchAssignItemResult> Results)` in `../MediaHandler.API/MediaHandler.API/Contracts/Admin/ReviewRequests.cs` — verify with `dotnet build`
+- [x] T080 Add `POST /api/v1/admin/review-items/batch-assign` endpoint to `../MediaHandler.API/MediaHandler.API/Controllers/AdminReviewController.cs`: accept `[FromBody] BatchAssignReviewItemsRequest` (record with `Guid[] ReviewItemIds`, `Guid TargetMediaId`); validate array is non-empty; dispatch `BatchAssignReviewItemsCommand` via MediatR; return `200 OK ApiResponse<BatchAssignReviewItemsResponse>`; return `400 Bad Request` for invalid input; return `403 Forbidden` for non-admin callers — depends on T079; verify with `dotnet build` and a test POST confirming per-item success/failure results in the response
+- [x] T081 Extend `MediaStatsDto` in `../MediaHandler.API/MediaHandler.Application/Features/Media/DTOs/MediaDto.cs`: add `int IncompleteTvShowCount` field; update `GetMediaStatsQueryHandler` in `../MediaHandler.API/MediaHandler.Application/Features/Media/Queries/GetMediaStats/GetMediaStatsQueryHandler.cs` to compute `IncompleteTvShowCount` as the count of TV shows where `m.NumberOfSeasons.HasValue && ownedSeasonCount < m.NumberOfSeasons.Value` (join `Media` with grouped `TvSeasons` count); update the `MediaStatsDto` constructor call to include the new field — verify `dotnet build` and confirm `GET /api/v1/media/stats` includes `incompleteTvShowCount`
+- [x] T082 Add `int? OwnedSeasonCount` field to `MediaListItemDto` in `../MediaHandler.API/MediaHandler.Application/Features/Media/DTOs/MediaDto.cs`; update `GetMediaListQueryHandler` in `../MediaHandler.API/MediaHandler.Application/Features/Media/Queries/GetMediaList/GetMediaListQueryHandler.cs` to project the count of `TvSeason` records per TV show into `OwnedSeasonCount` (null for films) — verify `dotnet build` and confirm `GET /api/v1/media` list response includes `ownedSeasonCount` for TV shows
+      **Checkpoint**: Backend for US-9 (sort/filter), US-11 (live counters), US-12 (batch assign), and US-14 (incompleteness data) is complete — all US-9–US-14 frontend work can proceed.
+
+---
+
+## Phase 14: User Story 9 — Frontend Pagination, Filtering & Sorting (Priority: P1)
+
+**Goal**: Every admin data table (Users, Review Items, Scan Decisions, Scan History, Enrichment History, Library Roots) supports sortable column headers (ascending/descending toggle) and inline column filters (text `contains` for string columns, dropdown for enum/status columns). Sort, filter, and pagination state are preserved.
+**Independent Test**: Navigate to any admin data table; click a column header to sort ascending, click again for descending; type in a text column filter and confirm rows narrow; select an enum dropdown filter and confirm only matching rows appear; navigate to page 2 while a filter is active and confirm the filter persists.
+
+> **Backend Dependency**: Sort/filter params require T072–T077 to be deployed for full server-side filtering.
+
+- [x] T083 [P] [US9] Update `src/app/features/admin/users/admin-user.service.ts`: extend `getUsers(page, pageSize, search?)` to add `sortField?: string` and `sortOrder?: 'asc' | 'desc'` parameters; append `sortField` and `sortOrder` as `HttpParams` on the `GET /api/v1/admin/users` request — depends on T072; verify `npx tsc --noEmit`
+- [x] T084 [US9] Update `src/app/features/admin/users/admin-users-page.component.ts`: extend `onLazyLoad(event: TableLazyLoadEvent)` to extract `event.sortField as string | undefined` and convert `event.sortOrder` (`1` → `'asc'`, `-1` → `'desc'`) and pass to `userService.getUsers()`; update `src/app/features/admin/users/admin-users-page.component.html` to add `[pSortableColumn]="'email'"` on the Email header, `[pSortableColumn]="'displayName'"` on the Name header, `[pSortableColumn]="'role'"` on the Role header, and `<p-sortIcon>` inside each — depends on T083; verify sort arrows render and clicking a header sorts the table
+- [x] T085 [P] [US9] Update `src/app/features/admin/review/admin-review.service.ts`: extend `getReviewItems()` to accept `sortField?: string`, `sortOrder?: 'asc' | 'desc'`, and `fileName?: string` parameters and append them as `HttpParams` on `GET /api/v1/admin/review-items` — depends on T073; verify `npx tsc --noEmit`
+- [x] T086 [US9] Update `src/app/features/admin/review/admin-review-page.component.ts`: extend `onLazyLoad` to extract `sortField`, `sortOrder`, and the `fileName` text filter value from `event.filters['fileName']?.value`; pass all to `adminReviewService.getReviewItems()`; update `src/app/features/admin/review/admin-review-page.component.html` to add `[pSortableColumn]` on `fileName` and `status` headers plus `<p-columnFilter type="text" field="fileName" [showMenu]="false">` under the file name column — depends on T085
+- [x] T087 [P] [US9] Update `src/app/features/admin/scanner/admin-scan.service.ts`: extend `getScanHistory()` to accept `sortField?` and `sortOrder?` and append to `GET /api/v1/admin/scan/history` — depends on T074; also update `src/app/features/admin/scan-results/admin-scan-decision.service.ts` to accept `sortField?`, `sortOrder?`, and `fileName?` parameters and append to `GET /api/v1/admin/scan/decisions` — depends on T075; verify `npx tsc --noEmit` on both files
+- [x] T088 [US9] Update `src/app/features/admin/scanner/scan-history-table.component.ts`: extend `onLazyLoad` to extract `sortField`/`sortOrder` from `TableLazyLoadEvent` and pass to `adminScanService.getScanHistory()`; add `[pSortableColumn]="'startedAt'"`, `[pSortableColumn]="'status'"`, `[pSortableColumn]="'mode'"` to column headers in `scan-history-table.component.html`; update `src/app/features/admin/scan-results/admin-scan-results-page.component.ts` to extract and pass `sortField`/`sortOrder`/`fileName` from `onLazyLoad` to `adminScanDecisionService`; add `[pSortableColumn]` on `fileName` and `status` columns plus `<p-columnFilter type="text" field="fileName">` in the scan-results table template — depends on T087
+- [x] T089 [P] [US9] Update `src/app/features/admin/enrichment/admin-enrichment.service.ts`: extend the enrichment history fetch method to accept `sortField?`/`sortOrder?` and append to `GET /api/v1/admin/enrichment/history` — depends on T076; update `src/app/features/admin/enrichment/admin-enrichment-page.component.ts` to extend its `onLazyLoad` to extract and pass `sortField`/`sortOrder`; add `[pSortableColumn]="'startedAt'"` and `[pSortableColumn]="'status'"` to enrichment history table column headers
+- [x] T090 [P] [US9] Update `src/app/features/admin/library-roots/admin-library-root.service.ts`: extend `getLibraryRoots()` to accept `sortField?`, `sortOrder?`, and `path?` filter params and append to `GET /api/v1/admin/library-roots` — depends on T077; update `src/app/features/admin/library-roots/admin-library-roots-page.component.ts` to extend `onLazyLoad` to pass sort + path filter; add `[pSortableColumn]="'path'"` to the path column header and `<p-columnFilter type="text" field="path" [showMenu]="false">` in `admin-library-roots-page.component.html`
+- [x] T091 [P] [US9] Add i18n keys for sort/filter UI to `src/assets/i18n/en.json` and `src/assets/i18n/fr.json`: `table.sortAscending` ("Sort ascending" / "Trier par ordre croissant"), `table.sortDescending` ("Sort descending" / "Trier par ordre décroissant"), `table.clearFilter` ("Clear filter" / "Effacer le filtre"), `table.filterPlaceholder` ("Filter..." / "Filtrer..."), `table.noResults` ("No results found" / "Aucun résultat trouvé"); add enum filter dropdown labels for review `status` values, scan `mode` values, and enrichment `status` values — verify strings appear in the column filter UI in both locales
+- [x] T092 [US9] End-to-end verification for US-9: navigate to each admin table page (Users, Review Items, Scan Decisions, Scan History, Enrichment History, Library Roots); click a column header to confirm ascending sort then click again for descending; type a value in a text filter column and confirm rows narrow; navigate to page 2 while filter is active and confirm filter/sort persist; clear the filter and confirm the full list returns
+      **Checkpoint**: User Story 9 is complete — all admin data tables support server-side sort, column filters, and paginated navigation.
+
+---
+
+## Phase 15: User Story 10 — Scan Results: Stay in Place After Assignment (Priority: P1)
+
+**Goal**: After assigning a file on the scan results page, the table stays on the same pagination page and scroll position. The assigned row updates in-place via signal. Active filters remain active.
+**Independent Test**: Navigate to scan results page, apply a filter, go to page 3, scroll down, assign a file — confirm the page remains on page 3 at the same scroll position with the filter still active and only the assigned row's status updated.
+
+> **Story Dependency**: Requires T087–T088 (US-9 scan-decisions pagination/sort) to be complete first.
+
+- [x] T093 [US10] Update `src/app/features/admin/scan-results/admin-scan-results-page.component.ts`: add `private savedScrollY = 0` property; capture it with `this.savedScrollY = window.scrollY` in the assignment action's pre-submission handler; in the assignment success callback, call `this.items.update(list => list.map(row => row.id === updated.id ? { ...row, ...updated } : row))` to patch only the affected row in-place via signal update (no full reload); after the in-place patch, call `window.scrollTo({ top: this.savedScrollY, behavior: 'instant' })`; keep `tableQuery()` `page` unchanged; if the now-assigned row is excluded by the current status filter, trigger a soft reload of the current page by re-setting `tableQuery` with the preserved page number; auto-decrement page by 1 if the current page becomes empty — verify `npx tsc --noEmit`
+- [x] T094 [US10] Update `src/app/features/admin/scan-results/scan-decision-table.component.ts` (or the assignment dialog component): emit an `(itemAssigned)` output carrying the complete updated `ScanDecision` object after a successful assignment API call; update `src/app/features/admin/scan-results/admin-scan-results-page.component.html` to bind `(itemAssigned)="onItemAssigned($event)"` and implement `onItemAssigned(updated)` to call the in-place signal update and scroll restore from T093 — depends on T093
+- [x] T095 [US10] End-to-end verification for US-10: apply a filter, navigate to page 3, scroll down, assign a file — confirm page stays on 3, scroll restores, filter remains active, only the assigned row updates; assign the last item on a page — confirm graceful adjustment stays on same page or moves to the previous page if now empty
+      **Checkpoint**: User Story 10 is complete — scan results page preserves position and state after every assignment.
+
+---
+
+## Phase 16: User Story 11 — Scanner: Real-Time Counter Incrementation (Priority: P2)
+
+**Goal**: Scan progress counters ("total discovered", "added", "updated", "needs review") increment at each 4-second polling interval during an active scan rather than remaining at 0 until completion.
+**Independent Test**: Start a scan on a library with >10 files; watch the `scan-status` counters — confirm at least one counter is > 0 within the first two polling cycles (~8 seconds).
+
+> **Backend Dependency**: T078 (incremental counter flush in `ScanRunCoordinator`) is the primary fix. The frontend counter binding (`scan.counts.*`) and 4-second polling loop already work correctly.
+
+- [x] T096 [US11] Implement incremental counter flushing in `../MediaHandler.API/MediaHandler.Infrastructure/Services/ScanRunCoordinator.cs`: in the per-file processing loop, increment `scanRun.TotalDiscovered++` for each discovered file; increment `scanRun.Added++`, `scanRun.Updated++`, or `scanRun.NeedsReview++` after each file outcome is determined; flush to DB every 10 files via `if (processedCount % 10 == 0) { await context.SaveChangesAsync(CancellationToken.None); }` — verify `dotnet build`; run a test scan on a library with 20+ files and confirm `GET /api/v1/admin/scan/active` returns non-zero `counts` before the scan finishes
+- [x] T097 [US11] Verify `src/app/shared/models/admin-scan.model.ts` `ScanCounts` interface fields (`totalDiscovered`, `added`, `updated`, `needsReview`) match the JSON property names returned by `GET /api/v1/admin/scan/active`; fix any camelCase/PascalCase mismatches by adjusting the frontend model; confirm `src/app/features/admin/scanner/scan-status.component.html` binds to `scan.counts.totalDiscovered`, `scan.counts.added`, `scan.counts.updated`, `scan.counts.needsReview`; run a live scan and verify all four counters update within the first two 4-second polling intervals (~8 seconds)
+      **Checkpoint**: User Story 11 is complete — scanner counters increment in real time during active scans.
+
+---
+
+## Phase 17: User Story 12 — Review Item: Multi-Select for Batch Assignment (Priority: P2)
+
+**Goal**: Each review item row has a checkbox; a "Select All" header checkbox selects all rows on the current page; a "Batch Assign" toolbar button opens a media search dialog that assigns all selected items in one operation; a per-item success/failure summary is shown after the batch completes.
+**Independent Test**: Select 3 rows via checkboxes — confirm "Batch Assign" button appears in the toolbar; ensure the button is disabled when no items are selected; click "Batch Assign", select a media item, confirm — verify all 3 items show as assigned and a result summary toast appears.
+
+> **Backend Dependency**: Requires T079–T080 (`POST /api/v1/admin/review-items/batch-assign`) to be deployed for full integration.
+
+- [x] T098 [P] [US12] Create `src/app/shared/models/batch-assign.model.ts`: export `interface BatchAssignRequest { reviewItemIds: string[]; targetMediaId: string }`, `interface BatchAssignItemResult { reviewItemId: string; success: boolean; errorMessage?: string }`, and `interface BatchAssignResult { results: BatchAssignItemResult[] }` — verify `npx tsc --noEmit`
+- [x] T099 [P] [US12] Update `src/app/features/admin/review/admin-review.service.ts`: add `batchAssign(request: BatchAssignRequest): Observable<ApiResponse<BatchAssignResult>>` method that POSTs `request` to `POST /api/v1/admin/review-items/batch-assign` via `ApiService` or `HttpClient`; use `takeUntilDestroyed()` for subscription cleanup — depends on T080 (backend) and T098 (model); verify `npx tsc --noEmit`
+- [x] T100 [US12] Update `src/app/features/admin/review/admin-review-page.component.ts`: add `selectedItems = signal<ReviewItem[]>([])`, `isAnySelected = computed(() => this.selectedItems().length > 0)`, `isBatchDialogVisible = signal(false)`; add `onSelectionChange(items: ReviewItem[])` handler; add `onSelectAll(checked: boolean, allItems: ReviewItem[])` for the header checkbox; add `openBatchAssign()` that sets `isBatchDialogVisible.set(true)`; add `onBatchConfirmed(targetMediaId: string)` that calls `adminReviewService.batchAssign()` and shows a translated toast summary with per-item result counts, then clears selection — depends on T099
+- [x] T101 [US12] Create `src/app/features/admin/review/batch-assign-dialog.component.ts` as standalone `@Component({ changeDetection: ChangeDetectionStrategy.OnPush })`: inputs `visible = input<boolean>(false)`, `selectedCount = input<number>(0)`; outputs `confirmed = output<string>()`, `dismissed = output<void>()`; state `searchQuery = signal('')`, `searchResults = signal<{ id: string; title: string; type: string }[]>([])`, `selectedMedia = signal<{ id: string; title: string } | null>(null)`, `isSearching = signal(false)`; debounce `searchQuery` 300 ms then call `GET /api/v1/media?title={query}&pageSize=10` via `ApiService`; `confirm()` emits `selectedMedia()!.id` — depends on T098
+- [x] T102 [US12] Create `src/app/features/admin/review/batch-assign-dialog.component.html`: `<p-dialog [visible]="visible()" (onHide)="dismissed.emit()">`; include a text input bound to `searchQuery`; show `searchResults()` as a scrollable list with single-select `<p-listbox>`; show "{{selectedCount()}} items → {{selectedMedia()?.title ?? '...'}}" summary; "Confirm" `<p-button>` disabled when `selectedMedia()` is null; "Cancel" emits `dismissed` — depends on T101
+- [x] T103 [P] [US12] Create `src/app/features/admin/review/batch-assign-dialog.component.scss`: scrollable results list (max-height: 300px, overflow-y: auto); selected row highlight; confirm/cancel button row (flex, right-aligned); search input full width — use CSS custom properties from the design token system
+- [x] T104 [US12] Update `src/app/features/admin/review/admin-review-page.component.html`: add `<p-checkbox>` in the first column of each row bound to selection; add "Select All" `<p-checkbox>` in the table header; add `@if (isAnySelected()) { <div class="batch-toolbar"> }` above the `<p-table>` with an items-selected count badge + "Batch Assign" `<p-button>`; add `<app-batch-assign-dialog [visible]="isBatchDialogVisible()" [selectedCount]="selectedItems().length" (confirmed)="onBatchConfirmed($event)" (dismissed)="isBatchDialogVisible.set(false)">` at the bottom; add `BatchAssignDialogComponent` to the page component imports — depends on T100–T102
+- [x] T105 [P] [US12] Update `src/app/features/admin/review/admin-review-page.component.scss` to style the `.batch-toolbar` (flexbox row, background using `--surface-b` token, padding, border-radius); constrain the checkbox column to 40px max to prevent layout shift
+- [x] T106 [US12] Add i18n keys for batch assign to `src/assets/i18n/en.json` and `src/assets/i18n/fr.json`: `admin.review.batchAssign` ("Batch Assign" / "Assignation groupée"), `admin.review.selectAll` ("Select all" / "Tout sélectionner"), `admin.review.selectedCount` ("{{count}} item(s) selected" / "{{count}} élément(s) sélectionné(s)"), `admin.review.batchAssignTitle` ("Assign to media" / "Assigner au média"), `admin.review.searchMedia` ("Search for a film or TV show..." / "Rechercher un film ou une série..."), `admin.review.batchSuccess` ("{{count}} item(s) assigned successfully" / "{{count}} élément(s) assigné(s) avec succès"), `admin.review.batchPartialFail` ("{{success}} succeeded, {{failed}} failed" / "{{success}} réussi(s), {{failed}} échoué(s)") — depends on T104
+- [x] T107 [US12] End-to-end verification for US-12: navigate to review items page; confirm each row has a checkbox; select 3 rows — confirm "Batch Assign" toolbar appears; deselect all — confirm toolbar hides; click "Batch Assign", search for a media item, confirm — verify all 3 items show assigned status and a result toast shows counts; test "Select All" header checkbox selects all visible rows
+      **Checkpoint**: User Story 12 is complete — multi-select batch assignment is fully functional on the review items page.
+
+---
+
+## Phase 18: User Story 13 — TMDB Enrichment: Detailed Process View (Priority: P2)
+
+**Goal**: While enrichment is running, the enrichment page displays a live detail panel showing each media item's title, folder path, and enrichment status (Pending / In Progress / Completed / Failed). A progress indicator shows "X of Y items enriched". Failed items show an error message. Falls back gracefully to the existing progress bar if the details endpoint is unavailable.
+**Independent Test**: Start an enrichment run with multiple items; open the enrichment page; confirm the detail panel shows items with live status; wait one poll cycle (4s) and confirm a status transitions from InProgress → Completed; confirm seasons/episodes counts appear for completed TV shows; stop the API and confirm fallback to minimal progress bar without errors.
+
+> **Backend Note**: `GET /api/v1/admin/enrichment/{runId}/details` already exists. The task is to poll it during an active run and display results in a new frontend component.
+
+- [x] T108 [P] [US13] Update `src/app/shared/models/enrichment.model.ts`: add `type EnrichmentItemStatus = 'Pending' | 'InProgress' | 'Completed' | 'Failed'`; add `interface EnrichmentItemDetail { mediaId: string; title: string; folderPath: string; status: EnrichmentItemStatus; errorMessage?: string; seasonsEnriched?: number; episodesEnriched?: number }` and `interface EnrichmentRunDetails { runId: string; totalCount: number; processedCount: number; items: EnrichmentItemDetail[] }` — verify `npx tsc --noEmit`
+- [x] T109 [US13] Update `src/app/features/admin/enrichment/admin-enrichment.service.ts`: add `runDetails = signal<EnrichmentRunDetails | null>(null)` ; add `getRunDetails(runId: string): Observable<ApiResponse<EnrichmentRunDetails>>` calling `GET /api/v1/admin/enrichment/{runId}/details`; in the existing active-enrichment polling loop, at each tick call `getRunDetails(activeRun.runId)` and on success call `runDetails.set(response.data)`; on HTTP error or 404, silently keep `runDetails` as null (graceful degradation); stop polling `runDetails` when enrichment completes — depends on T108; use `takeUntilDestroyed()` for the subscription
+- [x] T110 [US13] Create `src/app/features/admin/enrichment/enrichment-detail-panel.component.ts` as standalone `@Component({ changeDetection: ChangeDetectionStrategy.OnPush })`: input `details = input<EnrichmentRunDetails | null>(null)`; computed `progressPercent = computed(() => (details()?.totalCount ?? 0) > 0 ? Math.round(details()!.processedCount / details()!.totalCount * 100) : 0)` — depends on T108
+- [x] T111 [US13] Create `src/app/features/admin/enrichment/enrichment-detail-panel.component.html`: show `<p-progressBar [value]="progressPercent()">` and a translated "processedCount of totalCount items enriched" label; render a scrollable `<ul>` of `details()?.items ?? []` — each item: status icon (`pi-clock` Pending, `pi pi-spin pi-spinner` InProgress, `pi-check-circle` Completed, `pi-times-circle` Failed), media `title` in bold, `folderPath` in small muted text; for Completed TV shows show seasons/episodes count via Transloco; for Failed items show `errorMessage` in danger color; when `details()` is null render nothing (fallback to parent progress bar) — depends on T110
+- [x] T112 [P] [US13] Create `src/app/features/admin/enrichment/enrichment-detail-panel.component.scss`: scrollable item list (max-height: 360px, overflow-y: auto); status icon color utilities (`var(--green-500)` Completed, `var(--orange-400)` InProgress, `var(--red-400)` Failed, `var(--surface-400)` Pending); folder path truncated with ellipsis; item row padding and separator line — use CSS custom properties
+- [x] T113 [US13] Update `src/app/features/admin/enrichment/admin-enrichment-page.component.ts`: add `EnrichmentDetailPanelComponent` to the `imports` array; expose `runDetails = this.enrichmentService.runDetails` as a component property — depends on T109 and T110; update `src/app/features/admin/enrichment/admin-enrichment-page.component.html` to add `<app-enrichment-detail-panel [details]="runDetails()">` inside the "enrichment running" section (below or replacing the existing current-item text); the panel renders nothing when `runDetails()` is null so the existing progress bar remains as fallback
+- [x] T114 [P] [US13] Add i18n keys for the enrichment detail panel to `src/assets/i18n/en.json` and `src/assets/i18n/fr.json`: `admin.enrichment.detail.progress` ("{{processed}} of {{total}} items enriched" / "{{processed}} sur {{total}} éléments traités"), `admin.enrichment.detail.status.Pending` ("Pending" / "En attente"), `admin.enrichment.detail.status.InProgress` ("In Progress" / "En cours"), `admin.enrichment.detail.status.Completed` ("Completed" / "Terminé"), `admin.enrichment.detail.status.Failed` ("Failed" / "Échoué"), `admin.enrichment.detail.seasonsEnriched` ("{{n}} season(s)" / "{{n}} saison(s)"), `admin.enrichment.detail.episodesEnriched` ("{{n}} episode(s)" / "{{n}} épisode(s)")
+- [x] T115 [US13] End-to-end verification for US-13: start an enrichment run with ≥3 media items; open the enrichment page; confirm the detail panel appears with progress bar and item list; wait one polling cycle and confirm an item transitions to Completed with seasons/episodes count; confirm a failed item shows error message in red; stop the API — confirm fallback to minimal progress bar without console errors
+      **Checkpoint**: User Story 13 is complete — enrichment runs display a live per-item detail panel with progress and status updates.
+
+---
+
+## Phase 19: User Story 14 — Collection Page: Totals by Type and Completeness (Priority: P2)
+
+**Goal**: The collection stats bar shows an incomplete TV shows count (warning-styled) alongside the existing `totalTvShows`/`totalFilms` stats. Each TV show media card shows an incompleteness badge with a tooltip when `ownedSeasonCount < numberOfSeasons`.
+**Independent Test**: View the collection page; confirm the stats bar shows an incomplete TV shows stat when applicable; find a TV show card with missing seasons and confirm the incompleteness badge appears; hover it to see the missing season count; confirm no badge on films or complete TV shows.
+
+> **Backend Dependency**: Requires T081 (`incompleteTvShowCount` in stats DTO) and T082 (`ownedSeasonCount` in media list DTO) for accurate live data.
+> **Note**: The collection stats bar already displays `totalTvShows` and `totalFilms` correctly (via the existing `CollectionStatsComponent`). These tasks add the `incompleteTvShowCount` stat item and per-card incompleteness badge.
+
+- [x] T116 [P] [US14] Update `CollectionStats` interface in `src/app/core/api/api-response.model.ts`: add `incompleteTvShowCount: number` field — maps to the new `IncompleteTvShowCount` from T081; also update `src/app/shared/models/media.model.ts` `Media` interface to add `ownedSeasonCount: number | null` — maps to `OwnedSeasonCount` from T082 — verify `npx tsc --noEmit`
+- [x] T117 [US14] Update `src/app/features/collection/collection-stats.component.html`: add a new stats bar item rendered `@if (stats()!.incompleteTvShowCount > 0)` showing `stats()!.incompleteTvShowCount` with Transloco key `'collection.stats.incompleteTvShows'` and CSS class `stats-bar__item--warning` (warning color) — depends on T116; verify the new stat item appears when `incompleteTvShowCount > 0` and is absent when 0
+- [x] T118 [US14] Update `src/app/features/collection/media-card.component.ts`: add `isIncomplete = computed(() => this.media().type === MediaType.TvShow && this.media().numberOfSeasons != null && (this.media().ownedSeasonCount ?? 0) < this.media().numberOfSeasons!)` and `missingSeasonsCount = computed(() => this.isIncomplete() ? this.media().numberOfSeasons! - (this.media().ownedSeasonCount ?? 0) : 0)` computed signals — depends on T116; verify `npx tsc --noEmit`
+- [x] T119 [US14] Update `src/app/features/collection/media-card.component.html`: add `@if (isIncomplete()) { <span class="media-card__incomplete-badge" [pTooltip]="t('media.incomplete.tooltip', { count: missingSeasonsCount() })" tooltipPosition="top" [attr.aria-label]="t('media.incomplete.label')"><i class="pi pi-exclamation-circle"></i></span> }` as an overlay badge on the TV show poster — depends on T118
+- [x] T120 [P] [US14] Update `src/app/features/collection/collection-stats.component.scss` to add `.stats-bar__item--warning { color: var(--yellow-500); }` (or whichever warning token exists); update `src/app/features/collection/media-card.component.scss` to style `.media-card__incomplete-badge` as an absolute-positioned top-right overlay with warning-color icon and slight background — use CSS custom properties
+- [x] T121 [P] [US14] Add i18n keys to `src/assets/i18n/en.json` and `src/assets/i18n/fr.json`: `collection.stats.incompleteTvShows` ("{{count}} incomplete show(s)" / "{{count}} série(s) incomplète(s)"), `media.incomplete.label` ("Incomplete TV show" / "Série incomplète"), `media.incomplete.tooltip` ("Missing {{count}} season(s)" / "{{count}} saison(s) manquante(s)") — depends on T119; verify tooltip renders the correct missing season count in both locales
+- [x] T122 [US14] End-to-end verification for US-14: navigate to the collection page; confirm stats bar shows `totalTvShows` and `totalFilms` (already present); confirm `incompleteTvShowCount` stat item appears in warning color when applicable; find a TV show with `ownedSeasonCount < numberOfSeasons` and confirm the incompleteness badge is visible on its card; hover the badge and confirm the missing season count tooltip shows; confirm no badge on films or complete TV shows
+      **Checkpoint**: User Story 14 is complete — collection page shows TV/film breakdown plus per-card incompleteness indicators.
+
+---
+
+## Phase 20: User Story 15 — File Location Quick Access (Priority: P3)
+
+**Goal**: File paths on the media detail page are already displayed via `MediaFilesComponent` with per-file clipboard copy buttons. The remaining gaps are: (a) `ClipboardService` toast messages use raw i18n key strings instead of translated text, and (b) when clipboard access is denied, there is no fallback for manual copying.
+**Independent Test**: Click a file copy button on the media detail page — confirm the success toast shows translated text (not a raw key); block clipboard permission in DevTools and click copy — confirm a selectable fallback textarea appears with the path; view a media item with no files — confirm "no files" message appears, no copy buttons shown.
+
+> **Note**: `MediaFilesComponent` is already fully integrated in `media-detail-page.component.html` showing all file paths with copy buttons. `ClipboardService` already emits toast messages but passes raw key strings instead of translated text.
+
+- [x] T123 [US15] Fix `src/app/core/services/clipboard.service.ts`: inject `TranslocoService` via `inject(TranslocoService)`; replace `summary: 'common.pathCopied'` with `summary: this.translocoService.translate('common.pathCopied')` and `summary: 'common.copyFailed'` with `summary: this.translocoService.translate('common.copyFailed')` so toast messages show translated strings — verify `npx tsc --noEmit` and confirm the success toast shows "Path copied!" in EN and the translated text in FR
+- [x] T124 [US15] Update `src/app/features/media-detail/media-files.component.ts`: add `fallbackPaths = signal<Record<string, boolean>>({})` to track which paths are showing the fallback textarea; in `copyPath(path)`, on clipboard rejection additionally call `this.fallbackPaths.update(m => ({ ...m, [path]: true }))`; add `clearFallback(path: string)` that removes the entry; update `src/app/features/media-detail/media-files.component.html` to add `@if (fallbackPaths()[file.filePath]) { <textarea readonly [value]="file.filePath" class="media-files__fallback-textarea" [attr.aria-label]="'media.files.copyFallback' | transloco"></textarea><p-button icon="pi pi-times" size="small" variant="text" (onClick)="clearFallback(file.filePath)"> }` below each file's copy button — depends on T123; verify `npx tsc --noEmit`
+- [x] T125 [P] [US15] Ensure all required i18n keys are present in `src/assets/i18n/en.json` and `src/assets/i18n/fr.json`: `common.pathCopied` ("Path copied!" / "Chemin copié !"), `common.copyFailed` ("Copy failed" / "Échec de la copie"), `media.files.copyFallback` ("Clipboard access denied — copy the path manually:" / "Accès au presse-papiers refusé — copiez le chemin manuellement :") — add any that are missing; verify both EN and FR toast messages appear translated
+- [x] T126 [US15] End-to-end verification for US-15: navigate to a media detail page with associated files; click a copy button — confirm the success toast shows translated text (e.g. "Path copied!") not a raw key string; block clipboard permission in DevTools → click copy — confirm an error toast AND a fallback textarea appear; confirm the textarea can be dismissed; navigate to a media item with no files — confirm "no files" message appears and no copy buttons or fallback textareas are shown
+      **Checkpoint**: User Story 15 is complete — file location clipboard copy shows translated feedback toasts and provides a fallback textarea for manual copying when clipboard access is denied.
+
+---
+
+## Phase 13–20: Additional Dependencies & Execution Order
+
+### New Phase Dependencies
+
+- **Phase 13 (Backend Foundational)**: Depends on Phase 1 only — can run in parallel with all frontend work; **BLOCKS US-9 sort/filter, US-11 live counters, US-12 batch assign, US-14 completeness** for live-API testing
+- **US-9 Frontend (Phase 14)**: Can start after Phase 1; full server-side testing requires T072–T077; existing pagination infrastructure already in place
+- **US-10 (Phase 15)**: Requires US-9 scan-decisions pagination (T087–T088) to be complete first
+- **US-11 (Phase 16)**: T096 (backend) can start with Phase 13; T097 (frontend verify) can run immediately — frontend counter binding already correct
+- **US-12 (Phase 17)**: Frontend (T098–T107) can start after Phase 1; batch-assign calls require T079–T080 for integration
+- **US-13 (Phase 18)**: Pure frontend change — can start and deploy independently; backend details endpoint already exists
+- **US-14 (Phase 19)**: T116 (models) can start after Phase 1; stats bar TV/film counts already working; incompleteness requires T081–T082 (backend) for accurate data
+- **US-15 (Phase 20)**: Pure frontend fix — fully independent of all other stories
+
+### New User Story Dependencies
+
+| Story                           | Priority | Depends On                             | Can Parallelize With             |
+| ------------------------------- | -------- | -------------------------------------- | -------------------------------- |
+| US-9 — Table Sort/Filter        | P1       | Phase 13 backend for live testing      | US-10, US-11, US-12, US-15       |
+| US-10 — Scan Results Position   | P1       | US-9 scan-decisions (T087–T088)        | US-11, US-12, US-13, US-14       |
+| US-11 — Real-Time Counters      | P2       | T078 (backend counter flush)           | US-9, US-12, US-13, US-14, US-15 |
+| US-12 — Batch Assignment        | P2       | T079–T080 (backend endpoint)           | US-9, US-11, US-13, US-14, US-15 |
+| US-13 — Enrichment Detail       | P2       | Phase 1 only (backend endpoint exists) | All other stories                |
+| US-14 — Collection Completeness | P2       | T081–T082 (backend DTO fields)         | US-9, US-11, US-12, US-13, US-15 |
+| US-15 — File Location           | P3       | Phase 1 only                           | All other stories                |
+
+### Parallel Execution Examples (Phases 13–20)
+
+**Phase 13 (Backend) — Parallel opportunities**
+
+```
+Can run simultaneously (all target separate query/controller files):
+  T072 — GetUsersQuery sort params
+  T073 — ListReviewItemsQuery sort + fileName filter
+  T074 — ListScanHistoryQuery sort params
+  T075 — ListScanDecisionsQuery sort + fileName filter
+  T076 — ListEnrichmentHistoryQuery sort params
+  T077 — ListLibraryRootsQuery sort + path filter
+  T078 — ScanRunCoordinator incremental counter flush
+  T079 — BatchAssignReviewItemsCommand + handler
+  T081 — MediaStatsDto incompleteTvShowCount
+  T082 — MediaListItemDto ownedSeasonCount
+Sequential:
+  T080 — depends on T079 (endpoint dispatches the new command)
+```
+
+**Phase 14 (US-9 Frontend) — Parallel opportunities**
+
+```
+Can run simultaneously (separate service files):
+  T083 — admin-user.service.ts
+  T085 — admin-review.service.ts
+  T087 — admin-scan.service.ts + admin-scan-decision.service.ts
+  T089 — admin-enrichment.service.ts
+  T090 — admin-library-root.service.ts
+  T091 — i18n keys (en.json + fr.json)
+Then sequentially (each component depends on its service):
+  T084 — users page TS + template (after T083)
+  T086 — review page TS + template (after T085)
+  T088 — scan-history + scan-results TS + templates (after T087)
+Sequential at end:
+  T092 — verification (after all component updates)
+```
+
+**Phase 17 (US-12) — Parallel opportunities**
+
+```
+Can start simultaneously:
+  T098 — batch-assign.model.ts
+  T103 — batch-assign-dialog.component.scss
+Sequential:
+  T099 — after T098 (service uses model)
+  T100 — after T099 (component wires service)
+  T101 → T102 — dialog .ts then .html
+  T104 — after T100–T102 (page template wires dialog)
+  T105 — after T104 (page SCSS follows layout)
+  T106 — after T104 (i18n keys referenced in template)
+  T107 — verification last
+```
+
+**Phase 18 (US-13) — Parallel opportunities**
+
+```
+Can start simultaneously after T108:
+  T109 — service polling update
+  T112 — enrichment-detail-panel.component.scss
+Sequential after T108:
+  T110 → T111 — panel .ts then .html
+  T113 — page component wires panel (after T109 + T110)
+  T114 — i18n keys (can run alongside T110–T113)
+  T115 — verification last
+```
+
+---
+
+## Incremental Delivery (Sprints 7–12)
+
+| Sprint | Phases                                | Deliverable                                             |
+| ------ | ------------------------------------- | ------------------------------------------------------- |
+| 7      | Phase 13 (backend) + Phase 16 (US-11) | Sort/filter backend ready; scan counters increment live |
+| 8      | Phase 14 (US-9 frontend)              | All admin tables sortable + filterable                  |
+| 9      | Phase 15 (US-10)                      | Scan results position retained after assignment         |
+| 10     | Phase 17 (US-12)                      | Batch review item assignment                            |
+| 11     | Phase 18 (US-13) + Phase 20 (US-15)   | Enrichment detail panel; file location quick access     |
+| 12     | Phase 19 (US-14)                      | Collection completeness stats + per-card badges         |

@@ -53,7 +53,8 @@
       "films": "Films",
       "tvShows": "TV Shows",
       "watched": "Watched",
-      "unwatched": "Unwatched"
+      "unwatched": "Unwatched",
+      "incompleteTvShows": "{{count}} incomplete show(s)"
     },
     "recentlyAdded": "Recently Added"
   },
@@ -83,7 +84,12 @@
     },
     "season": {
       "missing": "{{count}} season(s) missing from your collection"
-    }
+    },
+    "incomplete": {
+      "label": "Incomplete TV show",
+      "tooltip": "Missing {{count}} season(s)"
+    },
+    "copyFallbackLabel": "Clipboard access denied — copy the path manually:"
   },
   "season": {
     "episodeCount": "{{count}} episodes",
@@ -374,7 +380,15 @@
         "confirmMessage": "Apply this action to all {{count}} open review items in the same folder?",
         "rootFolderLabel": "Root folder: {{folder}}",
         "rootFolderHint": "Applies to all items under: {{folder}}"
-      }
+      },
+      "filterFileName": "Filter by file name",
+      "batchAssign": "Batch Assign",
+      "selectAll": "Select all",
+      "selectedCount": "{{count}} item(s) selected",
+      "batchAssignTitle": "Assign to media",
+      "searchMedia": "Search for a film or TV show...",
+      "batchSuccess": "{{count}} item(s) assigned successfully",
+      "batchPartialFail": "{{success}} succeeded, {{failed}} failed"
     },
     "scanResults": {
       "title": "Scan Results",
@@ -526,6 +540,17 @@
         "statusEnriched": "Enriched",
         "statusFailed": "Failed",
         "statusSkipped": "Skipped"
+      },
+      "detail": {
+        "progress": "{{processed}} of {{total}} items enriched",
+        "status": {
+          "Pending": "Pending",
+          "InProgress": "In Progress",
+          "Completed": "Completed",
+          "Failed": "Failed"
+        },
+        "seasonsEnriched": "{{n}} season(s)",
+        "episodesEnriched": "{{n}} episode(s)"
       }
     },
     "rename": {
@@ -582,5 +607,12 @@
     "scrollLeft": "Scroll left",
     "scrollRight": "Scroll right",
     "toggleTheme": "Toggle light / dark theme"
+  },
+  "table": {
+    "sortAscending": "Sort ascending",
+    "sortDescending": "Sort descending",
+    "clearFilter": "Clear filter",
+    "filterPlaceholder": "Filter...",
+    "noResults": "No results found"
   }
 }
