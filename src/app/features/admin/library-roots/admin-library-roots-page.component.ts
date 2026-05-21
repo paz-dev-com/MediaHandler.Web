@@ -20,7 +20,7 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
-import { DatePipe } from '@angular/common';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { AdminLibraryRootService } from './admin-library-root.service';
 import { AddLibraryRootDialogComponent } from './add-library-root-dialog.component';
 import { LibraryRoot } from '@shared/models/library-root.model';
@@ -40,7 +40,7 @@ interface EnabledFilterOption {
   selector: 'app-admin-library-roots-page',
   standalone: true,
   imports: [
-    DatePipe,
+    LocaleDatePipe,
     FormsModule,
     TranslocoModule,
     TableModule,

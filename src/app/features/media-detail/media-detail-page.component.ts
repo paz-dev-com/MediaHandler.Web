@@ -1,4 +1,5 @@
-import { DecimalPipe, NgClass, SlicePipe } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -50,7 +51,7 @@ import { SeasonListComponent } from './season-list.component';
     LoadingSkeletonComponent,
     ErrorMessageComponent,
     TmdbImagePipe,
-    SlicePipe,
+    LocaleDatePipe,
     DecimalPipe,
   ],
   animations: [

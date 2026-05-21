@@ -71,7 +71,7 @@
             (ngModelChange)="onActiveToggle(user, $event)"
           />
         </td>
-        <td>{{ user.createdAt | date: 'short' }}</td>
+        <td>{{ user.createdAt | localeDate }}</td>
       </tr>
     </ng-template>
 

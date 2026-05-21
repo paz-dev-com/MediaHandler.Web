@@ -31,6 +31,19 @@
           class="scan-decision-table__filter"
         />
       }
+      @if (useGroupedView) {
+        <p-select
+          [options]="tmdbAssignedOptions"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="
+            selectedTmdbAssigned() === null ? null : selectedTmdbAssigned() ? 'true' : 'false'
+          "
+          (ngModelChange)="onTmdbAssignedChange($event)"
+          [placeholder]="t('admin.scanResults.filterTmdbAssigned')"
+          class="scan-decision-table__filter"
+        />
+      }
     </div>
     <p-button
       [label]="
@@ -49,7 +62,7 @@
       <div class="scan-decision-table__loading">
         <p-progressSpinner strokeWidth="4" [style]="{ width: '40px', height: '40px' }" />
       </div>
-    } @else if (groupedDecisions().length === 0) {
+    } @else if (filteredGroups().length === 0) {
       <p-message severity="info" [text]="t('admin.scanResults.empty')" />
     } @else {
       <div class="scan-decision-table__groups">
@@ -161,7 +174,7 @@
                       [value]="t('admin.scanResults.decisionTypes.' + episode.decisionType)"
                       [severity]="getDecisionTypeSeverity(episode.decisionType)"
                     />
-                    <span>{{ episode.decidedAt | date: 'short' }}</span>
+                    <span>{{ episode.decidedAt | localeDate }}</span>
                   </div>
                   @if (isEpisodeExpanded(episode.id)) {
                     <div class="scan-decision-table__episode-detail">
@@ -190,7 +203,7 @@
             <i class="pi pi-chevron-left"></i>
           </button>
           <span class="scan-decision-table__page-info">
-            {{ groupsPage() }} / {{ groupsTotalPages() }} ({{ groupedDecisions().length }}
+            {{ groupsPage() }} / {{ groupsTotalPages() }} ({{ filteredGroups().length }}
             {{ t('admin.scanResults.groups') }})
           </span>
           <button
@@ -273,7 +286,7 @@
             }
           </td>
           <td>
-            <span>{{ decision.decidedAt | date: 'short' }}</span>
+            <span>{{ decision.decidedAt | localeDate }}</span>
           </td>
         </tr>
       </ng-template>

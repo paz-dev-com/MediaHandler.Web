@@ -118,7 +118,7 @@
         <td>
           <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
         </td>
-        <td>{{ item.createdAt | date: 'short' }}</td>
+        <td>{{ item.createdAt | localeDate }}</td>
       </tr>
     </ng-template>
 

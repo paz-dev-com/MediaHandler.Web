@@ -16,7 +16,7 @@
       </div>
       <div class="health-panel__row">
         <span class="health-panel__label">{{ t('admin.health.timestamp') }}</span>
-        <span class="health-panel__value">{{ status.timestamp | date: 'medium' }}</span>
+        <span class="health-panel__value">{{ status.timestamp | localeDate }}</span>
       </div>
       <div class="health-panel__row">
         <span class="health-panel__label">{{ t('admin.health.version') }}</span>

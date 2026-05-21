@@ -63,15 +63,17 @@
         </td>
         <td>{{ folder.tmdbTitle ?? '-' }}</td>
         <td>
-          @if (folder.status !== 'InCollection') {
-            <p-button
-              [label]="t('admin.parentFolders.assignTmdb')"
-              icon="pi pi-link"
-              size="small"
-              severity="secondary"
-              (onClick)="onAssignTmdb(folder)"
-            />
-          }
+          <p-button
+            [label]="
+              folder.status === 'InCollection'
+                ? t('admin.parentFolders.reassignTmdb')
+                : t('admin.parentFolders.assignTmdb')
+            "
+            [icon]="folder.status === 'InCollection' ? 'pi pi-refresh' : 'pi pi-link'"
+            size="small"
+            [severity]="folder.status === 'InCollection' ? 'secondary' : 'secondary'"
+            (onClick)="onAssignTmdb(folder)"
+          />
         </td>
       </tr>
     </ng-template>

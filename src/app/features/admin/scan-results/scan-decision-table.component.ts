@@ -12,7 +12,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,6 +26,7 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { AdminScanDecisionService } from './admin-scan-decision.service';
 import { ScanDecisionDetailComponent } from './scan-decision-detail.component';
 import { TmdbSearchPanelComponent } from '../shared/tmdb-search-panel.component';
@@ -48,8 +49,8 @@ const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w92';
   selector: 'app-scan-decision-table',
   standalone: true,
   imports: [
-    DatePipe,
     DecimalPipe,
+    LocaleDatePipe,
     FormsModule,
     TranslocoModule,
     ButtonModule,
@@ -92,6 +93,8 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
   selectedDecisionType: ScanDecisionType | null = null;
   selectedMediaType: MediaType | null = null;
   selectedLibraryRootId: string | null = null;
+  /** Client-side assignment filter for grouped view: null=all, true=assigned, false=unassigned */
+  readonly selectedTmdbAssigned = signal<boolean | null>(null);
 
   /** Toggle between grouped view (default) and flat table view */
   useGroupedView = true;
@@ -99,6 +102,7 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
   decisionTypeOptions: FilterOption<ScanDecisionType>[] = [];
   mediaTypeOptions: FilterOption<MediaType>[] = [];
   libraryRootOptions: FilterOption<string>[] = [];
+  tmdbAssignedOptions: FilterOption<string>[] = [];
 
   expandedRows: Record<string, boolean> = {};
   readonly expandedGroups = signal<Record<string, boolean>>({});
@@ -107,13 +111,22 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
   // Client-side pagination for the grouped view (avoids rendering thousands of DOM nodes)
   readonly groupsPage = signal(1);
   readonly groupsPageSize = 25;
-  readonly pagedGroups = computed(() => {
+
+  /** Groups filtered by TMDB assignment status client-side */
+  readonly filteredGroups = computed(() => {
     const all = this.decisionService.groupedDecisions();
+    const filter = this.selectedTmdbAssigned();
+    if (filter === null) return all;
+    return filter ? all.filter((g) => !!g.assignedTmdbId) : all.filter((g) => !g.assignedTmdbId);
+  });
+
+  readonly pagedGroups = computed(() => {
+    const all = this.filteredGroups();
     const start = (this.groupsPage() - 1) * this.groupsPageSize;
     return all.slice(start, start + this.groupsPageSize);
   });
   readonly groupsTotalPages = computed(() =>
-    Math.max(1, Math.ceil(this.decisionService.groupedDecisions().length / this.groupsPageSize)),
+    Math.max(1, Math.ceil(this.filteredGroups().length / this.groupsPageSize)),
   );
 
   ngOnInit(): void {
@@ -154,6 +167,11 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
         label: this.transloco.translate('admin.scanResults.mediaTypes.TvShow'),
         value: MediaType.TvShow,
       },
+    ];
+    this.tmdbAssignedOptions = [
+      { label: this.transloco.translate('common.all'), value: null },
+      { label: this.transloco.translate('admin.scanResults.tmdbAssigned'), value: 'true' },
+      { label: this.transloco.translate('admin.scanResults.tmdbNotAssigned'), value: 'false' },
     ];
     this.buildLibraryRootOptions();
   }
@@ -207,6 +225,10 @@ export class ScanDecisionTableComponent implements OnInit, OnChanges {
     this.selectedLibraryRootId = v;
     this.groupsPage.set(1);
     this.loadData(1, this.meta().pageSize);
+  }
+  onTmdbAssignedChange(v: string | null): void {
+    this.selectedTmdbAssigned.set(v === null ? null : v === 'true');
+    this.groupsPage.set(1);
   }
 
   toggleViewMode(): void {
