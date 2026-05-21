@@ -8,7 +8,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,6 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { AdminReviewService } from './admin-review.service';
 import { ReviewResolveDialogComponent } from './review-resolve-dialog.component';
 import { BatchAssignDialogComponent } from './batch-assign-dialog.component';
@@ -40,7 +40,7 @@ interface ReasonFilterOption {
   selector: 'app-admin-review-page',
   standalone: true,
   imports: [
-    DatePipe,
+    LocaleDatePipe,
     FormsModule,
     TranslocoModule,
     TableModule,

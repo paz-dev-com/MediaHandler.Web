@@ -84,9 +84,12 @@ export class AdminLibraryRootService {
     });
   }
 
-  updateRoot(id: string, kind: LibraryRootKind, label?: string): void {
+  updateRoot(id: string, kind: LibraryRootKind, label?: string, path?: string): void {
     const body: Record<string, unknown> = { kind };
     body['label'] = label ?? null;
+    if (path !== undefined) {
+      body['path'] = path;
+    }
 
     this.api.put<LibraryRoot>(`admin/library-roots/${id}`, body).subscribe({
       next: () => this.refresh(),

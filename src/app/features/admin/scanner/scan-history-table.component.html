@@ -42,8 +42,8 @@
             [severity]="getStatusSeverity(scan.status)"
           />
         </td>
-        <td>{{ scan.startedAt | date: 'short' }}</td>
-        <td>{{ scan.finishedAt ? (scan.finishedAt | date: 'short') : '—' }}</td>
+        <td>{{ scan.startedAt | localeDate }}</td>
+        <td>{{ scan.finishedAt ? (scan.finishedAt | localeDate) : '—' }}</td>
         <td>{{ scan.counts.totalDiscovered }}</td>
         <td>{{ scan.counts.added }}</td>
         <td>{{ scan.counts.updated }}</td>

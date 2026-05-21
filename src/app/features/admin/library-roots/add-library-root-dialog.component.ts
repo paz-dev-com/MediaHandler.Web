@@ -126,6 +126,7 @@ export class AddLibraryRootDialogComponent implements OnInit {
     this.selectedKind = root.kind;
     this.label = root.label ?? '';
     this.visible.set(true);
+    this.loadLocations();
   }
 
   onVisibleChange(v: boolean): void {
@@ -147,7 +148,13 @@ export class AddLibraryRootDialogComponent implements OnInit {
 
     if (this.isEditMode) {
       if (!this.editingRoot) return;
-      this.rootService.updateRoot(this.editingRoot.id, this.selectedKind, this.label || undefined);
+      const newPath = this.composedPath() || this.subPath();
+      this.rootService.updateRoot(
+        this.editingRoot.id,
+        this.selectedKind,
+        this.label || undefined,
+        newPath || undefined,
+      );
       this.messageService.add({
         severity: 'success',
         summary: t('admin.libraryRoots.editedSuccess'),

@@ -92,7 +92,7 @@
             (ngModelChange)="onEnabledToggle(root, $event)"
           />
         </td>
-        <td>{{ root.createdAt | date: 'short' }}</td>
+        <td>{{ root.createdAt | localeDate }}</td>
         <td>
           <div class="admin-library-roots-page__row-actions">
             <p-button

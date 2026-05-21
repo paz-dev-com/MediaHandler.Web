@@ -92,7 +92,7 @@
           @if (media.releaseDate) {
             <div class="detail-item">
               <span class="detail-item__label">{{ 'media.releaseDate' | transloco }}</span>
-              <span>{{ media.releaseDate | slice: 0 : 10 }}</span>
+              <span>{{ media.releaseDate | localeDate }}</span>
             </div>
           }
           @if (media.runtime) {
@@ -141,7 +141,7 @@
           />
           @if (media.userMedia?.watchedAt) {
             <span class="detail-page__watched-date">
-              {{ 'media.watchedOn' | transloco }} {{ media.userMedia!.watchedAt | slice: 0 : 10 }}
+              {{ 'media.watchedOn' | transloco }} {{ media.userMedia!.watchedAt | localeDate }}
             </span>
           }
         </div>

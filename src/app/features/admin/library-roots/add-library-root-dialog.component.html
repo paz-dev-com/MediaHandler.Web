@@ -11,82 +11,59 @@
   [draggable]="false"
 >
   <div class="flex flex-column gap-3 pt-2">
-    <!-- ── Path row — dropdown + sub-path in add mode (not edit) ── -->
-    @if (!isEditMode) {
-      @if (isLoadingLocations()) {
-        <!-- Loading skeleton for locations -->
-        <div class="lr-dialog__loading">
-          <i class="pi pi-spin pi-spinner lr-dialog__spinner"></i>
-          <span class="text-color-secondary">{{
-            t('admin.libraryRoots.addDialog.loadingLocations')
-          }}</span>
-        </div>
-      } @else if (!hasNoLocations()) {
-        <!-- Root folder dropdown -->
-        <div class="flex flex-column gap-1">
-          <label for="lr-root" class="font-semibold">
-            {{ t('admin.libraryRoots.addDialog.rootFolderLabel') }}
-          </label>
-          <p-select
-            inputId="lr-root"
-            [options]="locations()"
-            [ngModel]="selectedRoot()"
-            (ngModelChange)="selectedRoot.set($event)"
-            [placeholder]="t('admin.libraryRoots.addDialog.rootFolderPlaceholder')"
-            [style]="{ width: '100%' }"
-            appendTo="body"
-          />
-        </div>
+    <!-- ── Path row — same layout for add and edit modes ── -->
+    @if (isLoadingLocations()) {
+      <!-- Loading skeleton for locations -->
+      <div class="lr-dialog__loading">
+        <i class="pi pi-spin pi-spinner lr-dialog__spinner"></i>
+        <span class="text-color-secondary">{{
+          t('admin.libraryRoots.addDialog.loadingLocations')
+        }}</span>
+      </div>
+    } @else if (!hasNoLocations()) {
+      <!-- Root folder dropdown -->
+      <div class="flex flex-column gap-1">
+        <label for="lr-root" class="font-semibold">
+          {{ t('admin.libraryRoots.addDialog.rootFolderLabel') }}
+        </label>
+        <p-select
+          inputId="lr-root"
+          [options]="locations()"
+          [ngModel]="selectedRoot()"
+          (ngModelChange)="selectedRoot.set($event)"
+          [placeholder]="t('admin.libraryRoots.addDialog.rootFolderPlaceholder')"
+          [style]="{ width: '100%' }"
+          appendTo="body"
+        />
+      </div>
 
-        <!-- Sub-path input -->
-        <div class="flex flex-column gap-1">
-          <label for="lr-subpath" class="font-semibold">
-            {{ t('admin.libraryRoots.addDialog.subPathLabel') }}
-            <span class="text-color-secondary font-normal text-sm ml-1">
-              ({{ t('admin.libraryRoots.addDialog.optional') }})
-            </span>
-          </label>
-          <input
-            id="lr-subpath"
-            pInputText
-            type="text"
-            [placeholder]="t('admin.libraryRoots.addDialog.subPathPlaceholder')"
-            [ngModel]="subPath()"
-            (ngModelChange)="subPath.set($event)"
-          />
-        </div>
+      <!-- Sub-path input -->
+      <div class="flex flex-column gap-1">
+        <label for="lr-subpath" class="font-semibold">
+          {{ t('admin.libraryRoots.addDialog.subPathLabel') }}
+          <span class="text-color-secondary font-normal text-sm ml-1">
+            ({{ t('admin.libraryRoots.addDialog.optional') }})
+          </span>
+        </label>
+        <input
+          id="lr-subpath"
+          pInputText
+          type="text"
+          [placeholder]="t('admin.libraryRoots.addDialog.subPathPlaceholder')"
+          [ngModel]="subPath()"
+          (ngModelChange)="subPath.set($event)"
+        />
+      </div>
 
-        <!-- Composed path preview -->
-        <div class="lr-dialog__path-preview flex flex-column gap-1">
-          <span class="font-semibold text-sm">{{
-            t('admin.libraryRoots.addDialog.composedPathLabel')
-          }}</span>
-          <code class="lr-dialog__path-value">{{ composedPath() || '—' }}</code>
-        </div>
-      } @else {
-        <!-- Fallback: manual path entry -->
-        <div class="flex flex-column gap-1">
-          <label for="lr-path" class="font-semibold">
-            {{ t('admin.libraryRoots.addDialog.pathLabel') }}
-          </label>
-          <input
-            id="lr-path"
-            pInputText
-            type="text"
-            [placeholder]="t('admin.libraryRoots.addDialog.pathPlaceholder')"
-            [ngModel]="subPath()"
-            (ngModelChange)="subPath.set($event)"
-          />
-          <p class="lr-dialog__no-locations-msg text-color-secondary text-sm">
-            <i class="pi pi-info-circle"></i>
-            {{ t('admin.libraryRoots.addDialog.noLocationsMessage') }}
-          </p>
-        </div>
-      }
-    }
-
-    <!-- Edit mode: show current path read-only -->
-    @if (isEditMode) {
+      <!-- Composed path preview -->
+      <div class="lr-dialog__path-preview flex flex-column gap-1">
+        <span class="font-semibold text-sm">{{
+          t('admin.libraryRoots.addDialog.composedPathLabel')
+        }}</span>
+        <code class="lr-dialog__path-value">{{ composedPath() || '—' }}</code>
+      </div>
+    } @else {
+      <!-- Fallback: manual path entry -->
       <div class="flex flex-column gap-1">
         <label for="lr-path" class="font-semibold">
           {{ t('admin.libraryRoots.addDialog.pathLabel') }}
@@ -98,8 +75,11 @@
           [placeholder]="t('admin.libraryRoots.addDialog.pathPlaceholder')"
           [ngModel]="subPath()"
           (ngModelChange)="subPath.set($event)"
-          [disabled]="true"
         />
+        <p class="lr-dialog__no-locations-msg text-color-secondary text-sm">
+          <i class="pi pi-info-circle"></i>
+          {{ t('admin.libraryRoots.addDialog.noLocationsMessage') }}
+        </p>
       </div>
     }
 
@@ -144,7 +124,7 @@
           ? t('admin.libraryRoots.editDialog.submit')
           : t('admin.libraryRoots.addDialog.submit')
       "
-      [disabled]="!selectedKind || (!isEditMode && !composedPath())"
+      [disabled]="!selectedKind || (!composedPath() && !subPath())"
       (onClick)="onSubmit(t)"
     />
   </ng-template>

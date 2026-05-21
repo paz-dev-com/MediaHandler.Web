@@ -23,7 +23,7 @@
       </span>
       <span class="scan-status__meta-item">
         <strong>{{ t('admin.scanner.startedAt') }}:</strong>
-        {{ scan.startedAt | date: 'short' }}
+        {{ scan.startedAt | localeDate }}
       </span>
     </div>
 

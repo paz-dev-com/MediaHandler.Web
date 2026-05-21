@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -21,7 +21,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
   selector: 'app-admin-enrichment-page',
   standalone: true,
   imports: [
-    DatePipe,
+    LocaleDatePipe,
     TranslocoModule,
     ButtonModule,
     MessageModule,
@@ -55,7 +55,7 @@ export class AdminEnrichmentPageComponent implements OnInit {
   readonly liveRunDetails = this.enrichmentService.liveRunDetails;
   readonly EnrichmentStatus = EnrichmentStatus;
 
-  expandedHistoryRows: Record<string, boolean> = {};
+  expandedHistoryRows = signal<Record<string, boolean>>({});
 
   get isRunning(): boolean {
     return this.enrichmentStatus()?.status === EnrichmentStatus.Running;
@@ -126,11 +126,16 @@ export class AdminEnrichmentPageComponent implements OnInit {
     }
   }
 
-  toggleHistoryRow(id: string, currentlyExpanded: boolean): void {
-    this.expandedHistoryRows = currentlyExpanded ? {} : { [id]: true };
-    if (!currentlyExpanded) {
+  toggleHistoryRow(id: string): void {
+    this.expandedHistoryRows.update((state) => {
+      if (state[id]) {
+        const next = { ...state };
+        delete next[id];
+        return next;
+      }
       this.enrichmentService.getRunDetails(id);
-    }
+      return { ...state, [id]: true };
+    });
   }
 
   getMediaDetailSeverity(status: string): TagSeverity {
