@@ -18,11 +18,11 @@ export interface ApiResponse<T> {
 
 export interface CollectionStats {
   totalMedia: number;
-  totalFilms: number;
-  totalTvShows: number;
-  totalWatched: number;
-  totalUnwatched: number;
+  films: number;
+  tvShows: number;
+  watchedByCurrentUser: number;
+  unwatchedByCurrentUser: number;
   totalFiles: number;
-  totalUnlinkedFiles: number;
+  unlinkedFiles: number;
   incompleteTvShowCount: number;
 }

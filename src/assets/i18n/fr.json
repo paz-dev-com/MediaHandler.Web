@@ -27,6 +27,7 @@
     "add": "Ajouter",
     "back": "Retour",
     "copyPath": "Copier le chemin",
+    "copyFolderPath": "Copier le chemin du dossier",
     "pathCopied": "Chemin copié dans le presse-papiers",
     "copyFailed": "Échec de la copie du chemin"
   },
@@ -586,12 +587,49 @@
       "reassignTmdb": "Réassigner TMDB",
       "statusAll": "Tous",
       "statusNotAssigned": "Non assigné",
-      "statusAssigned": "Assigné",
+      "statusAssigned": "TMDB assigné (import en attente)",
       "statusInCollection": "Dans la collection",
       "emptyMessage": "Aucun dossier parent trouvé. Lancez un scan pour découvrir les répertoires de séries.",
       "assignDialogTitle": "Assigner TMDB à {{folderName}}",
       "assignSuccess": "TMDB assigné avec succès à {{folderName}}",
       "filterByStatus": "Filtrer par statut"
+    }
+  },
+  "mediaDetail": {
+    "fileLink": {
+      "linkFileButton": "Lier un fichier",
+      "unlinkButton": "Délier",
+      "linkSuccess": "Fichier lié avec succès",
+      "unlinkSuccess": "Fichier délié avec succès",
+      "linkError": "Impossible de lier le fichier",
+      "unlinkError": "Impossible de délier le fichier"
+    },
+    "filePicker": {
+      "title": "Lier un fichier non associé",
+      "empty": "Aucun fichier non associé disponible",
+      "loadError": "Impossible de charger les fichiers non associés",
+      "columnPath": "Chemin du fichier",
+      "columnFormat": "Format",
+      "columnSize": "Taille",
+      "linkButton": "Lier"
+    },
+    "rootFolder": {
+      "title": "Dossier racine",
+      "copyTooltip": "Copier le chemin",
+      "editTooltip": "Modifier le dossier racine",
+      "empty": "Aucun dossier racine défini",
+      "setButton": "Définir le dossier racine",
+      "inputPlaceholder": "/nas/media/dossier",
+      "saveSuccess": "Dossier racine enregistré",
+      "saveError": "Impossible d'enregistrer le dossier racine"
+    },
+    "completeness": {
+      "title": "Complétude des saisons",
+      "noData": "Métadonnées indisponibles",
+      "ownedOf": "{{owned}} / {{total}} épisodes",
+      "complete": "Complet",
+      "incomplete": "Incomplet",
+      "missingEpisodes": "Épisodes manquants : "
     }
   },
   "a11y": {

@@ -31,6 +31,7 @@ const makeMedia = (posterPath: string | null = '/poster.jpg'): Media => ({
   status: null,
   numberOfSeasons: null,
   ownedSeasonCount: null,
+  rootFolder: null,
 });
 
 // ── IntersectionObserver mock ─────────────────────────────────────────────────

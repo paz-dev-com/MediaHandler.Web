@@ -1,0 +1,191 @@
+<div class="season-completeness">
+  <div class="season-completeness__header">
+    <h3 class="season-completeness__title">{{ 'mediaDetail.completeness.title' | transloco }}</h3>
+    @if (isAdmin()) {
+      <p-button
+        icon="pi pi-link"
+        [label]="'mediaDetail.fileLink.linkFileButton' | transloco"
+        size="small"
+        severity="secondary"
+        variant="outlined"
+        (onClick)="onLinkFileClick()"
+      />
+    }
+  </div>
+  @if (loading()) {
+    <div class="season-completeness__loading">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>{{ 'common.loading' | transloco }}</span>
+    </div>
+  } @else if (!completeness().length) {
+    <p class="season-completeness__empty text-color-secondary">
+      {{ 'mediaDetail.completeness.noData' | transloco }}
+    </p>
+  } @else {
+    <ul class="season-completeness__list">
+      @for (season of completeness(); track season.seasonNumber) {
+        <li
+          class="season-completeness__item"
+          [class.season-completeness__item--complete]="season.isComplete"
+        >
+          <div class="season-completeness__row">
+            <button
+              class="season-completeness__toggle"
+              [attr.aria-expanded]="isExpanded(season.seasonNumber)"
+              (click)="toggleSeason(season.seasonNumber)"
+            >
+              <i
+                class="pi"
+                [class.pi-chevron-right]="!isExpanded(season.seasonNumber)"
+                [class.pi-chevron-down]="isExpanded(season.seasonNumber)"
+                aria-hidden="true"
+              ></i>
+              <span class="season-completeness__name">{{ season.seasonName }}</span>
+            </button>
+            <div class="season-completeness__badges">
+              <span class="season-completeness__count">
+                {{
+                  'mediaDetail.completeness.ownedOf'
+                    | transloco: { owned: season.ownedCount, total: season.totalExpected }
+                }}
+              </span>
+              @if (season.isComplete) {
+                <p-tag
+                  [value]="'mediaDetail.completeness.complete' | transloco"
+                  severity="success"
+                  icon="pi pi-check"
+                  styleClass="text-xs"
+                />
+              } @else {
+                <p-tag
+                  [value]="'mediaDetail.completeness.incomplete' | transloco"
+                  severity="warn"
+                  styleClass="text-xs"
+                />
+              }
+            </div>
+          </div>
+          @if (!season.isComplete && season.missingEpisodeNumbers.length) {
+            <p class="season-completeness__missing">
+              {{ 'mediaDetail.completeness.missingEpisodes' | transloco }}
+              <span class="season-completeness__missing-list">
+                {{ season.missingEpisodeNumbers.join(', ') }}
+              </span>
+            </p>
+          }
+          @if (isExpanded(season.seasonNumber)) {
+            @let seasonFiles = filesBySeason().get(season.seasonNumber) ?? [];
+            <div class="season-completeness__files">
+              @if (!seasonFiles.length) {
+                <p class="season-completeness__files-empty text-color-secondary">
+                  {{ 'media.noFiles' | transloco }}
+                </p>
+              } @else {
+                <ul class="season-completeness__files-list">
+                  @for (file of seasonFiles; track file.id) {
+                    <li class="season-completeness__file-item">
+                      <div class="season-completeness__file-path">
+                        <i class="pi pi-file mr-2 text-color-secondary" aria-hidden="true"></i>
+                        <span class="season-completeness__file-path-text" [title]="file.filePath">{{
+                          file.filePath
+                        }}</span>
+                      </div>
+                      <div class="season-completeness__file-meta">
+                        @if (file.format) {
+                          <p-tag
+                            [value]="file.format.toUpperCase()"
+                            severity="secondary"
+                            styleClass="text-xs"
+                          />
+                        }
+                        @if (file.resolution) {
+                          <p-tag [value]="file.resolution" severity="info" styleClass="text-xs" />
+                        }
+                        <span class="text-sm text-color-secondary">{{
+                          file.fileSizeBytes | fileSize
+                        }}</span>
+                        <p-button
+                          icon="pi pi-copy"
+                          size="small"
+                          variant="text"
+                          severity="secondary"
+                          [pTooltip]="'common.copyPath' | transloco"
+                          [attr.aria-label]="'common.copyPath' | transloco"
+                          (onClick)="copyPath(file.filePath)"
+                        />
+                        <p-button
+                          icon="pi pi-folder-open"
+                          size="small"
+                          variant="text"
+                          severity="secondary"
+                          [pTooltip]="'common.copyFolderPath' | transloco"
+                          [attr.aria-label]="'common.copyFolderPath' | transloco"
+                          (onClick)="copyFolder(file.filePath)"
+                        />
+                        @if (isAdmin()) {
+                          <p-button
+                            icon="pi pi-unlink"
+                            size="small"
+                            variant="text"
+                            severity="danger"
+                            [pTooltip]="'mediaDetail.fileLink.unlinkButton' | transloco"
+                            [attr.aria-label]="'mediaDetail.fileLink.unlinkButton' | transloco"
+                            (onClick)="onUnlinkClick(file.id)"
+                          />
+                        }
+                      </div>
+                      @if (fallbackPaths()[file.filePath]) {
+                        <div class="season-completeness__file-fallback">
+                          <p class="season-completeness__file-fallback-label">
+                            {{ 'media.copyFallbackLabel' | transloco }}
+                          </p>
+                          <div class="season-completeness__file-fallback-row">
+                            <textarea
+                              readonly
+                              [value]="file.filePath"
+                              rows="2"
+                              [attr.aria-label]="'media.copyFallbackLabel' | transloco"
+                            ></textarea>
+                            <p-button
+                              icon="pi pi-times"
+                              size="small"
+                              variant="text"
+                              severity="secondary"
+                              (onClick)="clearFallback(file.filePath)"
+                            />
+                          </div>
+                        </div>
+                      }
+                      @if (fallbackFolders()[file.filePath]) {
+                        <div class="season-completeness__file-fallback">
+                          <p class="season-completeness__file-fallback-label">
+                            {{ 'media.copyFallbackLabel' | transloco }}
+                          </p>
+                          <div class="season-completeness__file-fallback-row">
+                            <textarea
+                              readonly
+                              [value]="getFolderPath(file.filePath)"
+                              rows="2"
+                              [attr.aria-label]="'media.copyFallbackLabel' | transloco"
+                            ></textarea>
+                            <p-button
+                              icon="pi pi-times"
+                              size="small"
+                              variant="text"
+                              severity="secondary"
+                              (onClick)="clearFolderFallback(file.filePath)"
+                            />
+                          </div>
+                        </div>
+                      }
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

@@ -37,4 +37,25 @@ export interface Media {
   numberOfSeasons: number | null;
   /** Number of seasons owned in the collection (TV shows only) */
   ownedSeasonCount: number | null;
+  /** Effective root folder path — stored override or auto-derived from linked file paths. Null if no files and no override. */
+  rootFolder: string | null;
+}
+
+/** Per-season completeness data returned by GET /media/{id}/completeness */
+export interface SeasonCompleteness {
+  seasonNumber: number;
+  seasonName: string;
+  totalExpected: number;
+  ownedCount: number;
+  missingEpisodeNumbers: number[];
+  isComplete: boolean;
+}
+
+/** Unlinked MediaFile record returned by GET /admin/media/unlinked-files */
+export interface UnlinkedFile {
+  id: string;
+  filePath: string;
+  fileSizeBytes: number | null;
+  format: string | null;
+  resolution: string | null;
 }

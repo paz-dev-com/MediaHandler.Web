@@ -5,11 +5,11 @@
       <span class="stats-bar__label">{{ 'collection.stats.total' | transloco }}</span>
     </div>
     <div class="stats-bar__item">
-      <span class="stats-bar__value">{{ stats()!.totalFilms }}</span>
+      <span class="stats-bar__value">{{ stats()!.films }}</span>
       <span class="stats-bar__label">{{ 'collection.stats.films' | transloco }}</span>
     </div>
     <div class="stats-bar__item">
-      <span class="stats-bar__value">{{ stats()!.totalTvShows }}</span>
+      <span class="stats-bar__value">{{ stats()!.tvShows }}</span>
       <span class="stats-bar__label">{{ 'collection.stats.tvShows' | transloco }}</span>
     </div>
     @if (stats()!.incompleteTvShowCount > 0) {
@@ -22,11 +22,11 @@
       </div>
     }
     <div class="stats-bar__item">
-      <span class="stats-bar__value">{{ stats()!.totalWatched }}</span>
+      <span class="stats-bar__value">{{ stats()!.watchedByCurrentUser }}</span>
       <span class="stats-bar__label">{{ 'collection.stats.watched' | transloco }}</span>
     </div>
     <div class="stats-bar__item">
-      <span class="stats-bar__value">{{ stats()!.totalUnwatched }}</span>
+      <span class="stats-bar__value">{{ stats()!.unwatchedByCurrentUser }}</span>
       <span class="stats-bar__label">{{ 'collection.stats.unwatched' | transloco }}</span>
     </div>
   </div>

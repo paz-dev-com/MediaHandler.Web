@@ -27,6 +27,7 @@
     "add": "Add",
     "back": "Back",
     "copyPath": "Copy path",
+    "copyFolderPath": "Copy folder path",
     "pathCopied": "Path copied to clipboard",
     "copyFailed": "Failed to copy path"
   },
@@ -586,12 +587,49 @@
       "reassignTmdb": "Reassign TMDB",
       "statusAll": "All",
       "statusNotAssigned": "Not Assigned",
-      "statusAssigned": "Assigned",
+      "statusAssigned": "TMDB Assigned (Pending Import)",
       "statusInCollection": "In Collection",
       "emptyMessage": "No parent folders found. Run a scan to discover TV show directories.",
       "assignDialogTitle": "Assign TMDB to {{folderName}}",
       "assignSuccess": "TMDB assigned successfully to {{folderName}}",
       "filterByStatus": "Filter by status"
+    }
+  },
+  "mediaDetail": {
+    "fileLink": {
+      "linkFileButton": "Link File",
+      "unlinkButton": "Unlink",
+      "linkSuccess": "File linked successfully",
+      "unlinkSuccess": "File unlinked successfully",
+      "linkError": "Failed to link file",
+      "unlinkError": "Failed to unlink file"
+    },
+    "filePicker": {
+      "title": "Link Unlinked File",
+      "empty": "No unlinked files available",
+      "loadError": "Failed to load unlinked files",
+      "columnPath": "File Path",
+      "columnFormat": "Format",
+      "columnSize": "Size",
+      "linkButton": "Link"
+    },
+    "rootFolder": {
+      "title": "Root Folder",
+      "copyTooltip": "Copy path to clipboard",
+      "editTooltip": "Edit root folder",
+      "empty": "No root folder set",
+      "setButton": "Set root folder",
+      "inputPlaceholder": "/nas/media/folder",
+      "saveSuccess": "Root folder saved",
+      "saveError": "Failed to save root folder"
+    },
+    "completeness": {
+      "title": "Season Completeness",
+      "noData": "Metadata not available",
+      "ownedOf": "{{owned}} / {{total}} episodes",
+      "complete": "Complete",
+      "incomplete": "Incomplete",
+      "missingEpisodes": "Missing episodes: "
     }
   },
   "a11y": {
