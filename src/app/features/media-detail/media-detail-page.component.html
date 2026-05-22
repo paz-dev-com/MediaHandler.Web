@@ -7,7 +7,6 @@
     <a routerLink="/" class="detail-page__back" [attr.aria-label]="'common.back' | transloco">
       <i class="pi pi-arrow-left" aria-hidden="true"></i> {{ 'common.back' | transloco }}
     </a>
-
     <!-- ── Cinematic hero section with parallax backdrop ── -->
     @if (media.backdropPath | tmdbImage: 'w1280'; as backdropUrl) {
       <div class="detail-page__hero" @heroEnter>
@@ -30,7 +29,6 @@
         </div>
       </div>
     }
-
     <!-- ── Poster + metadata row ── -->
     <div class="detail-page__content" @contentEnter>
       <div class="detail-page__poster-col">
@@ -49,7 +47,6 @@
           </div>
         }
       </div>
-
       <div class="detail-page__meta">
         <div class="detail-page__header">
           <!-- Use H1 only when there is no hero backdrop to avoid duplicate H1 -->
@@ -87,7 +84,6 @@
             </div>
           }
         </div>
-
         <div class="detail-page__details">
           @if (media.releaseDate) {
             <div class="detail-item">
@@ -114,7 +110,6 @@
             </div>
           }
         </div>
-
         @if (media.genres?.length) {
           <div class="detail-page__genres">
             @for (genre of media.genres; track genre) {
@@ -122,14 +117,12 @@
             }
           </div>
         }
-
         @if (media.overview) {
           <div class="detail-page__overview">
             <h3>{{ 'media.overview' | transloco }}</h3>
             <p>{{ media.overview }}</p>
           </div>
         }
-
         <div class="detail-page__watched-action">
           <p-button
             [icon]="media.userMedia?.isWatched ? 'pi pi-eye-slash' : 'pi pi-eye'"
@@ -147,8 +140,13 @@
         </div>
       </div>
     </div>
-
-    <!-- TV Show: season list -->
+    <!-- Root folder section (US2) -->
+    <app-root-folder
+      [rootFolder]="media.rootFolder"
+      [isAdmin]="isAdmin()"
+      (rootFolderSaved)="onRootFolderSaved($event)"
+    />
+    <!-- TV Show: season list + completeness + files merged -->
     @if (media.type === MediaType.TvShow) {
       <div class="detail-page__seasons">
         @if (service.seasonsLoading()) {
@@ -165,31 +163,41 @@
           />
         }
       </div>
+      <!-- Completeness + Files unified section (US3) -->
+      <div class="detail-page__tv-content">
+        <app-season-completeness
+          [completeness]="service.completeness()"
+          [loading]="service.completenessLoading()"
+          [files]="media.files ?? []"
+          [isAdmin]="isAdmin()"
+          (linkFileRequested)="onOpenLinkPicker()"
+          (unlinkFileRequested)="onUnlinkFileRequested($event)"
+        />
+        @if (service.filesError()) {
+          <app-error-message [message]="service.filesError()!" (retry)="reload()" />
+        }
+      </div>
     }
-
-    <!-- Files accordion — always at the bottom -->
-    <div class="detail-page__files-accordion">
-      <button
-        class="detail-page__files-header"
-        (click)="toggleFiles()"
-        [attr.aria-expanded]="filesOpen()"
-        [attr.aria-label]="'media.files' | transloco"
-        type="button"
-      >
-        <h3>{{ 'media.files' | transloco }}</h3>
-        <i
-          class="pi"
-          [class.pi-chevron-down]="!filesOpen()"
-          [class.pi-chevron-up]="filesOpen()"
-        ></i>
-      </button>
-      <div class="detail-page__files-body" [@accordionExpand]="filesOpen() ? 'open' : 'closed'">
+    <!-- Films: files section directly visible -->
+    @if (media.type === MediaType.Film) {
+      <div class="detail-page__film-files">
         @if (service.filesError()) {
           <app-error-message [message]="service.filesError()!" (retry)="reload()" />
         } @else {
-          <app-media-files [files]="media.files ?? []" />
+          <app-media-files
+            [files]="media.files ?? []"
+            [isAdmin]="isAdmin()"
+            (linkFileRequested)="onOpenLinkPicker()"
+            (unlinkFileRequested)="onUnlinkFileRequested($event)"
+          />
         }
       </div>
-    </div>
+    }
   </div>
+  <!-- File link picker dialog (US1) -->
+  <app-file-link-picker-dialog
+    [visible]="fileLinkPickerOpen()"
+    (visibleChange)="fileLinkPickerOpen.set($event)"
+    (fileLinkRequested)="onFileLinkRequested($event)"
+  />
 }

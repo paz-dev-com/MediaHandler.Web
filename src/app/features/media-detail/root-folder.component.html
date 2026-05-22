@@ -1,0 +1,119 @@
+<div class="root-folder">
+  <h3 class="root-folder__title">{{ 'mediaDetail.rootFolder.title' | transloco }}</h3>
+  @if (rootFolder()) {
+    @if (!editing()) {
+      <div class="root-folder__path-row">
+        <i class="pi pi-folder root-folder__icon" aria-hidden="true"></i>
+        <span class="root-folder__path" [title]="rootFolder()!">{{ rootFolder() }}</span>
+        <p-button
+          icon="pi pi-copy"
+          size="small"
+          variant="text"
+          severity="secondary"
+          [pTooltip]="'mediaDetail.rootFolder.copyTooltip' | transloco"
+          [attr.aria-label]="'mediaDetail.rootFolder.copyTooltip' | transloco"
+          (onClick)="copyPath()"
+        />
+        @if (isAdmin()) {
+          <p-button
+            icon="pi pi-pencil"
+            size="small"
+            variant="text"
+            severity="secondary"
+            [pTooltip]="'mediaDetail.rootFolder.editTooltip' | transloco"
+            [attr.aria-label]="'mediaDetail.rootFolder.editTooltip' | transloco"
+            (onClick)="startEdit()"
+          />
+        }
+      </div>
+      @if (showFallback()) {
+        <div class="root-folder__fallback">
+          <p class="root-folder__fallback-label">{{ 'media.copyFallbackLabel' | transloco }}</p>
+          <div class="root-folder__fallback-row">
+            <textarea
+              readonly
+              [value]="rootFolder()!"
+              class="root-folder__fallback-textarea"
+              rows="2"
+              [attr.aria-label]="'media.copyFallbackLabel' | transloco"
+            ></textarea>
+            <p-button
+              icon="pi pi-times"
+              size="small"
+              variant="text"
+              severity="secondary"
+              (onClick)="clearFallback()"
+            />
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="root-folder__edit-row">
+        <input
+          class="root-folder__edit-input"
+          type="text"
+          [ngModel]="editValue()"
+          (ngModelChange)="editValue.set($event)"
+          [placeholder]="'mediaDetail.rootFolder.inputPlaceholder' | transloco"
+          [attr.aria-label]="'mediaDetail.rootFolder.inputPlaceholder' | transloco"
+        />
+        <p-button
+          icon="pi pi-check"
+          size="small"
+          severity="success"
+          [pTooltip]="'common.save' | transloco"
+          (onClick)="saveEdit()"
+        />
+        <p-button
+          icon="pi pi-times"
+          size="small"
+          severity="secondary"
+          variant="text"
+          [pTooltip]="'common.cancel' | transloco"
+          (onClick)="cancelEdit()"
+        />
+      </div>
+    }
+  } @else {
+    <div class="root-folder__empty">
+      <span class="text-color-secondary">{{ 'mediaDetail.rootFolder.empty' | transloco }}</span>
+      @if (isAdmin()) {
+        <p-button
+          icon="pi pi-pencil"
+          [label]="'mediaDetail.rootFolder.setButton' | transloco"
+          size="small"
+          variant="text"
+          severity="secondary"
+          (onClick)="startEdit()"
+        />
+      }
+    </div>
+    @if (editing()) {
+      <div class="root-folder__edit-row">
+        <input
+          class="root-folder__edit-input"
+          type="text"
+          [ngModel]="editValue()"
+          (ngModelChange)="editValue.set($event)"
+          [placeholder]="'mediaDetail.rootFolder.inputPlaceholder' | transloco"
+          [attr.aria-label]="'mediaDetail.rootFolder.inputPlaceholder' | transloco"
+        />
+        <p-button
+          icon="pi pi-check"
+          size="small"
+          severity="success"
+          [pTooltip]="'common.save' | transloco"
+          (onClick)="saveEdit()"
+        />
+        <p-button
+          icon="pi pi-times"
+          size="small"
+          severity="secondary"
+          variant="text"
+          [pTooltip]="'common.cancel' | transloco"
+          (onClick)="cancelEdit()"
+        />
+      </div>
+    }
+  }
+</div>

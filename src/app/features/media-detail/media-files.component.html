@@ -1,6 +1,17 @@
 <div class="media-files">
-  <h3>{{ 'media.files' | transloco }}</h3>
-
+  <div class="media-files__header">
+    <h3>{{ 'media.files' | transloco }}</h3>
+    @if (isAdmin()) {
+      <p-button
+        icon="pi pi-link"
+        [label]="'mediaDetail.fileLink.linkFileButton' | transloco"
+        size="small"
+        severity="secondary"
+        variant="outlined"
+        (onClick)="onLinkFileClick()"
+      />
+    }
+  </div>
   @if (!files().length) {
     <p class="text-color-secondary">{{ 'media.noFiles' | transloco }}</p>
   } @else {
@@ -32,6 +43,26 @@
               [attr.aria-label]="'common.copyPath' | transloco"
               (onClick)="copyPath(file.filePath)"
             />
+            <p-button
+              icon="pi pi-folder-open"
+              size="small"
+              variant="text"
+              severity="secondary"
+              [pTooltip]="'common.copyFolderPath' | transloco"
+              [attr.aria-label]="'common.copyFolderPath' | transloco"
+              (onClick)="copyFolder(file.filePath)"
+            />
+            @if (isAdmin()) {
+              <p-button
+                icon="pi pi-unlink"
+                size="small"
+                variant="text"
+                severity="danger"
+                [pTooltip]="'mediaDetail.fileLink.unlinkButton' | transloco"
+                [attr.aria-label]="'mediaDetail.fileLink.unlinkButton' | transloco"
+                (onClick)="onUnlinkClick(file.id)"
+              />
+            }
           </div>
           @if (fallbackPaths()[file.filePath]) {
             <div class="media-files__fallback">
@@ -50,6 +81,27 @@
                   variant="text"
                   severity="secondary"
                   (onClick)="clearFallback(file.filePath)"
+                />
+              </div>
+            </div>
+          }
+          @if (fallbackFolders()[file.filePath]) {
+            <div class="media-files__fallback">
+              <p class="media-files__fallback-label">{{ 'media.copyFallbackLabel' | transloco }}</p>
+              <div class="media-files__fallback-row">
+                <textarea
+                  readonly
+                  [value]="getFolderPath(file.filePath)"
+                  class="media-files__fallback-textarea"
+                  [attr.aria-label]="'media.copyFallbackLabel' | transloco"
+                  rows="2"
+                ></textarea>
+                <p-button
+                  icon="pi pi-times"
+                  size="small"
+                  variant="text"
+                  severity="secondary"
+                  (onClick)="clearFolderFallback(file.filePath)"
                 />
               </div>
             </div>
