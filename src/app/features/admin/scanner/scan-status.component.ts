@@ -1,7 +1,7 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
@@ -14,7 +14,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
 @Component({
   selector: 'app-scan-status',
   standalone: true,
-  imports: [DatePipe, TranslocoModule, TagModule, ProgressSpinnerModule, ButtonModule],
+  imports: [LocaleDatePipe, TranslocoModule, TagModule, ProgressSpinnerModule, ButtonModule],
   templateUrl: './scan-status.component.html',
   styleUrl: './scan-status.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

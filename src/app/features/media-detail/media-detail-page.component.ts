@@ -1,4 +1,5 @@
-import { DecimalPipe, NgClass, SlicePipe } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,16 +10,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import {
-  animate,
-  group,
-  query,
-  stagger,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
@@ -26,12 +18,16 @@ import { ErrorMessageComponent } from '@shared/components/error-message.componen
 import { LoadingSkeletonComponent } from '@shared/components/loading-skeleton.component';
 import { MediaType } from '@shared/models/enums';
 import { TmdbImagePipe } from '@shared/pipes/tmdb-image.pipe';
+import { AuthService } from '@core/auth/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { TagModule } from 'primeng/tag';
 import { MediaDetailService } from './media-detail.service';
 import { MediaFilesComponent } from './media-files.component';
 import { SeasonListComponent } from './season-list.component';
+import { FileLinkPickerDialogComponent } from './file-link-picker-dialog.component';
+import { RootFolderComponent } from './root-folder.component';
+import { SeasonCompletenessComponent } from './season-completeness.component';
 
 @Component({
   selector: 'app-media-detail-page',
@@ -47,19 +43,16 @@ import { SeasonListComponent } from './season-list.component';
     ChipModule,
     MediaFilesComponent,
     SeasonListComponent,
+    FileLinkPickerDialogComponent,
+    RootFolderComponent,
+    SeasonCompletenessComponent,
     LoadingSkeletonComponent,
     ErrorMessageComponent,
     TmdbImagePipe,
-    SlicePipe,
+    LocaleDatePipe,
     DecimalPipe,
   ],
   animations: [
-    // Files section accordion
-    trigger('accordionExpand', [
-      state('closed', style({ height: '0', overflow: 'hidden', opacity: 0 })),
-      state('open', style({ height: '*', overflow: 'hidden', opacity: 1 })),
-      transition('closed <=> open', animate(ANIMATION_TIMINGS.NORMAL)),
-    ]),
     // Hero section entrance: fade in + slight scale from 1.02 → 1
     trigger('heroEnter', [
       transition(':enter', [
@@ -78,6 +71,7 @@ import { SeasonListComponent } from './season-list.component';
 })
 export class MediaDetailPageComponent implements OnInit {
   readonly service = inject(MediaDetailService);
+  private readonly authService = inject(AuthService);
 
   private readonly route = inject(ActivatedRoute);
   private readonly host = inject(ElementRef<HTMLElement>);
@@ -85,11 +79,19 @@ export class MediaDetailPageComponent implements OnInit {
 
   readonly MediaType = MediaType;
 
-  /** Controls the files accordion open/closed state. */
-  readonly filesOpen = signal(false);
+  /** Controls the file link picker dialog visibility. */
+  readonly fileLinkPickerOpen = signal(false);
+
+  /** True when the current user is an admin. */
+  readonly isAdmin = computed(() => this.authService.isAdmin());
 
   /** True when the current media is a TV show. */
   readonly isTvShow = computed(() => this.service.media()?.type === MediaType.TvShow);
+
+  /** Current media ID from route params for link/unlink actions. */
+  private get mediaId(): string {
+    return this.route.snapshot.paramMap.get('id')!;
+  }
 
   /**
    * Transloco key for the TV show production status badge.
@@ -139,10 +141,6 @@ export class MediaDetailPageComponent implements OnInit {
     });
   };
 
-  toggleFiles(): void {
-    this.filesOpen.update((v) => !v);
-  }
-
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.service.loadMedia(id);
@@ -190,6 +188,27 @@ export class MediaDetailPageComponent implements OnInit {
     for (const episodeId of event.episodeIds) {
       this.service.toggleEpisodeWatched(event.mediaId, event.seasonId, episodeId, event.isWatched);
     }
+  }
+
+  /** T019: Open the file link picker dialog. */
+  onOpenLinkPicker(): void {
+    this.fileLinkPickerOpen.set(true);
+  }
+
+  /** T019: Handle file link selection from the picker dialog. */
+  onFileLinkRequested(fileId: string): void {
+    this.fileLinkPickerOpen.set(false);
+    this.service.linkFile(this.mediaId, fileId);
+  }
+
+  /** T019: Handle unlink request from MediaFilesComponent. */
+  onUnlinkFileRequested(fileId: string): void {
+    this.service.unlinkFile(this.mediaId, fileId);
+  }
+
+  /** T028: Handle root folder save from RootFolderComponent. */
+  onRootFolderSaved(path: string | null): void {
+    this.service.updateRootFolder(this.mediaId, path);
   }
 
   reload(): void {

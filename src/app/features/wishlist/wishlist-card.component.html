@@ -34,7 +34,7 @@
     }
     @if (item().acquiredAt) {
       <p class="wishlist-card__acquired-date">
-        {{ 'wishlist.acquiredOn' | transloco }}: {{ item().acquiredAt | date: 'mediumDate' }}
+        {{ 'wishlist.acquiredOn' | transloco }}: {{ item().acquiredAt | localeDate }}
       </p>
     }
     @if (item().notes) {

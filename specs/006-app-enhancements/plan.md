@@ -1,56 +1,44 @@
 # Implementation Plan: Application Enhancements
 
-**Branch**: `feature/006-app-enhancements` | **Date**: 2025-07-24 | **Spec**: `specs/006-app-enhancements/spec.md`
+**Branch**: `develop` | **Date**: 2025-07-25 | **Spec**: [specs/006-app-enhancements/spec.md](./spec.md)  
 **Input**: Feature specification from `specs/006-app-enhancements/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Multi-faceted enhancement to the MediaHandler.Web application covering 8 user stories across 3 priority tiers. Core changes: (1) fix icon visibility across all pages (P1 CSS/theming bug), (2) complete i18n coverage with locale-aware date formatting and language-aware TMDB scanning (P1), (3) admin library root folder selection via API-sourced dropdown (P2), (4) wishlist indicator on TMDB search results (P2), (5) TV show production status and missing season detection (P2), (6) profile picture upload with auth provider default fallback (P3), (7) user info display in navigation menu (P3), (8) frontend warning cleanup (P3). Requires backend API changes: extend `StartScanRequest`/`StartScanCommand` with `language`, extend `MediaDto` with `status`/`numberOfSeasons`, extend `User`/`UserDto` with `profilePicturePath`, add profile picture upload/delete endpoints.
+Deliver 15 user stories that harden the MediaHandler.Web Angular SPA and its .NET 10 backend across UX, i18n, admin tooling, and data visibility. The frontend work centres on: CSS/theming fixes for icon visibility (US-1), full EN/FR translation + locale-aware date formatting (US-2), pagination/sorting/filtering on every admin PrimeNG `p-table` (US-9), scan-results position retention (US-10), real-time scanner counter polling (US-11), and review-item batch assignment (US-12). Backend work centres on: extending `MediaDto` with production-status fields (US-5, US-14), adding a profile-picture upload endpoint and `User.ProfilePicturePath` column (US-6), passing `language` through the scan pipeline (US-2), enriching all paginated-list endpoints with sort/filter query params (US-9), updating scan-counter persistence to increment during scanning (US-11), a batch-assign endpoint for review items (US-12), and surfacing enrichment per-item detail via polling (US-13).
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.9, Angular 21 (standalone, signals-first, OnPush)  
-**Primary Dependencies**: PrimeNG 21.x (`@primeuix/themes/aura`), `@angular/cdk` 21.x, `@angular/animations`, Transloco 8.x (EN/FR), Auth0 Angular 2.x  
-**Storage**: Backend API (MediaHandler.API, .NET 10, EF Core, SQLite/PostgreSQL); profile picture file storage server-side  
-**Testing**: Vitest (unit + component tests)  
-**Target Platform**: Web (modern browsers — Chrome 111+, Firefox 115+, Safari 16.4+, Edge 111+)  
-**Project Type**: Web application (SPA) with companion backend API  
-**Performance Goals**: 60fps animations, Lighthouse 90+ desktop, LCP < 2.5s, CLS < 0.1  
-**Constraints**: Bundle budget 500kB warning / 1MB error (initial); 4kB/8kB component styles; no new third-party dependencies expected; profile picture uploads ≤ 2MB (JPEG, PNG, WebP)  
-**Scale/Scope**: ~8 user stories, ~15 components modified/created, ~3 services modified, ~2 new pipes, API changes in 4 endpoints + 2 new endpoints
+**Language/Version**: TypeScript 5.x / Angular 21 (frontend); C# 12 / .NET 10 (backend — separate repo `MediaHandler.API`)  
+**Primary Dependencies**: PrimeNG 17+, PrimeIcons, Transloco 7+, @auth0/auth0-angular, Angular Signals, MediatR (backend), EF Core 9 (backend)  
+**Storage**: PostgreSQL (backend, via EF Core); local filesystem (profile-picture uploads in `wwwroot/uploads/profile-pictures/`)  
+**Testing**: Vitest + Angular Testing Library (frontend unit/component); xUnit (backend — out of scope for this PR)  
+**Target Platform**: Modern evergreen browsers (Chrome, Firefox, Safari, Edge); Angular SPA served from .NET Kestrel or Nginx  
+**Project Type**: Web application — Angular standalone-component SPA (frontend) + .NET 10 REST API (backend)  
+**Performance Goals**: LCP < 2.5 s, FID < 100 ms, CLS < 0.1 on 4G mobile; initial bundle ≤ 500 kB (warning) / 1 MB (error); component styles ≤ 4 kB  
+**Constraints**: OnPush change detection mandatory; standalone components only; no NgModules; NgOptimizedImage required for all `<img>`; `any` type forbidden; bundle budgets enforced in `angular.json`; no new heavy third-party packages without documented justification  
+**Scale/Scope**: Personal/small-team media library; ~15 admin screens; bilingual EN/FR; tables can hold hundreds to low-thousands of rows
 
 ## Constitution Check
 
-_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
+_GATE: Must pass before Phase 0 research. Re-checked after Phase 1 design._
 
-| Principle                       | Status  | Notes                                                                                                                                                                             |
-| ------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **I. Single Responsibility**    | ✅ PASS | Each modification targets a single concern. New `LocaleDatePipe`, `AdminFilesService`, profile upload methods are each single-purpose. No component expected to exceed 200 lines. |
-| **I. Angular Signals-First**    | ✅ PASS | All new state (wishlist lookup set, profile picture URL, root folder locations, missing seasons) uses signals. Existing signal patterns preserved.                                |
-| **I. Strict Typing**            | ✅ PASS | TypeScript strict mode remains enabled. New model fields (`status`, `numberOfSeasons`, `profilePicturePath`) have explicit types. No `any` usage.                                 |
-| **I. Prettier Compliance**      | ✅ PASS | No config changes. All new code follows 100-char, single-quote format.                                                                                                            |
-| **I. Standalone Components**    | ✅ PASS | All new/modified components remain standalone. No NgModules introduced.                                                                                                           |
-| **I. Reactive Patterns**        | ✅ PASS | File upload uses Observable pattern with `HttpClient`. Wishlist cross-reference uses computed signals. No manual subscriptions without cleanup.                                   |
-| **II. Unit Tests Required**     | ✅ PASS | New `LocaleDatePipe`, profile upload service methods, wishlist indicator logic, missing season computation all require unit tests. 80%+ coverage target.                          |
-| **II. Component Tests**         | ✅ PASS | Profile picture upload interactions, library root dialog root selection, wishlist indicator rendering, TV show status badge display require component tests.                      |
-| **III. Responsive Design**      | ✅ PASS | Profile picture upload, nav user info, library root dialog all follow mobile-first SCSS. Nav user info has compact mobile variant.                                                |
-| **III. Loading States**         | ✅ PASS | Profile picture upload shows progress/spinner. Root folder dropdown shows loading state while fetching locations.                                                                 |
-| **III. Error Feedback**         | ✅ PASS | Profile picture upload validates file type/size with clear error messages. No technical details exposed.                                                                          |
-| **III. Accessibility Baseline** | ✅ PASS | Profile picture upload has `alt` attributes. Icon fixes improve accessibility. Keyboard navigation maintained.                                                                    |
-| **III. Consistent Styling**     | ✅ PASS | All new UI elements use CSS custom properties and SCSS mixins from the design token system. No hard-coded values.                                                                 |
-| **III. Animation Restraint**    | ✅ PASS | No new decorative animations added.                                                                                                                                               |
-| **IV. Bundle Budget**           | ✅ PASS | No new dependencies. Changes are to existing components and services. Locale data for `fr` is minimal (~2KB gzipped).                                                             |
-| **IV. Lazy Loading**            | ✅ PASS | Feature routes remain lazy-loaded. Profile picture upload is within the profile feature module.                                                                                   |
-| **IV. OnPush Change Detection** | ✅ PASS | All new/modified components use `ChangeDetectionStrategy.OnPush`.                                                                                                                 |
-| **IV. Image Optimization**      | ✅ PASS | Profile picture display uses `NgOptimizedImage` with proper dimensions. Existing `NgOptimizedImage` issues fixed as part of FR-018/FR-019.                                        |
-| **IV. Memory Management**       | ✅ PASS | New subscriptions use `takeUntilDestroyed()` or `DestroyRef`. No leaked listeners.                                                                                                |
-| **IV. Core Web Vitals**         | ✅ PASS | No changes that would degrade LCP, FID, or CLS. Profile picture lazy-loads.                                                                                                       |
+| Principle                             | Requirement                                             | Status  | Notes                                                                                      |
+| ------------------------------------- | ------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------ |
+| Single Responsibility (≤200 lines)    | Components exceeding 200 lines must be refactored       | ✅ PASS | New batch-assign dialog and enrichment detail panel will be separate standalone components |
+| Angular Signals-First                 | New state must use signals, not BehaviorSubject         | ✅ PASS | TableState, wishlist cross-ref, counter values, enrichment detail list — all signals       |
+| Strict Typing                         | TypeScript strict mode; no `any`; explicit return types | ✅ PASS | All new DTOs/interfaces fully typed                                                        |
+| Standalone Components                 | All new components must be standalone                   | ✅ PASS | No NgModules introduced                                                                    |
+| Reactive Patterns                     | No manual subscriptions; use `async` or `toSignal()`    | ✅ PASS | HTTP calls via `toSignal(httpCall$)` pattern or `async` pipe                               |
+| Unit Tests Required (≥80% statements) | Vitest tests for every new service/pipe/component       | ✅ PASS | Tests planned per task                                                                     |
+| OnPush Change Detection               | All new components must use `OnPush`                    | ✅ PASS | Enforced by linting rule                                                                   |
+| NgOptimizedImage                      | All `<img>` must use `NgOptimizedImage`                 | ✅ PASS | Profile picture display must use `NgOptimizedImage` with `fill` or explicit dimensions     |
+| Bundle Budget                         | No budget relaxation without governance review          | ✅ PASS | No new runtime-imported packages anticipated; existing PrimeNG table features used         |
+| Memory Management                     | DestroyRef / takeUntilDestroyed() for streams           | ✅ PASS | All polling intervals scoped to component lifecycle                                        |
+| Responsive Design (360–2560 px)       | Mobile-first SCSS                                       | ✅ PASS | Compact nav user-info for mobile (US-7); table pagination adapts                           |
+| Consistent Styling                    | SCSS variables/mixins; no hardcoded values              | ✅ PASS | Icon visibility fix targets CSS tokens; no inline `style=""`                               |
 
-**Gate Result**: ✅ PASS — No violations. No constitution amendments required.
-
-**Post-Phase 1 Re-check**: ✅ PASS — Design decisions align with all constitution principles. No new dependencies introduced.
+**Gate result**: ✅ No violations — proceed to Phase 0.
 
 ## Project Structure
 
@@ -59,85 +47,88 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 ```text
 specs/006-app-enhancements/
 ├── plan.md              # This file
-├── research.md          # Phase 0 output — technology decisions
-├── data-model.md        # Phase 1 output — entity and model changes
-├── quickstart.md        # Phase 1 output — setup and verification guide
+├── research.md          # Phase 0 output — decisions R-001 to R-015
+├── data-model.md        # Phase 1 output — entity/DTO changes + new frontend types
+├── quickstart.md        # Phase 1 output — setup & verification checklist
 ├── contracts/
-│   └── api-contracts.md # Phase 1 output — API endpoint contracts
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+│   └── api-contracts.md # Phase 1 output — all endpoint changes and new endpoints
+└── tasks.md             # Phase 2 output (/speckit.tasks command — NOT created here)
 ```
 
 ### Source Code (repository root)
 
 ```text
+# Frontend — MediaHandler.Web (Angular SPA)
 src/
+├── app/
+│   ├── core/
+│   │   ├── auth/                         # Auth0 integration (existing)
+│   │   └── services/
+│   │       ├── profile.service.ts        # MODIFIED: uploadProfilePicture(), removeProfilePicture()
+│   │       └── wishlist.service.ts       # EXISTING: items() signal used for cross-ref
+│   ├── shared/
+│   │   ├── components/
+│   │   │   └── file-location/            # NEW: FileLocationComponent (US-15)
+│   │   └── pipes/
+│   │       └── locale-date.pipe.ts       # NEW: LocaleDatePipe (US-2)
+│   ├── features/
+│   │   ├── collection/
+│   │   │   └── collection-page/          # MODIFIED: stats bar (US-14), completeness badge (US-14)
+│   │   ├── search/
+│   │   │   ├── tmdb-search-page/         # MODIFIED: wishlist cross-ref signal (US-4)
+│   │   │   └── tmdb-result-card/         # MODIFIED: wishlistIndicator input (US-4)
+│   │   ├── profile/
+│   │   │   └── profile-page/             # MODIFIED: custom picture upload/remove (US-6)
+│   │   └── admin/
+│   │       ├── library-roots/
+│   │       │   └── add-library-root-dialog/  # MODIFIED: root folder dropdown (US-3)
+│   │       ├── scanner/
+│   │       │   └── scanner-page/         # MODIFIED: real-time counter polling (US-11)
+│   │       ├── scan-results/
+│   │       │   └── scan-results-page/    # MODIFIED: position retention (US-10), sorting/filtering (US-9)
+│   │       ├── review-items/
+│   │       │   └── review-items-page/    # MODIFIED: multi-select + batch assign (US-12)
+│   │       │       └── batch-assign-dialog/  # NEW: BatchAssignDialogComponent (US-12)
+│   │       ├── enrichment/
+│   │       │   └── enrichment-page/      # MODIFIED: detail panel polling (US-13)
+│   │       │       └── enrichment-detail-panel/  # NEW: EnrichmentDetailPanelComponent (US-13)
+│   │       └── users/
+│   │           └── users-page/           # MODIFIED: pagination/sort/filter (US-9)
+│   └── layout/
+│       └── sidebar/
+│           └── sidebar.component.*       # MODIFIED: user info + picture (US-7)
 ├── assets/
 │   └── i18n/
-│       ├── en.json                          # MODIFIED: New/missing translation keys
-│       └── fr.json                          # MODIFIED: New/missing translation keys
-├── app/
-│   ├── app.config.ts                        # MODIFIED: Register FR locale data
-│   ├── core/
-│   │   ├── api/
-│   │   │   └── api.service.ts               # UNCHANGED
-│   │   ├── auth/
-│   │   │   └── auth.service.ts              # UNCHANGED (reads auth0 picture from user$)
-│   │   └── layout/
-│   │       ├── sidebar.component.ts         # MODIFIED: Add user info (name + picture)
-│   │       ├── sidebar.component.html       # MODIFIED: User info section near logout
-│   │       └── sidebar.component.scss       # MODIFIED: User info styles, icon fixes
-│   ├── shared/
-│   │   ├── models/
-│   │   │   ├── media.model.ts               # MODIFIED: Add status, numberOfSeasons
-│   │   │   └── user.model.ts                # MODIFIED: Add profilePicturePath
-│   │   ├── pipes/
-│   │   │   └── locale-date.pipe.ts          # NEW: Locale-aware date formatting pipe
-│   │   ├── services/
-│   │   │   └── admin-files.service.ts       # NEW: GET /files/locations wrapper
-│   │   └── styles/
-│   │       └── _variables.scss              # MODIFIED: Fix icon color variables if needed
-│   └── features/
-│       ├── admin/
-│       │   ├── library-roots/
-│       │   │   ├── add-library-root-dialog.component.ts   # MODIFIED: Root folder dropdown
-│       │   │   ├── add-library-root-dialog.component.html # MODIFIED: Dropdown + sub-path UI
-│       │   │   └── admin-library-root.service.ts          # MODIFIED: Add getLocations()
-│       │   └── scanner/
-│       │       ├── admin-scan.service.ts     # MODIFIED: Add language param to startScan()
-│       │       ├── scan-launcher.component.ts    # MODIFIED: Pass active language to scan
-│       │       └── scan-launcher.component.html  # UNCHANGED (language sent implicitly)
-│       ├── collection/
-│       │   └── media-card.component.scss    # MODIFIED: Icon visibility fixes
-│       ├── media-detail/
-│       │   ├── media-detail-page.component.ts    # MODIFIED: Display production status
-│       │   ├── media-detail-page.component.html  # MODIFIED: Status badge, missing seasons
-│       │   ├── media-detail-page.component.scss  # MODIFIED: Status badge styles
-│       │   ├── season-list.component.ts          # MODIFIED: Missing season detection
-│       │   ├── season-list.component.html        # MODIFIED: Missing season indicators
-│       │   └── season-list.component.scss        # MODIFIED: Missing season visual treatment
-│       ├── profile/
-│       │   ├── profile-page.component.ts    # MODIFIED: Picture upload/remove, auth0 picture
-│       │   ├── profile-page.component.html  # MODIFIED: Picture display + upload UI
-│       │   ├── profile-page.component.scss  # MODIFIED: Picture upload styles
-│       │   └── profile.service.ts           # MODIFIED: Upload/remove profile picture methods
-│       ├── tmdb-search/
-│       │   ├── tmdb-search-page.component.ts    # MODIFIED: Wishlist cross-reference
-│       │   ├── tmdb-result-card.component.ts    # MODIFIED: Wishlist indicator input
-│       │   ├── tmdb-result-card.component.html  # MODIFIED: Wishlist badge rendering
-│       │   └── tmdb-result-card.component.scss  # MODIFIED: Wishlist badge styles
-│       └── wishlist/
-│           └── wishlist.service.ts          # UNCHANGED (already provides items signal)
+│       ├── en.json                       # MODIFIED: add all missing keys (US-2)
+│       └── fr.json                       # MODIFIED: add all missing keys (US-2)
+└── styles/
+    └── _themes.scss                      # MODIFIED: icon visibility CSS fix (US-1)
+
+# Backend — MediaHandler.API (separate repo, companion changes)
+src/
+├── MediaHandler.API/
+│   ├── Controllers/
+│   │   ├── AdminScanController.cs        # MODIFIED: pass Language to command
+│   │   └── UserProfileController.cs      # NEW: POST/DELETE profile-picture
+│   └── DTOs/
+│       ├── MediaDto.cs                   # MODIFIED: +Status, +NumberOfSeasons
+│       └── UserDto.cs                    # MODIFIED: +ProfilePicturePath
+├── Application/
+│   ├── Commands/
+│   │   ├── StartScanCommand.cs           # MODIFIED: +Language field
+│   │   └── BatchAssignReviewItemsCommand.cs  # NEW
+│   └── Queries/
+│       └── GetEnrichmentRunDetailsQuery.cs   # MODIFIED: support polling during active run
+├── Domain/
+│   └── Entities/
+│       └── User.cs                       # MODIFIED: +ProfilePicturePath
+└── Infrastructure/
+    └── Persistence/
+        └── Migrations/                   # NEW: migration for User.ProfilePicturePath
 ```
 
-**Structure Decision**: Single-project Angular SPA. All source under `src/`. No new feature modules or structural refactoring. New shared utilities (`LocaleDatePipe`, `AdminFilesService`) go in existing `src/app/shared/` directories. API changes are in the companion `MediaHandler.API` solution (separate repository root).
+**Structure Decision**: Web application (Option 2). Frontend lives entirely in `MediaHandler.Web/src/`. Backend changes are tracked as companion work in `MediaHandler.API` (separate repo). All feature toggles are release-based (ship when complete).
 
 ## Complexity Tracking
 
-> No constitution violations requiring justification.
-
-| Action Item                                        | Scope                              | Priority                                    |
-| -------------------------------------------------- | ---------------------------------- | ------------------------------------------- |
-| Backend API changes (4 modified + 2 new endpoints) | MediaHandler.API solution          | P1 (prerequisite for FR-003, FR-011–FR-016) |
-| i18n audit (full EN/FR coverage)                   | All components + translation files | P1                                          |
-| Icon visibility debugging                          | Global SCSS + component styles     | P1                                          |
-| `NgOptimizedImage` fixes (FR-018)                  | Multiple components                | P3 (part of warning cleanup)                |
+_No constitution violations — table not applicable._

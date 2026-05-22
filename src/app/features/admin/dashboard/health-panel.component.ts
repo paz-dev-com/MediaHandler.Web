@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { AdminHealthService } from './admin-health.service';
@@ -8,7 +8,7 @@ import { AdminHealthService } from './admin-health.service';
 @Component({
   selector: 'app-health-panel',
   standalone: true,
-  imports: [DatePipe, TranslocoModule, TagModule, ProgressSpinnerModule],
+  imports: [LocaleDatePipe, TranslocoModule, TagModule, ProgressSpinnerModule],
   templateUrl: './health-panel.component.html',
   styleUrl: './health-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

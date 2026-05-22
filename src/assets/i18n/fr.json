@@ -27,6 +27,7 @@
     "add": "Ajouter",
     "back": "Retour",
     "copyPath": "Copier le chemin",
+    "copyFolderPath": "Copier le chemin du dossier",
     "pathCopied": "Chemin copié dans le presse-papiers",
     "copyFailed": "Échec de la copie du chemin"
   },
@@ -53,7 +54,8 @@
       "films": "Films",
       "tvShows": "Séries TV",
       "watched": "Vus",
-      "unwatched": "Non vus"
+      "unwatched": "Non vus",
+      "incompleteTvShows": "{{count}} série(s) incomplète(s)"
     },
     "recentlyAdded": "Ajoutés récemment"
   },
@@ -83,7 +85,12 @@
     },
     "season": {
       "missing": "{{count}} saison(s) manquante(s) dans votre collection"
-    }
+    },
+    "incomplete": {
+      "label": "Série incomplète",
+      "tooltip": "{{count}} saison(s) manquante(s)"
+    },
+    "copyFallbackLabel": "Accès au presse-papiers refusé — copiez le chemin manuellement :"
   },
   "season": {
     "episodeCount": "{{count}} épisodes",
@@ -374,7 +381,15 @@
         "confirmMessage": "Appliquer cette action à tous les {{count}} éléments ouverts dans le même dossier ?",
         "rootFolderLabel": "Dossier racine : {{folder}}",
         "rootFolderHint": "S'applique à tous les éléments sous : {{folder}}"
-      }
+      },
+      "filterFileName": "Filtrer par nom de fichier",
+      "batchAssign": "Assignation groupée",
+      "selectAll": "Tout sélectionner",
+      "selectedCount": "{{count}} élément(s) sélectionné(s)",
+      "batchAssignTitle": "Assigner au média",
+      "searchMedia": "Rechercher un film ou une série...",
+      "batchSuccess": "{{count}} élément(s) assigné(s) avec succès",
+      "batchPartialFail": "{{success}} réussi(s), {{failed}} échoué(s)"
     },
     "scanResults": {
       "title": "Résultats de scan",
@@ -403,6 +418,7 @@
       "episodeCount": "{{count}} épisodes",
       "tmdbAssigned": "TMDB assigné",
       "tmdbNotAssigned": "Non assigné",
+      "filterTmdbAssigned": "Assignation TMDB",
       "viewMode": "Mode d'affichage",
       "tableView": "Vue tableau",
       "groupView": "Groupes de séries",
@@ -526,6 +542,17 @@
         "statusEnriched": "Enrichi",
         "statusFailed": "Échoué",
         "statusSkipped": "Ignoré"
+      },
+      "detail": {
+        "progress": "{{processed}} sur {{total}} éléments traités",
+        "status": {
+          "Pending": "En attente",
+          "InProgress": "En cours",
+          "Completed": "Terminé",
+          "Failed": "Échoué"
+        },
+        "seasonsEnriched": "{{n}} saison(s)",
+        "episodesEnriched": "{{n}} épisode(s)"
       }
     },
     "rename": {
@@ -557,14 +584,52 @@
       "tmdbAssignment": "Assignation TMDB",
       "actions": "Actions",
       "assignTmdb": "Assigner TMDB",
+      "reassignTmdb": "Réassigner TMDB",
       "statusAll": "Tous",
       "statusNotAssigned": "Non assigné",
-      "statusAssigned": "Assigné",
+      "statusAssigned": "TMDB assigné (import en attente)",
       "statusInCollection": "Dans la collection",
       "emptyMessage": "Aucun dossier parent trouvé. Lancez un scan pour découvrir les répertoires de séries.",
       "assignDialogTitle": "Assigner TMDB à {{folderName}}",
       "assignSuccess": "TMDB assigné avec succès à {{folderName}}",
       "filterByStatus": "Filtrer par statut"
+    }
+  },
+  "mediaDetail": {
+    "fileLink": {
+      "linkFileButton": "Lier un fichier",
+      "unlinkButton": "Délier",
+      "linkSuccess": "Fichier lié avec succès",
+      "unlinkSuccess": "Fichier délié avec succès",
+      "linkError": "Impossible de lier le fichier",
+      "unlinkError": "Impossible de délier le fichier"
+    },
+    "filePicker": {
+      "title": "Lier un fichier non associé",
+      "empty": "Aucun fichier non associé disponible",
+      "loadError": "Impossible de charger les fichiers non associés",
+      "columnPath": "Chemin du fichier",
+      "columnFormat": "Format",
+      "columnSize": "Taille",
+      "linkButton": "Lier"
+    },
+    "rootFolder": {
+      "title": "Dossier racine",
+      "copyTooltip": "Copier le chemin",
+      "editTooltip": "Modifier le dossier racine",
+      "empty": "Aucun dossier racine défini",
+      "setButton": "Définir le dossier racine",
+      "inputPlaceholder": "/nas/media/dossier",
+      "saveSuccess": "Dossier racine enregistré",
+      "saveError": "Impossible d'enregistrer le dossier racine"
+    },
+    "completeness": {
+      "title": "Complétude des saisons",
+      "noData": "Métadonnées indisponibles",
+      "ownedOf": "{{owned}} / {{total}} épisodes",
+      "complete": "Complet",
+      "incomplete": "Incomplet",
+      "missingEpisodes": "Épisodes manquants : "
     }
   },
   "a11y": {
@@ -582,5 +647,12 @@
     "scrollLeft": "Défiler à gauche",
     "scrollRight": "Défiler à droite",
     "toggleTheme": "Basculer entre le thème clair et sombre"
+  },
+  "table": {
+    "sortAscending": "Trier par ordre croissant",
+    "sortDescending": "Trier par ordre décroissant",
+    "clearFilter": "Effacer le filtre",
+    "filterPlaceholder": "Filtrer...",
+    "noResults": "Aucun résultat trouvé"
   }
 }

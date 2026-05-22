@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AdminEnrichmentService } from './admin-enrichment.service';
+import { EnrichmentDetailPanelComponent } from './enrichment-detail-panel.component';
 import { EnrichmentRun } from '@shared/models/enrichment.model';
 import { EnrichmentStatus } from '@shared/models/enums';
 
@@ -20,7 +21,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
   selector: 'app-admin-enrichment-page',
   standalone: true,
   imports: [
-    DatePipe,
+    LocaleDatePipe,
     TranslocoModule,
     ButtonModule,
     MessageModule,
@@ -30,6 +31,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     CardModule,
     ConfirmDialogModule,
     TableModule,
+    EnrichmentDetailPanelComponent,
   ],
   templateUrl: './admin-enrichment-page.component.html',
   styleUrl: './admin-enrichment-page.component.scss',
@@ -50,9 +52,10 @@ export class AdminEnrichmentPageComponent implements OnInit {
   readonly historyLoading = this.enrichmentService.historyLoading;
   readonly runDetails = this.enrichmentService.runDetails;
   readonly runDetailsLoading = this.enrichmentService.runDetailsLoading;
+  readonly liveRunDetails = this.enrichmentService.liveRunDetails;
   readonly EnrichmentStatus = EnrichmentStatus;
 
-  expandedHistoryRows: Record<string, boolean> = {};
+  expandedHistoryRows = signal<Record<string, boolean>>({});
 
   get isRunning(): boolean {
     return this.enrichmentStatus()?.status === EnrichmentStatus.Running;
@@ -98,7 +101,14 @@ export class AdminEnrichmentPageComponent implements OnInit {
     const pageSize = (event.rows as number) ?? this.historyMeta().pageSize;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
-    this.enrichmentService.getHistory(page, pageSize);
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
+    this.enrichmentService.getHistory(
+      page,
+      pageSize,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+    );
   }
 
   getStatusSeverity(status: EnrichmentStatus): TagSeverity {
@@ -116,11 +126,16 @@ export class AdminEnrichmentPageComponent implements OnInit {
     }
   }
 
-  toggleHistoryRow(id: string, currentlyExpanded: boolean): void {
-    this.expandedHistoryRows = currentlyExpanded ? {} : { [id]: true };
-    if (!currentlyExpanded) {
+  toggleHistoryRow(id: string): void {
+    this.expandedHistoryRows.update((state) => {
+      if (state[id]) {
+        const next = { ...state };
+        delete next[id];
+        return next;
+      }
       this.enrichmentService.getRunDetails(id);
-    }
+      return { ...state, [id]: true };
+    });
   }
 
   getMediaDetailSeverity(status: string): TagSeverity {

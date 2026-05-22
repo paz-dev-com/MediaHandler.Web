@@ -5,8 +5,8 @@
 
   <app-collection-filters [filters]="service.filters()" (filtersChange)="onFiltersChange($event)" />
 
-  @if (!service.loading() && service.media().length > 0) {
-    <app-spotlight-carousel [items]="service.media()" />
+  @if (service.recentMedia().length > 0) {
+    <app-spotlight-carousel [items]="service.recentMedia()" />
   }
 
   @if (service.loading()) {

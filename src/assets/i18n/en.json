@@ -27,6 +27,7 @@
     "add": "Add",
     "back": "Back",
     "copyPath": "Copy path",
+    "copyFolderPath": "Copy folder path",
     "pathCopied": "Path copied to clipboard",
     "copyFailed": "Failed to copy path"
   },
@@ -53,7 +54,8 @@
       "films": "Films",
       "tvShows": "TV Shows",
       "watched": "Watched",
-      "unwatched": "Unwatched"
+      "unwatched": "Unwatched",
+      "incompleteTvShows": "{{count}} incomplete show(s)"
     },
     "recentlyAdded": "Recently Added"
   },
@@ -83,7 +85,12 @@
     },
     "season": {
       "missing": "{{count}} season(s) missing from your collection"
-    }
+    },
+    "incomplete": {
+      "label": "Incomplete TV show",
+      "tooltip": "Missing {{count}} season(s)"
+    },
+    "copyFallbackLabel": "Clipboard access denied — copy the path manually:"
   },
   "season": {
     "episodeCount": "{{count}} episodes",
@@ -374,7 +381,15 @@
         "confirmMessage": "Apply this action to all {{count}} open review items in the same folder?",
         "rootFolderLabel": "Root folder: {{folder}}",
         "rootFolderHint": "Applies to all items under: {{folder}}"
-      }
+      },
+      "filterFileName": "Filter by file name",
+      "batchAssign": "Batch Assign",
+      "selectAll": "Select all",
+      "selectedCount": "{{count}} item(s) selected",
+      "batchAssignTitle": "Assign to media",
+      "searchMedia": "Search for a film or TV show...",
+      "batchSuccess": "{{count}} item(s) assigned successfully",
+      "batchPartialFail": "{{success}} succeeded, {{failed}} failed"
     },
     "scanResults": {
       "title": "Scan Results",
@@ -403,6 +418,7 @@
       "episodeCount": "{{count}} episodes",
       "tmdbAssigned": "TMDB Assigned",
       "tmdbNotAssigned": "Not Assigned",
+      "filterTmdbAssigned": "TMDB Assignment",
       "viewMode": "View Mode",
       "tableView": "Table View",
       "groupView": "TV Show Groups",
@@ -526,6 +542,17 @@
         "statusEnriched": "Enriched",
         "statusFailed": "Failed",
         "statusSkipped": "Skipped"
+      },
+      "detail": {
+        "progress": "{{processed}} of {{total}} items enriched",
+        "status": {
+          "Pending": "Pending",
+          "InProgress": "In Progress",
+          "Completed": "Completed",
+          "Failed": "Failed"
+        },
+        "seasonsEnriched": "{{n}} season(s)",
+        "episodesEnriched": "{{n}} episode(s)"
       }
     },
     "rename": {
@@ -557,14 +584,52 @@
       "tmdbAssignment": "TMDB Assignment",
       "actions": "Actions",
       "assignTmdb": "Assign TMDB",
+      "reassignTmdb": "Reassign TMDB",
       "statusAll": "All",
       "statusNotAssigned": "Not Assigned",
-      "statusAssigned": "Assigned",
+      "statusAssigned": "TMDB Assigned (Pending Import)",
       "statusInCollection": "In Collection",
       "emptyMessage": "No parent folders found. Run a scan to discover TV show directories.",
       "assignDialogTitle": "Assign TMDB to {{folderName}}",
       "assignSuccess": "TMDB assigned successfully to {{folderName}}",
       "filterByStatus": "Filter by status"
+    }
+  },
+  "mediaDetail": {
+    "fileLink": {
+      "linkFileButton": "Link File",
+      "unlinkButton": "Unlink",
+      "linkSuccess": "File linked successfully",
+      "unlinkSuccess": "File unlinked successfully",
+      "linkError": "Failed to link file",
+      "unlinkError": "Failed to unlink file"
+    },
+    "filePicker": {
+      "title": "Link Unlinked File",
+      "empty": "No unlinked files available",
+      "loadError": "Failed to load unlinked files",
+      "columnPath": "File Path",
+      "columnFormat": "Format",
+      "columnSize": "Size",
+      "linkButton": "Link"
+    },
+    "rootFolder": {
+      "title": "Root Folder",
+      "copyTooltip": "Copy path to clipboard",
+      "editTooltip": "Edit root folder",
+      "empty": "No root folder set",
+      "setButton": "Set root folder",
+      "inputPlaceholder": "/nas/media/folder",
+      "saveSuccess": "Root folder saved",
+      "saveError": "Failed to save root folder"
+    },
+    "completeness": {
+      "title": "Season Completeness",
+      "noData": "Metadata not available",
+      "ownedOf": "{{owned}} / {{total}} episodes",
+      "complete": "Complete",
+      "incomplete": "Incomplete",
+      "missingEpisodes": "Missing episodes: "
     }
   },
   "a11y": {
@@ -582,5 +647,12 @@
     "scrollLeft": "Scroll left",
     "scrollRight": "Scroll right",
     "toggleTheme": "Toggle light / dark theme"
+  },
+  "table": {
+    "sortAscending": "Sort ascending",
+    "sortDescending": "Sort descending",
+    "clearFilter": "Clear filter",
+    "filterPlaceholder": "Filter...",
+    "noResults": "No results found"
   }
 }

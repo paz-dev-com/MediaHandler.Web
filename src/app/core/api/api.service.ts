@@ -56,6 +56,22 @@ export class ApiService {
     return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${path}`, body, { params: httpParams });
   }
 
+  patch<T>(
+    path: string,
+    body: unknown,
+    params?: Record<string, string | number | boolean | null | undefined>,
+  ): Observable<ApiResponse<T>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== null && value !== undefined) {
+          httpParams = httpParams.set(key, String(value));
+        }
+      }
+    }
+    return this.http.patch<ApiResponse<T>>(`${this.baseUrl}/${path}`, body, { params: httpParams });
+  }
+
   delete<T>(path: string): Observable<ApiResponse<T>> {
     return this.http.delete<ApiResponse<T>>(`${this.baseUrl}/${path}`);
   }

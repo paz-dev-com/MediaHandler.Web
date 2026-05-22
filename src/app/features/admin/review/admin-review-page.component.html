@@ -25,6 +25,14 @@
       <input
         pInputText
         type="text"
+        [placeholder]="t('admin.review.filterFileName')"
+        [ngModel]="fileNameFilter()"
+        (ngModelChange)="onFileNameFilterChange($event)"
+        [style]="{ 'min-width': '12rem' }"
+      />
+      <input
+        pInputText
+        type="text"
         [placeholder]="t('admin.review.filterScanRunId')"
         [ngModel]="scanRunIdFilter()"
         (ngModelChange)="onScanRunIdFilterChange($event)"
@@ -44,19 +52,64 @@
     (onLazyLoad)="onLazyLoad($event)"
     selectionMode="single"
     styleClass="p-datatable-striped"
+    [sortMode]="'single'"
   >
+    <ng-template pTemplate="caption">
+      @if (isAnySelected()) {
+        <div class="admin-review-page__batch-toolbar">
+          <span class="admin-review-page__batch-count">
+            {{ t('admin.review.selectedCount', { count: selectedItems().length }) }}
+          </span>
+          <p-button
+            [label]="t('admin.review.batchAssign')"
+            icon="pi pi-link"
+            size="small"
+            (onClick)="openBatchAssign()"
+          />
+        </div>
+      }
+    </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ t('admin.review.columns.filePath') }}</th>
+        <th style="width: 3rem">
+          <p-checkbox
+            [ngModel]="selectedItems().length === items().length && items().length > 0"
+            [binary]="true"
+            (ngModelChange)="onSelectAll($event)"
+            [ariaLabel]="t('admin.review.selectAll')"
+          />
+        </th>
+        <th [pSortableColumn]="'fileName'">
+          {{ t('admin.review.columns.filePath') }}<p-sortIcon field="fileName" />
+        </th>
         <th>{{ t('admin.review.columns.parsedTitle') }}</th>
-        <th>{{ t('admin.review.columns.reason') }}</th>
-        <th>{{ t('admin.review.columns.status') }}</th>
-        <th>{{ t('admin.review.columns.createdAt') }}</th>
+        <th [pSortableColumn]="'reason'">
+          {{ t('admin.review.columns.reason') }}<p-sortIcon field="reason" />
+        </th>
+        <th [pSortableColumn]="'status'">
+          {{ t('admin.review.columns.status') }}<p-sortIcon field="status" />
+        </th>
+        <th [pSortableColumn]="'createdAt'">
+          {{ t('admin.review.columns.createdAt') }}<p-sortIcon field="createdAt" />
+        </th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-item>
       <tr class="admin-review-page__row" (click)="onRowSelect(item)">
+        <td (click)="$event.stopPropagation()">
+          <p-checkbox
+            [ngModel]="selectedItems().includes(item)"
+            [binary]="true"
+            (ngModelChange)="
+              onSelectionChange(
+                $event
+                  ? [...selectedItems(), item]
+                  : selectedItems().filter((i) => i.id !== item.id)
+              )
+            "
+          />
+        </td>
         <td class="admin-review-page__path">{{ item.filePath }}</td>
         <td>{{ item.parsedTitle ?? '—' }}</td>
         <td>
@@ -65,13 +118,13 @@
         <td>
           <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
         </td>
-        <td>{{ item.createdAt | date: 'short' }}</td>
+        <td>{{ item.createdAt | localeDate }}</td>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5" class="text-center p-4">
+        <td colspan="6" class="text-center p-4">
           {{ t('admin.review.empty') }}
         </td>
       </tr>
@@ -82,5 +135,12 @@
     [item]="selectedItem()"
     (resolved)="onDialogResolved()"
     (closed)="onDialogClosed()"
+  />
+
+  <app-batch-assign-dialog
+    [visible]="isBatchDialogVisible()"
+    [selectedCount]="selectedItems().length"
+    (confirmed)="onBatchConfirmed($event)"
+    (dismissed)="onBatchDismissed()"
   />
 </div>

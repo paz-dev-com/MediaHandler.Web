@@ -6,9 +6,9 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -28,7 +28,7 @@ interface RoleOption {
   selector: 'app-admin-users-page',
   standalone: true,
   imports: [
-    DatePipe,
+    LocaleDatePipe,
     FormsModule,
     TranslocoModule,
     TableModule,
@@ -92,7 +92,15 @@ export class AdminUsersPageComponent implements OnInit, OnDestroy {
     const pageSize = (event.rows as number) ?? this.meta().pageSize;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
-    this.userService.getUsers(page, pageSize, this.searchQuery() || undefined);
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
+    this.userService.getUsers(
+      page,
+      pageSize,
+      this.searchQuery() || undefined,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+    );
   }
 
   onRoleChange(user: AdminUser, role: string): void {

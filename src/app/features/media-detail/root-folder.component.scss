@@ -1,0 +1,97 @@
+.root-folder {
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-border);
+
+  &__title {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  &__path-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__icon {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+  }
+
+  &__path {
+    font-family: monospace;
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+    color: var(--color-text-primary);
+  }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
+
+  &__edit-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__edit-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.375rem 0.625rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-family: monospace;
+
+    &:focus {
+      outline: 2px solid var(--p-primary-color, #6366f1);
+      outline-offset: 1px;
+    }
+  }
+
+  &__fallback {
+    margin-top: 0.5rem;
+  }
+
+  &__fallback-label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.25rem;
+  }
+
+  &__fallback-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  &__fallback-textarea {
+    flex: 1;
+    font-family: monospace;
+    font-size: 0.75rem;
+    resize: none;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-bg-surface);
+    color: var(--color-text-primary);
+  }
+}

@@ -1,0 +1,82 @@
+<p-dialog
+  [visible]="visible()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="file-link-picker-dialog"
+  [header]="'mediaDetail.filePicker.title' | transloco"
+  (onHide)="close()"
+>
+  @if (loading()) {
+    <div class="file-link-picker__loading">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>{{ 'common.loading' | transloco }}</span>
+    </div>
+  } @else if (error()) {
+    <div class="file-link-picker__error">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ 'mediaDetail.filePicker.loadError' | transloco }}</span>
+      <p-button
+        [label]="'common.retry' | transloco"
+        severity="secondary"
+        size="small"
+        (onClick)="loadFiles()"
+      />
+    </div>
+  } @else if (!files().length) {
+    <div class="file-link-picker__empty">
+      <i class="pi pi-folder-open"></i>
+      <p>{{ 'mediaDetail.filePicker.empty' | transloco }}</p>
+    </div>
+  } @else {
+    <p-table
+      [value]="files()"
+      [lazy]="true"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="meta()?.totalCount ?? 0"
+      [rowsPerPageOptions]="[20, 50, 100]"
+      (onPage)="onPageChange($event)"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ 'mediaDetail.filePicker.columnPath' | transloco }}</th>
+          <th class="file-link-picker__col-format">
+            {{ 'mediaDetail.filePicker.columnFormat' | transloco }}
+          </th>
+          <th class="file-link-picker__col-size">
+            {{ 'mediaDetail.filePicker.columnSize' | transloco }}
+          </th>
+          <th class="file-link-picker__col-action"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-file>
+        <tr>
+          <td class="file-link-picker__path" [title]="file.filePath">{{ file.filePath }}</td>
+          <td>
+            @if (file.format) {
+              <p-tag
+                [value]="file.format.toUpperCase()"
+                severity="secondary"
+                styleClass="text-xs"
+              />
+            }
+            @if (file.resolution) {
+              <p-tag [value]="file.resolution" severity="info" styleClass="text-xs" />
+            }
+          </td>
+          <td class="file-link-picker__size">{{ file.fileSizeBytes | fileSize }}</td>
+          <td>
+            <p-button
+              [label]="'mediaDetail.filePicker.linkButton' | transloco"
+              size="small"
+              (onClick)="onLinkClick(file.id)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</p-dialog>

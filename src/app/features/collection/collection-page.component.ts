@@ -51,6 +51,7 @@ export class CollectionPageComponent implements OnInit {
   ngOnInit(): void {
     this.service.loadStats();
     this.service.loadMedia();
+    this.service.loadRecentMedia();
   }
 
   onFiltersChange(partial: Partial<CollectionFilters>): void {

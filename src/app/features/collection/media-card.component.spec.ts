@@ -30,6 +30,8 @@ const makeMedia = (posterPath: string | null = '/poster.jpg'): Media => ({
   updatedAt: '2024-01-01T00:00:00Z',
   status: null,
   numberOfSeasons: null,
+  ownedSeasonCount: null,
+  rootFolder: null,
 });
 
 // ── IntersectionObserver mock ─────────────────────────────────────────────────

@@ -1,0 +1,56 @@
+@if (details()) {
+  <div class="enrichment-detail-panel" *transloco="let t">
+    <div class="enrichment-detail-panel__progress">
+      <p-progressBar
+        [value]="progressPercent()"
+        [showValue]="true"
+        styleClass="enrichment-detail-panel__bar"
+      />
+      <p class="enrichment-detail-panel__progress-label">
+        {{
+          t('admin.enrichment.detail.progress', {
+            processed: details()!.processedCount,
+            total: details()!.totalCount,
+          })
+        }}
+      </p>
+    </div>
+
+    @if (details()!.items.length > 0) {
+      <ul class="enrichment-detail-panel__list">
+        @for (item of details()!.items; track item.mediaId) {
+          <li
+            class="enrichment-detail-panel__item"
+            [class]="'enrichment-detail-panel__item--' + item.status.toLowerCase()"
+          >
+            <i [class]="'enrichment-detail-panel__icon ' + getStatusIcon(item.status)"></i>
+            <div class="enrichment-detail-panel__item-body">
+              <span class="enrichment-detail-panel__item-title">{{ item.title }}</span>
+              <span class="enrichment-detail-panel__item-path">{{ item.folderPath }}</span>
+              <span class="enrichment-detail-panel__item-status">
+                {{ t('admin.enrichment.detail.status.' + item.status) }}
+              </span>
+              @if (item.status === 'Completed') {
+                @if (item.seasonsEnriched !== undefined && item.seasonsEnriched > 0) {
+                  <span class="enrichment-detail-panel__item-meta">
+                    {{ t('admin.enrichment.detail.seasonsEnriched', { n: item.seasonsEnriched }) }}
+                  </span>
+                }
+                @if (item.episodesEnriched !== undefined && item.episodesEnriched > 0) {
+                  <span class="enrichment-detail-panel__item-meta">
+                    {{
+                      t('admin.enrichment.detail.episodesEnriched', { n: item.episodesEnriched })
+                    }}
+                  </span>
+                }
+              }
+              @if (item.status === 'Failed' && item.errorMessage) {
+                <span class="enrichment-detail-panel__item-error">{{ item.errorMessage }}</span>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+}

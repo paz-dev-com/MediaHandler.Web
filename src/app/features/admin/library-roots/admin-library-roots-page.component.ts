@@ -20,7 +20,7 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
-import { DatePipe } from '@angular/common';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { AdminLibraryRootService } from './admin-library-root.service';
 import { AddLibraryRootDialogComponent } from './add-library-root-dialog.component';
 import { LibraryRoot } from '@shared/models/library-root.model';
@@ -40,7 +40,7 @@ interface EnabledFilterOption {
   selector: 'app-admin-library-roots-page',
   standalone: true,
   imports: [
-    DatePipe,
+    LocaleDatePipe,
     FormsModule,
     TranslocoModule,
     TableModule,
@@ -73,6 +73,7 @@ export class AdminLibraryRootsPageComponent implements OnInit {
 
   readonly selectedKindFilter = signal<LibraryRootKind | null>(null);
   readonly selectedEnabledFilter = signal<boolean | null>(null);
+  readonly pathFilter = signal<string>('');
 
   kindFilterOptions: KindFilterOption[] = [];
   enabledFilterOptions: EnabledFilterOption[] = [];
@@ -115,11 +116,16 @@ export class AdminLibraryRootsPageComponent implements OnInit {
     const pageSize = (event.rows as number) ?? this.meta().pageSize;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
     this.rootService.getRoots(
       page,
       pageSize,
       this.selectedKindFilter() ?? undefined,
       this.selectedEnabledFilter() ?? undefined,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+      this.pathFilter() || undefined,
     );
   }
 
@@ -130,6 +136,9 @@ export class AdminLibraryRootsPageComponent implements OnInit {
       this.meta().pageSize,
       kind ?? undefined,
       this.selectedEnabledFilter() ?? undefined,
+      undefined,
+      undefined,
+      this.pathFilter() || undefined,
     );
   }
 
@@ -140,6 +149,22 @@ export class AdminLibraryRootsPageComponent implements OnInit {
       this.meta().pageSize,
       this.selectedKindFilter() ?? undefined,
       enabled ?? undefined,
+      undefined,
+      undefined,
+      this.pathFilter() || undefined,
+    );
+  }
+
+  onPathFilterChange(path: string): void {
+    this.pathFilter.set(path);
+    this.rootService.getRoots(
+      1,
+      this.meta().pageSize,
+      this.selectedKindFilter() ?? undefined,
+      this.selectedEnabledFilter() ?? undefined,
+      undefined,
+      undefined,
+      path || undefined,
     );
   }
 

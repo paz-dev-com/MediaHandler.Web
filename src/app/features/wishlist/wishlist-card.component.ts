@@ -1,4 +1,4 @@
-import { DatePipe, SlicePipe } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,13 +12,14 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { ANIMATION_TIMINGS } from '@shared/animations/animation.config';
 import { WishlistItem } from '@shared/models/wishlist.model';
 import { TmdbImagePipe } from '@shared/pipes/tmdb-image.pipe';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-wishlist-card',
   standalone: true,
-  imports: [TranslocoModule, ButtonModule, TagModule, TmdbImagePipe, SlicePipe, DatePipe],
+  imports: [TranslocoModule, ButtonModule, TagModule, TmdbImagePipe, SlicePipe, LocaleDatePipe],
   templateUrl: './wishlist-card.component.html',
   styleUrl: './wishlist-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

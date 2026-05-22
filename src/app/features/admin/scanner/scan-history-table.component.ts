@@ -1,7 +1,7 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { LocaleDatePipe } from '@shared/pipes/locale-date.pipe';
 import { ButtonModule } from 'primeng/button';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -13,7 +13,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
 @Component({
   selector: 'app-scan-history-table',
   standalone: true,
-  imports: [DatePipe, TranslocoModule, ButtonModule, TableModule, TagModule],
+  imports: [LocaleDatePipe, TranslocoModule, ButtonModule, TableModule, TagModule],
   templateUrl: './scan-history-table.component.html',
   styleUrl: './scan-history-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +35,14 @@ export class ScanHistoryTableComponent implements OnInit {
     const pageSize = (event.rows as number) ?? 20;
     const first = (event.first as number) ?? 0;
     const page = Math.floor(first / pageSize) + 1;
-    this.scanService.getScanHistory(page, pageSize);
+    const sortField = event.sortField as string | undefined;
+    const sortOrder = event.sortOrder === -1 ? 'desc' : 'asc';
+    this.scanService.getScanHistory(
+      page,
+      pageSize,
+      sortField || undefined,
+      sortField ? sortOrder : undefined,
+    );
   }
 
   navigateToResults(scanId: string): void {

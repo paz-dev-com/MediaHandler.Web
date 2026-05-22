@@ -22,12 +22,26 @@ export class AdminLibraryRootService {
   private currentPageSize = 20;
   private currentKind: LibraryRootKind | undefined;
   private currentEnabledOnly: boolean | undefined;
+  private currentSortField: string | undefined;
+  private currentSortOrder: 'asc' | 'desc' | undefined;
+  private currentPath: string | undefined;
 
-  getRoots(page: number, pageSize: number, kind?: LibraryRootKind, enabledOnly?: boolean): void {
+  getRoots(
+    page: number,
+    pageSize: number,
+    kind?: LibraryRootKind,
+    enabledOnly?: boolean,
+    sortField?: string,
+    sortOrder?: 'asc' | 'desc',
+    path?: string,
+  ): void {
     this.currentPage = page;
     this.currentPageSize = pageSize;
     this.currentKind = kind;
     this.currentEnabledOnly = enabledOnly;
+    this.currentSortField = sortField;
+    this.currentSortOrder = sortOrder;
+    this.currentPath = path;
 
     this.loading.set(true);
 
@@ -40,6 +54,15 @@ export class AdminLibraryRootService {
     }
     if (enabledOnly !== undefined) {
       params['enabledOnly'] = enabledOnly;
+    }
+    if (sortField) {
+      params['sortField'] = sortField;
+    }
+    if (sortOrder) {
+      params['sortOrder'] = sortOrder;
+    }
+    if (path) {
+      params['path'] = path;
     }
 
     this.api.get<LibraryRoot[]>('admin/library-roots', params).subscribe({
@@ -61,9 +84,12 @@ export class AdminLibraryRootService {
     });
   }
 
-  updateRoot(id: string, kind: LibraryRootKind, label?: string): void {
+  updateRoot(id: string, kind: LibraryRootKind, label?: string, path?: string): void {
     const body: Record<string, unknown> = { kind };
     body['label'] = label ?? null;
+    if (path !== undefined) {
+      body['path'] = path;
+    }
 
     this.api.put<LibraryRoot>(`admin/library-roots/${id}`, body).subscribe({
       next: () => this.refresh(),
@@ -111,6 +137,9 @@ export class AdminLibraryRootService {
       this.currentPageSize,
       this.currentKind,
       this.currentEnabledOnly,
+      this.currentSortField,
+      this.currentSortOrder,
+      this.currentPath,
     );
   }
 }

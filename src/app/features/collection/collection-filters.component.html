@@ -24,7 +24,7 @@
 
   <p-select
     [options]="watchedOptions"
-    [ngModel]="filters().isWatched"
+    [ngModel]="watchedValue"
     (ngModelChange)="onWatchedChange($event)"
     optionLabel="label"
     optionValue="value"

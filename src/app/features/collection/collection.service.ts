@@ -17,6 +17,8 @@ export class CollectionService {
   private readonly api = inject(ApiService);
 
   readonly media = signal<Media[]>([]);
+  /** Stores the 10 most recently added items for the carousel — independent of current page. */
+  readonly recentMedia = signal<Media[]>([]);
   readonly stats = signal<CollectionStats | null>(null);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -54,6 +56,13 @@ export class CollectionService {
         next: (response) => {
           this.media.set(response.data);
           this.totalCount.set(response.meta?.totalCount ?? 0);
+          // Keep the cached recently-added list (carousel) based on the first page
+          if (page === 1 && this.recentMedia().length === 0) {
+            const sorted = [...response.data]
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .slice(0, 10);
+            this.recentMedia.set(sorted);
+          }
         },
         error: () => this.error.set('Failed to load media'),
       });
@@ -62,6 +71,18 @@ export class CollectionService {
   loadStats(): void {
     this.api.get<CollectionStats>('media/stats').subscribe({
       next: (response) => this.stats.set(response.data),
+    });
+  }
+
+  /** Loads the 10 most recently added items for the carousel, independent of current page. */
+  loadRecentMedia(): void {
+    this.api.get<Media[]>('media', { page: 1, pageSize: 10 }).subscribe({
+      next: (response) => {
+        const sorted = [...(response.data ?? [])]
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 10);
+        this.recentMedia.set(sorted);
+      },
     });
   }
 

@@ -31,6 +31,10 @@
       <p-message severity="info" [text]="t('admin.scanResults.noScanSelected')" />
     </div>
   } @else {
-    <app-scan-decision-table [scanId]="scanIdForTable()" [libraryRoots]="libraryRoots()" />
+    <app-scan-decision-table
+      [scanId]="scanIdForTable()"
+      [libraryRoots]="libraryRoots()"
+      (itemAssigned)="onItemAssigned($event)"
+    />
   }
 </div>

@@ -1,5 +1,27 @@
 import { EnrichmentStatus } from './enums';
 
+/** Enrichment item status for live detail panel */
+export type EnrichmentItemStatus = 'Pending' | 'InProgress' | 'Completed' | 'Failed';
+
+/** Per-item detail for a live enrichment run */
+export interface EnrichmentItemDetail {
+  mediaId: string;
+  title: string;
+  folderPath: string;
+  status: EnrichmentItemStatus;
+  errorMessage?: string;
+  seasonsEnriched?: number;
+  episodesEnriched?: number;
+}
+
+/** Full detail for a live enrichment run (from GET /api/v1/admin/enrichment/{runId}/details) */
+export interface EnrichmentRunDetails {
+  runId: string;
+  totalCount: number;
+  processedCount: number;
+  items: EnrichmentItemDetail[];
+}
+
 /** Maps to backend `EnrichmentErrorDetailDto` */
 export interface EnrichmentErrorDetail {
   mediaId: string;
