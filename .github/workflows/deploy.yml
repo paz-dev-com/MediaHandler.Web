@@ -109,7 +109,7 @@ jobs:
           ls -la "${{ env.WEB_ROOT }}" | head -10
 
       - name: Reload Caddy
-        run: systemctl --user reload caddy
+        run: sudo systemctl reload caddy
 
       - name: Verify index.html deployed
         run: |
