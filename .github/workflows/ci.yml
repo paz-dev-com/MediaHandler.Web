@@ -44,16 +44,23 @@ jobs:
           node --version
           npm --version
 
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+      # Temporarily disabled due to npm bug #4828 with optional dependencies
+      # The cache can store incomplete installations of @rollup/rollup-linux-x64-gnu
+      # - name: Cache npm dependencies
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-npm-
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          # Workaround for npm optional dependencies bug (https://github.com/npm/cli/issues/4828)
+          # Remove package-lock.json and node_modules, then do fresh install
+          # This ensures @rollup/rollup-linux-x64-gnu gets installed correctly
+          rm -rf node_modules package-lock.json
+          npm install
 
       # ── 1. Format check (Prettier) ───────────────────────────────────────
 
