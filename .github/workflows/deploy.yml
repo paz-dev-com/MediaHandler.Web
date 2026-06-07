@@ -29,56 +29,56 @@ jobs:
       image-tag: ${{ steps.tag.outputs.tag }}
 
     steps:
-    - name: Checkout repository
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        git init
-        git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
-        git -c protocol.version=2 fetch --depth=1 origin "${{ github.sha }}"
-        git reset --hard FETCH_HEAD
-        git clean -df
+      - name: Checkout repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git -c protocol.version=2 fetch --depth=1 origin "${{ github.sha }}"
+          git reset --hard FETCH_HEAD
+          git clean -df
 
-    - name: Create build env file
-      run: |
-        echo "AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}" > .env.build
-        echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env.build
-        echo "AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}" >> .env.build
-        echo "AUTH0_REDIRECT_URI=https://${{ secrets.APP_HOST }}/auth/callback" >> .env.build
-        echo "PROD_AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}" >> .env.build
-        echo "PROD_AUTH0_REDIRECT_URI=https://${{ secrets.APP_HOST }}/auth/callback" >> .env.build
+      - name: Create build env file
+        run: |
+          echo "AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}" > .env.build
+          echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env.build
+          echo "AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}" >> .env.build
+          echo "AUTH0_REDIRECT_URI=https://${{ secrets.APP_HOST }}/auth/callback" >> .env.build
+          echo "PROD_AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}" >> .env.build
+          echo "PROD_AUTH0_REDIRECT_URI=https://${{ secrets.APP_HOST }}/auth/callback" >> .env.build
 
-    - name: Compute image tag
-      id: tag
-      run: echo "tag=sha-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Compute image tag
+        id: tag
+        run: echo "tag=sha-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
-    - name: Login to GHCR
-      run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
-          -u "${{ github.actor }}" --password-stdin
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
+            -u "${{ github.actor }}" --password-stdin
 
-    - name: Debug build context
-      run: ls -la
+      - name: Debug build context
+        run: ls -la
 
-    - name: Build & push
-      run: |
-        IMAGE_TAG="${{ steps.tag.outputs.tag }}"
-        APP_HOST="${{ secrets.APP_HOST }}"
-        docker build \
-          --tag "${{ env.IMAGE_NAME }}:${IMAGE_TAG}" \
-          --tag "${{ env.IMAGE_NAME }}:latest" \
-          --build-arg API_BASE_URL=/api/v1 \
-          --build-arg PROD_API_BASE_URL=/api/v1 \
-          --build-arg AUTH0_DOMAIN="${{ secrets.AUTH0_DOMAIN }}" \
-          --build-arg AUTH0_CLIENT_ID="${{ secrets.AUTH0_CLIENT_ID }}" \
-          --build-arg AUTH0_AUDIENCE="${{ secrets.AUTH0_AUDIENCE }}" \
-          --build-arg AUTH0_REDIRECT_URI="https://${APP_HOST}/auth/callback" \
-          --build-arg PROD_AUTH0_AUDIENCE="${{ secrets.AUTH0_AUDIENCE }}" \
-          --build-arg PROD_AUTH0_REDIRECT_URI="https://${APP_HOST}/auth/callback" \
-          .
-        docker push "${{ env.IMAGE_NAME }}:${IMAGE_TAG}"
-        docker push "${{ env.IMAGE_NAME }}:latest"
-        echo "Pushed: ${{ env.IMAGE_NAME }}:${IMAGE_TAG}"
+      - name: Build & push
+        run: |
+          IMAGE_TAG="${{ steps.tag.outputs.tag }}"
+          APP_HOST="${{ secrets.APP_HOST }}"
+          docker build \
+            --tag "${{ env.IMAGE_NAME }}:${IMAGE_TAG}" \
+            --tag "${{ env.IMAGE_NAME }}:latest" \
+            --build-arg API_BASE_URL=/api/v1 \
+            --build-arg PROD_API_BASE_URL=/api/v1 \
+            --build-arg AUTH0_DOMAIN="${{ secrets.AUTH0_DOMAIN }}" \
+            --build-arg AUTH0_CLIENT_ID="${{ secrets.AUTH0_CLIENT_ID }}" \
+            --build-arg AUTH0_AUDIENCE="${{ secrets.AUTH0_AUDIENCE }}" \
+            --build-arg AUTH0_REDIRECT_URI="https://${APP_HOST}/auth/callback" \
+            --build-arg PROD_AUTH0_AUDIENCE="${{ secrets.AUTH0_AUDIENCE }}" \
+            --build-arg PROD_AUTH0_REDIRECT_URI="https://${APP_HOST}/auth/callback" \
+            .
+          docker push "${{ env.IMAGE_NAME }}:${IMAGE_TAG}"
+          docker push "${{ env.IMAGE_NAME }}:latest"
+          echo "Pushed: ${{ env.IMAGE_NAME }}:${IMAGE_TAG}"
 
   # ─────────────────────────────────────────────────────────────────────────
   # JOB 2 – Extract Angular dist to server disk, reload Caddy
@@ -104,7 +104,7 @@ jobs:
           docker run --rm \
             -v "${{ env.WEB_ROOT }}:/output" \
             "${IMAGE}" \
-            sh -c "cp -rp /app/dist/browser/. /output/"
+            sh -c "cp -rp /app/dist/browser/browser/. /output/"
           echo "Angular dist extracted to ${{ env.WEB_ROOT }}"
           ls -la "${{ env.WEB_ROOT }}" | head -10
 

@@ -24,7 +24,7 @@ RUN npm run build -- --configuration production --output-path=dist/browser
 # Stage 2 : image de distribution (dist uniquement, pas de serveur HTTP)
 # En production, Caddy (service host) sert les fichiers directement.
 # Usage déploiement :
-#   docker run --rm -v /data/mediahandler/web:/output IMAGE sh -c "cp -rp /app/dist/browser/. /output/"
+#   docker run --rm -v /data/mediahandler/web:/output IMAGE sh -c "cp -rp /app/dist/browser/browser/. /output/"
 # ─────────────────────────────────────────────────────────────────────────────
 FROM alpine:3.20 AS dist
 WORKDIR /app/dist/browser
