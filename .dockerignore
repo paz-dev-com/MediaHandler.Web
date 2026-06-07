@@ -1,0 +1,8 @@
+node_modules
+dist
+.angular
+.idea
+.git
+.gitignore
+README.md
+coverage
