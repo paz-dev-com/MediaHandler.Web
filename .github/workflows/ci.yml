@@ -54,9 +54,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Try clean install first, fallback to regular install if lock file is out of sync
-          rm -rf node_modules
-          npm ci || npm install
+          # Workaround for npm optional dependencies bug (https://github.com/npm/cli/issues/4828)
+          # The bug affects @rollup and @esbuild platform-specific binaries
+          # Use npm install instead of npm ci to let npm resolve optional deps correctly
+          npm install
 
       # ── 1. Format check (Prettier) ───────────────────────────────────────
 
