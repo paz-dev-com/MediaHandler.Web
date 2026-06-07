@@ -120,9 +120,6 @@ jobs:
             exit 1
           fi
 
-      - name: Clean old dist
-        run: rm -rf "${{ env.WEB_ROOT }}/*"
-
       - name: Logout GHCR
         if: always()
         run: docker logout ghcr.io || true
