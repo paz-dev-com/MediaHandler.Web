@@ -3,7 +3,9 @@
 # ─────────────────────────────────────────────────────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
+
 COPY .env.build .env
+COPY .npmrc ./
 COPY package*.json ./
 RUN npm ci
 
