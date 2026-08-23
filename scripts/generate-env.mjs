@@ -70,7 +70,7 @@ const redirectUri = resolve('', 'AUTH0_REDIRECT_URI', 'http://localhost:4200/aut
 const auth0Audience = resolve('Okta:Audience', 'AUTH0_AUDIENCE', '');
 
 // Prod-specific overrides
-const prodApiBaseUrl = resolve('', 'PROD_API_BASE_URL', apiBaseUrl);
+const prodApiBaseUrl = resolve('', 'PROD_API_BASE_URL', '/api/v1');
 const prodRedirectUri = resolve('', 'PROD_AUTH0_REDIRECT_URI', redirectUri);
 const prodAudience = resolve('', 'PROD_AUTH0_AUDIENCE', auth0Audience);
 

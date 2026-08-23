@@ -86,7 +86,7 @@ Environment files are **auto-generated** by `scripts/generate-env.mjs` and are g
 | `API_BASE_URL`            | `https://localhost:7001/api/v1`       | Backend API base URL          |
 | `AUTH0_REDIRECT_URI`      | `http://localhost:4200/auth/callback` | OAuth callback URL            |
 | `AUTH0_AUDIENCE`          | Same as `API_BASE_URL`                | Auth0 API audience identifier |
-| `PROD_API_BASE_URL`       | Same as `API_BASE_URL`                | Production API URL            |
+| `PROD_API_BASE_URL`       | `/api/v1`                             | Production API URL            |
 | `PROD_AUTH0_REDIRECT_URI` | Same as `AUTH0_REDIRECT_URI`          | Production callback URL       |
 | `PROD_AUTH0_AUDIENCE`     | Same as `AUTH0_AUDIENCE`              | Production audience           |
 
