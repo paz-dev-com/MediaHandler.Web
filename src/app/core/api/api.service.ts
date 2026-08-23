@@ -75,4 +75,8 @@ export class ApiService {
   delete<T>(path: string): Observable<ApiResponse<T>> {
     return this.http.delete<ApiResponse<T>>(`${this.baseUrl}/${path}`);
   }
+
+  upload<T>(path: string, formData: FormData): Observable<ApiResponse<T>> {
+    return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${path}`, formData);
+  }
 }

@@ -67,6 +67,20 @@ export const adminRoutes: Routes = [
             (m) => m.AdminParentFoldersPageComponent,
           ),
       },
+      {
+        path: 'kodi-import',
+        loadComponent: () =>
+          import('./kodi-import/admin-kodi-import-page.component').then(
+            (m) => m.AdminKodiImportPageComponent,
+          ),
+      },
+      {
+        path: 'kodi-import/:runId',
+        loadComponent: () =>
+          import('./kodi-import/admin-kodi-import-report-page.component').then(
+            (m) => m.AdminKodiImportReportPageComponent,
+          ),
+      },
     ],
   },
 ];

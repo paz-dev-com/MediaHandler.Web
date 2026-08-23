@@ -1,0 +1,126 @@
+<div class="admin-kodi-import-report-page" *transloco="let t">
+  <p-button
+    [label]="t('admin.kodiImport.backToHistory')"
+    icon="pi pi-arrow-left"
+    styleClass="p-button-text p-button-sm"
+    size="small"
+    (onClick)="onBackToHistory()"
+  />
+
+  @if (reportNotFound()) {
+    <p-message severity="warn" [text]="t('admin.kodiImport.report.notFound')" />
+  } @else if (reportError()) {
+    <div class="admin-kodi-import-report-page__error">
+      <p-message severity="error" [text]="t('admin.kodiImport.report.loadError')" />
+      <p-button
+        [label]="t('admin.kodiImport.report.retry')"
+        icon="pi pi-refresh"
+        size="small"
+        (onClick)="onRetry()"
+      />
+    </div>
+  } @else if (report(); as run) {
+    <div class="admin-kodi-import-report-page__header">
+      <h2 class="admin-kodi-import-report-page__title">{{ t('admin.kodiImport.title') }}</h2>
+      <div class="admin-kodi-import-report-page__badges">
+        <p-tag
+          [value]="t('admin.kodiImport.modes.' + run.mode)"
+          [severity]="getModeSeverity(run.mode)"
+        />
+        <p-tag
+          [value]="t('admin.kodiImport.runStatus.' + run.status)"
+          [severity]="getStatusSeverity(run.status)"
+        />
+      </div>
+    </div>
+
+    @if (run.mode === KodiImportMode.Preview) {
+      <p-message severity="warn" [text]="t('admin.kodiImport.report.previewBanner')" />
+      <p class="admin-kodi-import-report-page__hint">
+        {{ t('admin.kodiImport.report.requiresIdentityLookupHint') }}
+      </p>
+    }
+
+    <div class="admin-kodi-import-report-page__meta">
+      <span class="admin-kodi-import-report-page__meta-item">
+        <strong>{{ t('admin.kodiImport.status.sourceFile') }}:</strong> {{ run.sourceFileName }}
+      </span>
+      <span class="admin-kodi-import-report-page__meta-item">
+        <strong>{{ t('admin.kodiImport.status.schemaVersion') }}:</strong> {{ run.schemaVersion }}
+      </span>
+      <span class="admin-kodi-import-report-page__meta-item">
+        <strong>{{ t('admin.kodiImport.status.startedAt') }}:</strong>
+        {{ run.startedAt | localeDate }}
+      </span>
+      @if (run.finishedAt) {
+        <span class="admin-kodi-import-report-page__meta-item">
+          <strong>{{ t('admin.kodiImport.status.finishedAt') }}:</strong>
+          {{ run.finishedAt | localeDate }}
+        </span>
+      }
+    </div>
+
+    @if (run.status === ImportRunStatus.Failed && run.failureReason) {
+      <p-message severity="error" [text]="run.failureReason" />
+    }
+
+    <div class="admin-kodi-import-report-page__counters">
+      <h3 class="admin-kodi-import-report-page__section-title">
+        {{ t('admin.kodiImport.report.countersTitle') }}
+      </h3>
+      <div class="admin-kodi-import-report-page__counter-grid">
+        @for (key of counterKeys; track key) {
+          <div class="admin-kodi-import-report-page__counter-card">
+            <span class="admin-kodi-import-report-page__counter-label">{{
+              t('admin.kodiImport.counts.' + key)
+            }}</span>
+            <span class="admin-kodi-import-report-page__counter-value">{{ run.counts[key] }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (run.counts.needsReview > 0) {
+      <p-message severity="info">
+        <span>
+          {{ t('admin.kodiImport.report.needsReviewHint') }}
+          <a routerLink="/admin/review" class="admin-kodi-import-report-page__link">
+            {{ t('admin.kodiImport.report.needsReviewLink') }}
+          </a>
+        </span>
+      </p-message>
+    }
+
+    @if (run.unmatchedPrefixes.length > 0) {
+      <div class="admin-kodi-import-report-page__unmatched">
+        <h3 class="admin-kodi-import-report-page__section-title">
+          {{ t('admin.kodiImport.report.unmatchedPrefixesTitle') }}
+        </h3>
+        <ul class="admin-kodi-import-report-page__prefix-list">
+          @for (prefix of run.unmatchedPrefixes; track prefix) {
+            <li class="admin-kodi-import-report-page__prefix-item">
+              <code>{{ prefix }}</code>
+              <p-button
+                [label]="t('admin.kodiImport.report.createMapping')"
+                icon="pi pi-plus"
+                size="small"
+                (onClick)="onCreateMapping(prefix)"
+              />
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    <div class="admin-kodi-import-report-page__items">
+      <h3 class="admin-kodi-import-report-page__section-title">
+        {{ t('admin.kodiImport.items.title') }}
+      </h3>
+      <app-kodi-import-items-table [runId]="run.id" />
+    </div>
+  } @else if (reportLoading()) {
+    <p-message severity="info" [text]="t('common.loading')" />
+  }
+
+  <app-kodi-mapping-dialog />
+</div>

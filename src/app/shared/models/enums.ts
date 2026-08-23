@@ -65,3 +65,44 @@ export enum EnrichmentStatus {
   Completed = 'Completed',
   Failed = 'Failed',
 }
+
+export enum KodiImportMode {
+  Import = 'Import',
+  Preview = 'Preview',
+}
+
+export enum ImportRunStatus {
+  Pending = 'Pending',
+  Running = 'Running',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
+
+export enum KodiItemKind {
+  Movie = 'Movie',
+  TvShow = 'TvShow',
+  Episode = 'Episode',
+  MusicVideo = 'MusicVideo',
+}
+
+export enum ImportItemStatus {
+  Created = 'Created',
+  Reused = 'Reused',
+  Unchanged = 'Unchanged',
+  NeedsReview = 'NeedsReview',
+  RequiresIdentityLookup = 'RequiresIdentityLookup',
+  IdentityLookupFailed = 'IdentityLookupFailed',
+  Conflict = 'Conflict',
+  SkippedMusicVideo = 'SkippedMusicVideo',
+  NoLongerInKodi = 'NoLongerInKodi',
+}
+
+export enum ImportLinkStatus {
+  Linked = 'Linked',
+  AlreadyLinked = 'AlreadyLinked',
+  PartiallyLinked = 'PartiallyLinked',
+  UnmatchedPath = 'UnmatchedPath',
+  NoScannedFile = 'NoScannedFile',
+  UnsupportedLocation = 'UnsupportedLocation',
+  Conflict = 'Conflict',
+}
