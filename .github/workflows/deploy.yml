@@ -39,7 +39,6 @@ jobs:
           git reset --hard FETCH_HEAD
           git clean -df
 
-
       - name: Compute image tag
         id: tag
         run: echo "tag=sha-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"

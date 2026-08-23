@@ -79,4 +79,25 @@ export class ApiService {
   upload<T>(path: string, formData: FormData): Observable<ApiResponse<T>> {
     return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${path}`, formData);
   }
+
+  uploadBinary<T>(
+    path: string,
+    body: Blob,
+    params?: Record<string, string | number | boolean | null | undefined>,
+    headers?: Record<string, string>,
+  ): Observable<ApiResponse<T>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== null && value !== undefined) {
+          httpParams = httpParams.set(key, String(value));
+        }
+      }
+    }
+
+    return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${path}`, body, {
+      params: httpParams,
+      headers: headers ?? {},
+    });
+  }
 }

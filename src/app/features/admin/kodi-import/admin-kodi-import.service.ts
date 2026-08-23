@@ -1,7 +1,7 @@
 import { DestroyRef, Injectable, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, Subject, interval, of } from 'rxjs';
+import { Observable, Subject, from, interval, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 const POLL_INTERVAL_MS = 4000;
@@ -90,22 +90,44 @@ export class AdminKodiImportService {
     this.uploadErrorCode.set(null);
     this.uploadErrorMessage.set(null);
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('mode', mode.toLowerCase());
+    const modeValue = mode.toLowerCase();
 
-    this.api.upload<ImportRun>(API_URL, formData).subscribe({
-      next: (resp) => {
-        this.activeRun.set(resp.data);
-        this.uploading.set(false);
-        if (resp.data && ACTIVE_STATES.includes(resp.data.status)) {
-          this.beginPolling();
-        } else if (resp.data && TERMINAL_STATES.includes(resp.data.status)) {
-          this.getHistory(this.currentHistoryPage, this.currentHistoryPageSize);
-        }
-      },
-      error: (err: HttpErrorResponse) => this.handleUploadError(err),
-    });
+    // Read bytes first to avoid Chromium file-handle upload errors (net::ERR_FILE_NOT_FOUND)
+    // observed with direct File streaming in some proxy/network environments.
+    from(file.arrayBuffer())
+      .pipe(
+        switchMap((buffer) =>
+          this.api.uploadBinary<ImportRun>(
+            `${API_URL}/raw`,
+            new Blob([buffer], { type: 'application/octet-stream' }),
+            { fileName: file.name, mode: modeValue },
+            { 'Content-Type': 'application/octet-stream' },
+          ),
+        ),
+        // Backward compatibility with older API versions that only support multipart.
+        catchError((err: unknown) => {
+          if (!(err instanceof HttpErrorResponse) || (err.status !== 404 && err.status !== 415)) {
+            return throwError(() => err);
+          }
+
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('mode', modeValue);
+          return this.api.upload<ImportRun>(API_URL, formData);
+        }),
+      )
+      .subscribe({
+        next: (resp) => {
+          this.activeRun.set(resp.data);
+          this.uploading.set(false);
+          if (resp.data && ACTIVE_STATES.includes(resp.data.status)) {
+            this.beginPolling();
+          } else if (resp.data && TERMINAL_STATES.includes(resp.data.status)) {
+            this.getHistory(this.currentHistoryPage, this.currentHistoryPageSize);
+          }
+        },
+        error: (err: unknown) => this.handleUploadError(err),
+      });
   }
 
   clearUploadError(): void {
@@ -281,10 +303,18 @@ export class AdminKodiImportService {
     }
   }
 
-  private handleUploadError(err: HttpErrorResponse): void {
+  private handleUploadError(err: unknown): void {
     this.uploading.set(false);
-    const apiError = err.error?.errors?.[0];
-    this.uploadErrorCode.set(apiError?.code ?? 'UNKNOWN');
-    this.uploadErrorMessage.set(apiError?.message ?? err.message ?? 'Unknown error');
+
+    if (err instanceof HttpErrorResponse) {
+      const apiError = err.error?.errors?.[0];
+      this.uploadErrorCode.set(apiError?.code ?? 'UNKNOWN');
+      this.uploadErrorMessage.set(apiError?.message ?? err.message ?? 'Unknown error');
+      return;
+    }
+
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    this.uploadErrorCode.set('UNKNOWN');
+    this.uploadErrorMessage.set(message);
   }
 }
