@@ -86,3 +86,13 @@ export function makePathMapping(overrides: Partial<KodiPathMapping> = {}): KodiP
     ...overrides,
   };
 }
+
+export function makeFile(name: string, content = ''): File {
+  const file = new File([content], name);
+  Object.defineProperty(file, 'arrayBuffer', {
+    value: () => Promise.resolve(new ArrayBuffer(content.length)),
+    writable: false,
+    configurable: true,
+  });
+  return file;
+}

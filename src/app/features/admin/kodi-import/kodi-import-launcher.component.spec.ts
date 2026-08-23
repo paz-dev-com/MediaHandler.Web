@@ -86,7 +86,7 @@ describe('KodiImportLauncherComponent', () => {
   });
 
   it('should call uploadDatabase when launch is clicked', () => {
-    const spy = vi.spyOn(service, 'uploadDatabase');
+    const spy = vi.spyOn(service, 'uploadDatabase').mockImplementation(() => undefined);
     const file = new File([''], 'MyVideos121.db');
     component.onFileSelect({ files: [file] });
     component.onModeChange(KodiImportMode.Preview);

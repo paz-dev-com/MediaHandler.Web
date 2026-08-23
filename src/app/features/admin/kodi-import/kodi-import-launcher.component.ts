@@ -65,6 +65,7 @@ export class KodiImportLauncherComponent implements OnInit {
     UNSUPPORTED_VERSION: 'unsupportedVersion',
     UPLOAD_TOO_LARGE: 'uploadTooLarge',
     INVALID_KODI_DB: 'invalidKodiDb',
+    UPLOAD_INCOMPLETE: 'unknown',
     VALIDATION_ERROR: 'validation',
     IMPORT_IN_PROGRESS: 'importInProgress',
     UNKNOWN: 'unknown',
