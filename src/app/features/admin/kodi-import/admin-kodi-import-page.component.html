@@ -1,0 +1,21 @@
+<div class="admin-kodi-import-page" *transloco="let t">
+  <div class="admin-kodi-import-page__header">
+    <h2 class="admin-kodi-import-page__title">{{ t('admin.kodiImport.title') }}</h2>
+  </div>
+
+  <div class="admin-kodi-import-page__section">
+    <app-kodi-import-launcher />
+  </div>
+
+  <div id="active-run" class="admin-kodi-import-page__section">
+    <app-kodi-import-status />
+  </div>
+
+  <div class="admin-kodi-import-page__section">
+    <app-kodi-import-history-table />
+  </div>
+
+  <div class="admin-kodi-import-page__section">
+    <app-kodi-import-mappings />
+  </div>
+</div>

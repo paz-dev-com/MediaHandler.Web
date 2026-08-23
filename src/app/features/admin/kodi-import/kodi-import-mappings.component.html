@@ -1,0 +1,61 @@
+<div class="kodi-import-mappings" *transloco="let t">
+  <p-confirmDialog />
+
+  <div class="kodi-import-mappings__header">
+    <h3 class="kodi-import-mappings__title">{{ t('admin.kodiImport.mappings.title') }}</h3>
+    <p-button [label]="t('admin.kodiImport.mappings.add')" icon="pi pi-plus" (onClick)="onAdd()" />
+  </div>
+
+  <p-table [value]="mappings()" [loading]="loading()" styleClass="p-datatable-striped">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ t('admin.kodiImport.mappings.columns.sortOrder') }}</th>
+        <th>{{ t('admin.kodiImport.mappings.columns.kodiPrefix') }}</th>
+        <th>{{ t('admin.kodiImport.mappings.columns.nasPrefix') }}</th>
+        <th>{{ t('admin.kodiImport.mappings.columns.actions') }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-mapping>
+      <tr>
+        <td>{{ mapping.sortOrder }}</td>
+        <td>{{ mapping.kodiPrefix }}</td>
+        <td>{{ mapping.nasPrefix }}</td>
+        <td>
+          <div class="kodi-import-mappings__row-actions">
+            <p-button
+              icon="pi pi-pencil"
+              severity="secondary"
+              [outlined]="true"
+              [rounded]="true"
+              [ariaLabel]="t('admin.libraryRoots.editButton')"
+              [pTooltip]="t('admin.libraryRoots.editButton')"
+              tooltipPosition="left"
+              (onClick)="onEdit(mapping)"
+            />
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [outlined]="true"
+              [rounded]="true"
+              [ariaLabel]="t('admin.libraryRoots.removeButton')"
+              [pTooltip]="t('admin.libraryRoots.removeButton')"
+              tooltipPosition="left"
+              (onClick)="onRemove(mapping)"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="text-center p-4">
+          {{ t('admin.kodiImport.mappings.empty') }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-kodi-mapping-dialog (saved)="onMappingSaved()" />
+</div>
