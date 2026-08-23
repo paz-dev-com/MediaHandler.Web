@@ -227,9 +227,10 @@
 **Authorization**: Authenticated user (acts on current user).
 
 **Request**: `multipart/form-data`
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `file` | binary | Yes | Image file (JPEG, PNG, or WebP, ≤ 2MB) |
+
+| Field  | Type   | Required | Description                            |
+| ------ | ------ | -------- | -------------------------------------- |
+| `file` | binary | Yes      | Image file (JPEG, PNG, or WebP, ≤ 2MB) |
 
 **Response** (200 OK):
 

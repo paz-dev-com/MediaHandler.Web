@@ -1,0 +1,84 @@
+<div class="kodi-import-history-table" *transloco="let t">
+  <h3 class="kodi-import-history-table__title">{{ t('admin.kodiImport.history.title') }}</h3>
+
+  @if (historyError()) {
+    <p-message severity="error" [text]="t('admin.kodiImport.history.loadError')" />
+    <p-button
+      [label]="t('admin.kodiImport.history.retry')"
+      icon="pi pi-refresh"
+      size="small"
+      (onClick)="onRetry()"
+    />
+  }
+
+  <p-table
+    [value]="history()"
+    [lazy]="true"
+    [loading]="historyLoading()"
+    [paginator]="true"
+    [rows]="20"
+    [totalRecords]="historyMeta().total"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-striped"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ t('admin.kodiImport.history.columns.mode') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.status') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.file') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.startedAt') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.finishedAt') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.created') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.filesLinked') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.conflicts') }}</th>
+        <th>{{ t('admin.kodiImport.history.columns.needsReview') }}</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-run>
+      <tr>
+        <td>
+          <p-tag
+            [value]="t('admin.kodiImport.modes.' + run.mode)"
+            [severity]="getModeSeverity(run.mode)"
+          />
+        </td>
+        <td>
+          <p-tag
+            [value]="t('admin.kodiImport.runStatus.' + run.status)"
+            [severity]="getStatusSeverity(run.status)"
+          />
+        </td>
+        <td>{{ run.sourceFileName }}</td>
+        <td>{{ run.startedAt | localeDate }}</td>
+        <td>{{ run.finishedAt ? (run.finishedAt | localeDate) : '—' }}</td>
+        <td>{{ createdCount(run) }}</td>
+        <td>{{ run.counts.filesLinked }}</td>
+        <td>{{ run.counts.conflicts }}</td>
+        <td>{{ run.counts.needsReview }}</td>
+        <td>
+          @if (isTerminal(run)) {
+            <p-button
+              [label]="t('admin.kodiImport.history.viewReport')"
+              icon="pi pi-arrow-right"
+              styleClass="p-button-text p-button-sm"
+              size="small"
+              [text]="true"
+              (onClick)="navigateToReport(run.id)"
+            />
+          }
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="10" class="text-center p-4">
+          {{ t('admin.kodiImport.history.empty') }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

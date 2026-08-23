@@ -188,6 +188,7 @@
       "users": "Users",
       "libraryRoots": "Library Roots",
       "scanner": "Scanner",
+      "kodiImport": "Kodi Import",
       "review": "Review",
       "scanResults": "Scan Results",
       "enrichment": "TMDB Enrichment"
@@ -309,6 +310,187 @@
         "Completed": "Completed",
         "Failed": "Failed",
         "Cancelled": "Cancelled"
+      }
+    },
+    "kodiImport": {
+      "title": "Kodi Import",
+      "backToHistory": "Back to Kodi Import history",
+      "launcher": {
+        "title": "Upload Kodi Database",
+        "chooseFile": "Choose MyVideos*.db file",
+        "fileHint": "Keep the original Kodi file name (e.g. MyVideos121.db).",
+        "modeLabel": "Mode",
+        "launch": "Launch Import",
+        "launching": "Launching…",
+        "invalidNameWarning": "The file name does not look like a Kodi video database. Keep the original MyVideos<version>.db name if this is a valid export.",
+        "modes": {
+          "Import": "Import",
+          "Preview": "Preview"
+        },
+        "modeHintImport": "Apply changes to the collection and link files.",
+        "modeHintPreview": "Dry run — projected outcomes only, nothing is saved."
+      },
+      "errors": {
+        "invalidFileName": "Invalid file name. Please keep the original MyVideos<version>.db name.",
+        "unsupportedVersion": "Unsupported database version: {{detail}}",
+        "uploadTooLarge": "Upload too large: {{detail}}",
+        "invalidKodiDb": "This does not appear to be a valid Kodi video database. Close Kodi before copying the file, then try again.",
+        "validation": "Validation failed: {{detail}}",
+        "importInProgress": "An import is already in progress.",
+        "viewActiveRun": "View active run",
+        "unknown": "Import failed: {{detail}}"
+      },
+      "status": {
+        "title": "Active Import",
+        "idle": "No import is currently running. Upload a database to start one.",
+        "mode": "Mode",
+        "sourceFile": "Source file",
+        "schemaVersion": "Schema version",
+        "startedAt": "Started",
+        "finishedAt": "Finished",
+        "elapsed": "Elapsed",
+        "statusLabel": "Status",
+        "failureReason": "Failure reason",
+        "viewReport": "View Report",
+        "pollingError": "Update failed. Retrying automatically…"
+      },
+      "runStatus": {
+        "Pending": "Pending",
+        "Running": "Running",
+        "Completed": "Completed",
+        "Failed": "Failed"
+      },
+      "modes": {
+        "Import": "Import",
+        "Preview": "Preview"
+      },
+      "history": {
+        "title": "Import History",
+        "empty": "No imports have been run yet.",
+        "loadError": "Failed to load import history.",
+        "retry": "Retry",
+        "viewReport": "View Report",
+        "columns": {
+          "mode": "Mode",
+          "status": "Status",
+          "file": "Source file",
+          "startedAt": "Started",
+          "finishedAt": "Finished",
+          "created": "Created",
+          "filesLinked": "Files Linked",
+          "conflicts": "Conflicts",
+          "needsReview": "Needs Review",
+          "actions": "Actions"
+        }
+      },
+      "counts": {
+        "totalItems": "Total Items",
+        "moviesCreated": "Movies Created",
+        "showsCreated": "Shows Created",
+        "episodesCreated": "Episodes Created",
+        "itemsReused": "Items Reused",
+        "itemsUnchanged": "Items Unchanged",
+        "filesLinked": "Files Linked",
+        "unmatchedPaths": "Unmatched Paths",
+        "noScannedFiles": "No Scanned Files",
+        "unsupportedLocations": "Unsupported Locations",
+        "conflicts": "Conflicts",
+        "noLongerInKodi": "No Longer in Kodi",
+        "needsReview": "Needs Review",
+        "identityLookupFailures": "Identity Lookup Failures",
+        "skippedMusicVideos": "Skipped Music Videos"
+      },
+      "mappings": {
+        "title": "Kodi → NAS Path Mappings",
+        "add": "Add Mapping",
+        "empty": "No mappings configured. Without mappings, Kodi paths cannot be linked to NAS files and imports will report unmatched paths.",
+        "saved": "Mapping saved.",
+        "updated": "Mapping updated.",
+        "removed": "Mapping removed.",
+        "removeTitle": "Confirm Removal",
+        "removeConfirm": "Remove the mapping from \"{{ kodiPrefix }}\" to \"{{ nasPrefix }}\"? This cannot be undone.",
+        "columns": {
+          "sortOrder": "Order",
+          "kodiPrefix": "Kodi Prefix",
+          "nasPrefix": "NAS Prefix",
+          "actions": "Actions"
+        }
+      },
+      "mappingsDialog": {
+        "createTitle": "Add Path Mapping",
+        "editTitle": "Edit Path Mapping",
+        "kodiPrefixLabel": "Kodi prefix",
+        "kodiPrefixPlaceholder": "smb://FREEBOX/Films/",
+        "nasPrefixLabel": "NAS prefix",
+        "nasPrefixPlaceholder": "/nas/Movies/",
+        "nasPrefixHint": "Must start with /",
+        "sortOrderLabel": "Sort order",
+        "required": "This field is required.",
+        "nasPrefixMustStartWithSlash": "The NAS prefix must start with /.",
+        "duplicate": "This Kodi prefix is already mapped.",
+        "submit": "Save",
+        "cancel": "Cancel"
+      },
+      "report": {
+        "previewBanner": "Preview — projected outcomes only, nothing has been persisted.",
+        "requiresIdentityLookupHint": "Items marked \"Requires Identity Lookup\" would be resolved against the provider during a real import.",
+        "countersTitle": "Summary Counters",
+        "unmatchedPrefixesTitle": "Unmatched Kodi Path Prefixes",
+        "createMapping": "Create Mapping",
+        "needsReviewHint": "Items marked \"Needs Review\" are handled through the review queue.",
+        "needsReviewLink": "Open Review Queue",
+        "notFound": "Run not found.",
+        "loadError": "Failed to load run report.",
+        "retry": "Retry"
+      },
+      "items": {
+        "title": "Item Outcomes",
+        "filterOutcome": "Filter by outcome",
+        "filterKind": "Filter by kind",
+        "empty": "No item outcomes for this run.",
+        "emptyFiltered": "No items match the current filters.",
+        "loadError": "Failed to load item outcomes.",
+        "retry": "Retry",
+        "reviewLink": "Review",
+        "columns": {
+          "title": "Title",
+          "itemKind": "Kind",
+          "mediaKind": "Media Kind",
+          "outcome": "Outcome",
+          "linkOutcome": "Link Outcome",
+          "linkedFiles": "Linked Files",
+          "reason": "Reason"
+        }
+      },
+      "outcomes": {
+        "Created": "Created",
+        "Reused": "Reused",
+        "Unchanged": "Unchanged",
+        "NeedsReview": "Needs Review",
+        "RequiresIdentityLookup": "Requires Identity Lookup",
+        "IdentityLookupFailed": "Identity Lookup Failed",
+        "Conflict": "Conflict",
+        "SkippedMusicVideo": "Skipped Music Video",
+        "NoLongerInKodi": "No Longer in Kodi"
+      },
+      "linkOutcomes": {
+        "Linked": "Linked",
+        "AlreadyLinked": "Already Linked",
+        "PartiallyLinked": "Partially Linked",
+        "UnmatchedPath": "Unmatched Path",
+        "NoScannedFile": "No Scanned File",
+        "UnsupportedLocation": "Unsupported Location",
+        "Conflict": "Conflict"
+      },
+      "itemKinds": {
+        "Movie": "Movie",
+        "TvShow": "TV Show",
+        "Episode": "Episode",
+        "MusicVideo": "Music Video"
+      },
+      "mediaKinds": {
+        "Film": "Film",
+        "TvShow": "TV Show"
       }
     },
     "dashboard": {

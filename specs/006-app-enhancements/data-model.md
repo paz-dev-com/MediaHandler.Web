@@ -10,44 +10,51 @@
 The backend `Media` entity already has `Status` and `NumberOfSeasons`. The change is adding them to `MediaDto` (API) and `Media` interface (frontend).
 
 **Backend DTO change** (`MediaDto.cs`):
-| Field | Type | Description |
-|-------|------|-------------|
-| `Status` | `string?` | TMDB production status: "Returning Series", "Ended", "Released", etc. |
-| `NumberOfSeasons` | `int?` | Total season count from TMDB. Null for films. |
+
+| Field             | Type      | Description                                                           |
+| ----------------- | --------- | --------------------------------------------------------------------- |
+| `Status`          | `string?` | TMDB production status: "Returning Series", "Ended", "Released", etc. |
+| `NumberOfSeasons` | `int?`    | Total season count from TMDB. Null for films.                         |
 
 **Frontend model change** (`media.model.ts`):
-| Field | Type | Description |
-|-------|------|-------------|
-| `status` | `string \| null` | Production status from TMDB metadata |
+
+| Field             | Type             | Description                                  |
+| ----------------- | ---------------- | -------------------------------------------- |
+| `status`          | `string \| null` | Production status from TMDB metadata         |
 | `numberOfSeasons` | `number \| null` | Total season count from TMDB. Null for films |
 
 ### 2. User (extended — requires API change)
 
 **Backend entity change** (`User.cs`):
-| Field | Type | Description |
-|-------|------|-------------|
+
+| Field                | Type      | Description                                                                                   |
+| -------------------- | --------- | --------------------------------------------------------------------------------------------- |
 | `ProfilePicturePath` | `string?` | Relative path to server-stored custom profile picture. Null when using auth provider default. |
 
 **Backend DTO change** (`UserDto.cs`):
-| Field | Type | Description |
-|-------|------|-------------|
+
+| Field                | Type      | Description                                 |
+| -------------------- | --------- | ------------------------------------------- |
 | `ProfilePicturePath` | `string?` | URL/path to custom profile picture, or null |
 
 **Frontend model change** (`user.model.ts`):
-| Field | Type | Description |
-|-------|------|-------------|
+
+| Field                | Type             | Description                               |
+| -------------------- | ---------------- | ----------------------------------------- |
 | `profilePicturePath` | `string \| null` | Server-stored custom profile picture path |
 
 ### 3. StartScanRequest (extended — requires API change)
 
 **Backend request change** (`ScanRequests.cs`):
-| Field | Type | Description |
-|-------|------|-------------|
+
+| Field      | Type      | Description                                                                     |
+| ---------- | --------- | ------------------------------------------------------------------------------- |
 | `Language` | `string?` | Optional TMDB language code (e.g., "en", "fr"). Null falls back to API default. |
 
 **Backend command change** (`StartScanCommand.cs`):
-| Field | Type | Description |
-|-------|------|-------------|
+
+| Field      | Type      | Description                                |
+| ---------- | --------- | ------------------------------------------ |
 | `Language` | `string?` | Passed through to TMDB matcher during scan |
 
 ## New Frontend Types

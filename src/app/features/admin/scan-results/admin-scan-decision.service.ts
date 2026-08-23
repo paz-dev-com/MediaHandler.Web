@@ -125,9 +125,9 @@ export class AdminScanDecisionService {
     preview = false,
   ): Observable<BatchRenamePreview | BatchRenameResult> {
     return this.api
-      .post<
-        BatchRenamePreview | BatchRenameResult
-      >(`admin/tv-groups/${groupId}/rename`, null, { preview })
+      .post<BatchRenamePreview | BatchRenameResult>(`admin/tv-groups/${groupId}/rename`, null, {
+        preview,
+      })
       .pipe(map((response) => response.data));
   }
 

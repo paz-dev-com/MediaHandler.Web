@@ -18,9 +18,11 @@ const ERROR_MESSAGES: Record<number, string> = {
  * Requests that should NOT display an error toast on specific status codes.
  * Key: URL suffix, Value: set of suppressed HTTP status codes.
  */
-const SILENT_ERRORS: Array<{ urlSuffix: string; statuses: number[] }> = [
+const SILENT_ERRORS: Array<{ urlSuffix?: string; urlIncludes?: string; statuses: number[] }> = [
   // 404 on GET /auth/me is expected for new users — syncUser() handles it silently.
   { urlSuffix: '/auth/me', statuses: [404] },
+  // Kodi Import surfaces all of these inline (upload errors, 409, run-not-found, duplicate mapping).
+  { urlIncludes: '/admin/kodi-import', statuses: [400, 404, 409, 422] },
 ];
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
@@ -33,9 +35,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      const isSilent = SILENT_ERRORS.some(
-        (rule) => req.url.endsWith(rule.urlSuffix) && rule.statuses.includes(error.status),
-      );
+      const isSilent = SILENT_ERRORS.some((rule) => {
+        const statusMatches = rule.statuses.includes(error.status);
+        const urlMatches = rule.urlSuffix
+          ? req.url.endsWith(rule.urlSuffix)
+          : rule.urlIncludes
+            ? req.url.includes(rule.urlIncludes)
+            : false;
+        return statusMatches && urlMatches;
+      });
 
       if (!isSilent) {
         const summary = ERROR_MESSAGES[error.status] ?? 'error.unknown';
