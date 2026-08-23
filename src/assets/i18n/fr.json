@@ -188,6 +188,7 @@
       "users": "Utilisateurs",
       "libraryRoots": "Racines de bibliothèque",
       "scanner": "Scanner",
+      "kodiImport": "Import Kodi",
       "review": "Révision",
       "scanResults": "Résultats de scan",
       "enrichment": "Enrichissement TMDB"
@@ -321,6 +322,187 @@
         "Completed": "Terminé",
         "Failed": "Échoué",
         "Cancelled": "Annulé"
+      }
+    },
+    "kodiImport": {
+      "title": "Import Kodi",
+      "backToHistory": "Retour à l'historique d'import Kodi",
+      "launcher": {
+        "title": "Téléverser la base Kodi",
+        "chooseFile": "Choisir le fichier MyVideos*.db",
+        "fileHint": "Conservez le nom de fichier original de Kodi (ex. MyVideos121.db).",
+        "modeLabel": "Mode",
+        "launch": "Lancer l'import",
+        "launching": "Lancement…",
+        "invalidNameWarning": "Le nom du fichier ne ressemble pas à une base vidéo Kodi. Conservez le nom original MyVideos<version>.db s'il s'agit d'une exportation valide.",
+        "modes": {
+          "Import": "Import",
+          "Preview": "Prévisualisation"
+        },
+        "modeHintImport": "Applique les modifications à la collection et lie les fichiers.",
+        "modeHintPreview": "Exécution à blanc — résultats projetés uniquement, rien n'est enregistré."
+      },
+      "errors": {
+        "invalidFileName": "Nom de fichier invalide. Veuillez conserver le nom original MyVideos<version>.db.",
+        "unsupportedVersion": "Version de base non prise en charge : {{detail}}",
+        "uploadTooLarge": "Téléversement trop volumineux : {{detail}}",
+        "invalidKodiDb": "Ce fichier ne semble pas être une base vidéo Kodi valide. Fermez Kodi avant de copier le fichier, puis réessayez.",
+        "validation": "Validation échouée : {{detail}}",
+        "importInProgress": "Un import est déjà en cours.",
+        "viewActiveRun": "Voir l'import en cours",
+        "unknown": "Échec de l'import : {{detail}}"
+      },
+      "status": {
+        "title": "Import en cours",
+        "idle": "Aucun import n'est en cours. Téléversez une base pour démarrer.",
+        "mode": "Mode",
+        "sourceFile": "Fichier source",
+        "schemaVersion": "Version du schéma",
+        "startedAt": "Démarré le",
+        "finishedAt": "Terminé le",
+        "elapsed": "Écoulé",
+        "statusLabel": "Statut",
+        "failureReason": "Motif de l'échec",
+        "viewReport": "Voir le rapport",
+        "pollingError": "Mise à jour échouée. Nouvelle tentative automatique…"
+      },
+      "runStatus": {
+        "Pending": "En attente",
+        "Running": "En cours",
+        "Completed": "Terminé",
+        "Failed": "Échoué"
+      },
+      "modes": {
+        "Import": "Import",
+        "Preview": "Prévisualisation"
+      },
+      "history": {
+        "title": "Historique des imports",
+        "empty": "Aucun import n'a encore été exécuté.",
+        "loadError": "Échec du chargement de l'historique.",
+        "retry": "Réessayer",
+        "viewReport": "Voir le rapport",
+        "columns": {
+          "mode": "Mode",
+          "status": "Statut",
+          "file": "Fichier source",
+          "startedAt": "Démarré le",
+          "finishedAt": "Terminé le",
+          "created": "Créés",
+          "filesLinked": "Fichiers liés",
+          "conflicts": "Conflits",
+          "needsReview": "À réviser",
+          "actions": "Actions"
+        }
+      },
+      "counts": {
+        "totalItems": "Éléments totaux",
+        "moviesCreated": "Films créés",
+        "showsCreated": "Séries créées",
+        "episodesCreated": "Épisodes créés",
+        "itemsReused": "Éléments réutilisés",
+        "itemsUnchanged": "Éléments inchangés",
+        "filesLinked": "Fichiers liés",
+        "unmatchedPaths": "Chemins non résolus",
+        "noScannedFiles": "Fichiers non scannés",
+        "unsupportedLocations": "Emplacements non pris en charge",
+        "conflicts": "Conflits",
+        "noLongerInKodi": "Plus dans Kodi",
+        "needsReview": "À réviser",
+        "identityLookupFailures": "Échecs d'identification",
+        "skippedMusicVideos": "Clips vidéo ignorés"
+      },
+      "mappings": {
+        "title": "Correspondances de chemins Kodi → NAS",
+        "add": "Ajouter une correspondance",
+        "empty": "Aucune correspondance configurée. Sans correspondance, les chemins Kodi ne peuvent pas être liés aux fichiers NAS et les imports rapporteront des chemins non résolus.",
+        "saved": "Correspondance enregistrée.",
+        "updated": "Correspondance mise à jour.",
+        "removed": "Correspondance supprimée.",
+        "removeTitle": "Confirmer la suppression",
+        "removeConfirm": "Supprimer la correspondance de « {{ kodiPrefix }} » vers « {{ nasPrefix }} » ? Cette action est irréversible.",
+        "columns": {
+          "sortOrder": "Ordre",
+          "kodiPrefix": "Préfixe Kodi",
+          "nasPrefix": "Préfixe NAS",
+          "actions": "Actions"
+        }
+      },
+      "mappingsDialog": {
+        "createTitle": "Ajouter une correspondance",
+        "editTitle": "Modifier la correspondance",
+        "kodiPrefixLabel": "Préfixe Kodi",
+        "kodiPrefixPlaceholder": "smb://FREEBOX/Films/",
+        "nasPrefixLabel": "Préfixe NAS",
+        "nasPrefixPlaceholder": "/nas/Movies/",
+        "nasPrefixHint": "Doit commencer par /",
+        "sortOrderLabel": "Ordre de tri",
+        "required": "Ce champ est obligatoire.",
+        "nasPrefixMustStartWithSlash": "Le préfixe NAS doit commencer par /.",
+        "duplicate": "Ce préfixe Kodi est déjà mappé.",
+        "submit": "Enregistrer",
+        "cancel": "Annuler"
+      },
+      "report": {
+        "previewBanner": "Prévisualisation — résultats projetés, rien n'a été enregistré.",
+        "requiresIdentityLookupHint": "Les éléments marqués « Identification provider requise » seraient résolus via le provider lors d'un vrai import.",
+        "countersTitle": "Compteurs récapitulatifs",
+        "unmatchedPrefixesTitle": "Préfixes de chemins Kodi non résolus",
+        "createMapping": "Créer une correspondance",
+        "needsReviewHint": "Les éléments marqués « À réviser » sont traités via la file de révision.",
+        "needsReviewLink": "Ouvrir la file de révision",
+        "notFound": "Exécution introuvable.",
+        "loadError": "Échec du chargement du rapport.",
+        "retry": "Réessayer"
+      },
+      "items": {
+        "title": "Résultats par élément",
+        "filterOutcome": "Filtrer par résultat",
+        "filterKind": "Filtrer par type",
+        "empty": "Aucun résultat pour cette exécution.",
+        "emptyFiltered": "Aucun élément ne correspond aux filtres actuels.",
+        "loadError": "Échec du chargement des résultats.",
+        "retry": "Réessayer",
+        "reviewLink": "Réviser",
+        "columns": {
+          "title": "Titre",
+          "itemKind": "Type",
+          "mediaKind": "Type de média",
+          "outcome": "Résultat",
+          "linkOutcome": "Résultat du lien",
+          "linkedFiles": "Fichiers liés",
+          "reason": "Raison"
+        }
+      },
+      "outcomes": {
+        "Created": "Créé",
+        "Reused": "Réutilisé",
+        "Unchanged": "Inchangé",
+        "NeedsReview": "À réviser",
+        "RequiresIdentityLookup": "Identification provider requise",
+        "IdentityLookupFailed": "Échec d'identification",
+        "Conflict": "Conflit",
+        "SkippedMusicVideo": "Clip vidéo ignoré",
+        "NoLongerInKodi": "Plus dans Kodi"
+      },
+      "linkOutcomes": {
+        "Linked": "Lié",
+        "AlreadyLinked": "Déjà lié",
+        "PartiallyLinked": "Partiellement lié",
+        "UnmatchedPath": "Chemin non résolu",
+        "NoScannedFile": "Fichier non scanné",
+        "UnsupportedLocation": "Emplacement non pris en charge",
+        "Conflict": "Conflit"
+      },
+      "itemKinds": {
+        "Movie": "Film",
+        "TvShow": "Série TV",
+        "Episode": "Épisode",
+        "MusicVideo": "Clip vidéo"
+      },
+      "mediaKinds": {
+        "Film": "Film",
+        "TvShow": "Série TV"
       }
     },
     "review": {

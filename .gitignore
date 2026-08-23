@@ -49,3 +49,5 @@ Thumbs.db
 # Generated from .NET User Secrets + .env by scripts/generate-env.mjs
 src/environments/environment.ts
 src/environments/environment.prod.ts
+/.kimi-code/
+/.specify/

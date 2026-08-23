@@ -1,0 +1,98 @@
+<p-dialog
+  *transloco="let t"
+  [header]="
+    isEditMode()
+      ? t('admin.kodiImport.mappingsDialog.editTitle')
+      : t('admin.kodiImport.mappingsDialog.createTitle')
+  "
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: '32rem' }"
+  [closable]="true"
+  [draggable]="false"
+>
+  <div class="kodi-mapping-dialog__body flex flex-column gap-3 pt-2">
+    <div class="flex flex-column gap-1">
+      <label for="kodi-prefix" class="font-semibold">
+        {{ t('admin.kodiImport.mappingsDialog.kodiPrefixLabel') }}
+      </label>
+      <input
+        id="kodi-prefix"
+        pInputText
+        type="text"
+        [placeholder]="t('admin.kodiImport.mappingsDialog.kodiPrefixPlaceholder')"
+        [ngModel]="kodiPrefix()"
+        (ngModelChange)="kodiPrefix.set($event)"
+      />
+      @if (kodiPrefixInvalid()) {
+        <small class="p-error">{{ t('admin.kodiImport.mappingsDialog.required') }}</small>
+      }
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label for="nas-prefix" class="font-semibold">
+        {{ t('admin.kodiImport.mappingsDialog.nasPrefixLabel') }}
+      </label>
+      <input
+        id="nas-prefix"
+        pInputText
+        type="text"
+        [placeholder]="t('admin.kodiImport.mappingsDialog.nasPrefixPlaceholder')"
+        [ngModel]="nasPrefix()"
+        (ngModelChange)="nasPrefix.set($event)"
+      />
+      <small class="text-color-secondary">{{
+        t('admin.kodiImport.mappingsDialog.nasPrefixHint')
+      }}</small>
+      @if (nasPrefixInvalid()) {
+        <small class="p-error">{{ t('admin.kodiImport.mappingsDialog.required') }}</small>
+      }
+      @if (nasPrefixSlashInvalid()) {
+        <small class="p-error">{{
+          t('admin.kodiImport.mappingsDialog.nasPrefixMustStartWithSlash')
+        }}</small>
+      }
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label for="sort-order" class="font-semibold">
+        {{ t('admin.kodiImport.mappingsDialog.sortOrderLabel') }}
+      </label>
+      <p-inputNumber
+        id="sort-order"
+        [ngModel]="sortOrder()"
+        (ngModelChange)="sortOrder.set($event)"
+        [useGrouping]="false"
+        [min]="0"
+      />
+      @if (sortOrderInvalid()) {
+        <small class="p-error">{{ t('admin.kodiImport.mappingsDialog.required') }}</small>
+      }
+    </div>
+
+    @if (mappingService.saveErrorCode() === 'DUPLICATE_MAPPING') {
+      <p-message severity="error" [text]="t('admin.kodiImport.mappingsDialog.duplicate')" />
+    }
+    @if (
+      mappingService.saveErrorCode() === 'VALIDATION_ERROR' ||
+      mappingService.saveErrorCode() === 'UNKNOWN'
+    ) {
+      <p-message severity="error" [text]="t('common.error')" />
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="t('admin.kodiImport.mappingsDialog.cancel')"
+      severity="secondary"
+      (onClick)="onCancel()"
+    />
+    <p-button
+      [label]="t('admin.kodiImport.mappingsDialog.submit')"
+      [disabled]="!canSubmit() || mappingService.saving()"
+      [loading]="mappingService.saving()"
+      (onClick)="onSubmit(t)"
+    />
+  </ng-template>
+</p-dialog>

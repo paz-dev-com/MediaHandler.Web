@@ -1,0 +1,77 @@
+<div class="kodi-import-launcher" *transloco="let t">
+  <h3 class="kodi-import-launcher__title">{{ t('admin.kodiImport.launcher.title') }}</h3>
+
+  <div class="kodi-import-launcher__controls">
+    <div class="kodi-import-launcher__file">
+      <p-fileUpload
+        mode="basic"
+        [auto]="false"
+        [multiple]="false"
+        accept=".db"
+        [chooseLabel]="t('admin.kodiImport.launcher.chooseFile')"
+        chooseIcon="pi pi-upload"
+        (onSelect)="onFileSelect($event)"
+        (onClear)="onFileClear()"
+      />
+      @if (selectedFile(); as file) {
+        <span class="kodi-import-launcher__file-name">{{ file.name }}</span>
+      }
+    </div>
+
+    <p-select
+      [options]="modeOptions"
+      [ngModel]="selectedMode()"
+      optionLabel="label"
+      optionValue="value"
+      [style]="{ 'min-width': '12rem' }"
+      (ngModelChange)="onModeChange($event)"
+      appendTo="body"
+    />
+
+    <p-button
+      [label]="
+        uploading()
+          ? t('admin.kodiImport.launcher.launching')
+          : t('admin.kodiImport.launcher.launch')
+      "
+      icon="pi pi-play"
+      [loading]="uploading()"
+      [disabled]="!canLaunch()"
+      (onClick)="onLaunch()"
+    />
+  </div>
+
+  <p class="kodi-import-launcher__hint">{{ t('admin.kodiImport.launcher.fileHint') }}</p>
+
+  @if (invalidName()) {
+    <p-message severity="warn" [text]="t('admin.kodiImport.launcher.invalidNameWarning')" />
+  }
+
+  @if (selectedMode() === KodiImportMode.Import) {
+    <p class="kodi-import-launcher__mode-hint">
+      {{ t('admin.kodiImport.launcher.modeHintImport') }}
+    </p>
+  } @else {
+    <p class="kodi-import-launcher__mode-hint">
+      {{ t('admin.kodiImport.launcher.modeHintPreview') }}
+    </p>
+  }
+
+  @if (uploadErrorCode(); as code) {
+    <div class="kodi-import-launcher__errors">
+      <p-message
+        severity="error"
+        [text]="t('admin.kodiImport.errors.' + uploadErrorKey(code), errorParams())"
+      />
+      @if (code === 'IMPORT_IN_PROGRESS') {
+        <p-button
+          [label]="t('admin.kodiImport.errors.viewActiveRun')"
+          icon="pi pi-arrow-down"
+          styleClass="p-button-text p-button-sm"
+          size="small"
+          (onClick)="onViewActiveRun()"
+        />
+      }
+    </div>
+  }
+</div>

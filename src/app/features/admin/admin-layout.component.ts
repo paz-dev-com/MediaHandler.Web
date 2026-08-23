@@ -32,6 +32,7 @@ export class AdminLayoutComponent implements OnInit {
     { labelKey: 'admin.nav.users', route: '/admin/users', value: 'users' },
     { labelKey: 'admin.nav.libraryRoots', route: '/admin/library-roots', value: 'library-roots' },
     { labelKey: 'admin.nav.scanner', route: '/admin/scanner', value: 'scanner' },
+    { labelKey: 'admin.nav.kodiImport', route: '/admin/kodi-import', value: 'kodi-import' },
     { labelKey: 'admin.nav.review', route: '/admin/review', value: 'review' },
     { labelKey: 'admin.nav.scanResults', route: '/admin/scan-results', value: 'scan-results' },
     { labelKey: 'admin.nav.enrichment', route: '/admin/enrichment', value: 'enrichment' },
