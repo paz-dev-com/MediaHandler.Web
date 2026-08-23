@@ -1,0 +1,104 @@
+<div class="kodi-import-status" *transloco="let t">
+  @if (activeRun(); as run) {
+    <div class="kodi-import-status__header">
+      <h3 class="kodi-import-status__title">{{ t('admin.kodiImport.status.title') }}</h3>
+      <div class="kodi-import-status__badges">
+        @if (isActive(run)) {
+          <p-progressSpinner
+            styleClass="kodi-import-status__spinner"
+            strokeWidth="4"
+            [style]="{ width: '1.5rem', height: '1.5rem' }"
+          />
+        }
+        <p-tag
+          [value]="t('admin.kodiImport.modes.' + run.mode)"
+          [severity]="getModeSeverity(run.mode)"
+        />
+        <p-tag
+          [value]="t('admin.kodiImport.runStatus.' + run.status)"
+          [severity]="getStatusSeverity(run.status)"
+        />
+      </div>
+    </div>
+
+    <div class="kodi-import-status__meta">
+      <span class="kodi-import-status__meta-item">
+        <strong>{{ t('admin.kodiImport.status.sourceFile') }}:</strong> {{ run.sourceFileName }}
+      </span>
+      <span class="kodi-import-status__meta-item">
+        <strong>{{ t('admin.kodiImport.status.schemaVersion') }}:</strong> {{ run.schemaVersion }}
+      </span>
+      <span class="kodi-import-status__meta-item">
+        <strong>{{ t('admin.kodiImport.status.startedAt') }}:</strong>
+        {{ run.startedAt | localeDate }}
+      </span>
+      @if (isActive(run)) {
+        <span class="kodi-import-status__meta-item">
+          <strong>{{ t('admin.kodiImport.status.elapsed') }}:</strong>
+          {{ formatElapsed(elapsedSeconds()) }}
+        </span>
+      }
+      @if (run.finishedAt) {
+        <span class="kodi-import-status__meta-item">
+          <strong>{{ t('admin.kodiImport.status.finishedAt') }}:</strong>
+          {{ run.finishedAt | localeDate }}
+        </span>
+      }
+    </div>
+
+    @if (run.status === ImportRunStatus.Failed && run.failureReason) {
+      <p-message severity="error" [text]="run.failureReason" />
+    }
+
+    <div class="kodi-import-status__counts">
+      <div class="kodi-import-status__count-item">
+        <span class="kodi-import-status__count-label">{{
+          t('admin.kodiImport.counts.totalItems')
+        }}</span>
+        <span class="kodi-import-status__count-value">{{ run.counts.totalItems }}</span>
+      </div>
+      <div class="kodi-import-status__count-item">
+        <span class="kodi-import-status__count-label"
+          >{{ t('admin.kodiImport.counts.moviesCreated') }} /
+          {{ t('admin.kodiImport.counts.showsCreated') }} /
+          {{ t('admin.kodiImport.counts.episodesCreated') }}</span
+        >
+        <span class="kodi-import-status__count-value">{{ createdCount(run) }}</span>
+      </div>
+      <div class="kodi-import-status__count-item">
+        <span class="kodi-import-status__count-label">{{
+          t('admin.kodiImport.counts.filesLinked')
+        }}</span>
+        <span class="kodi-import-status__count-value">{{ run.counts.filesLinked }}</span>
+      </div>
+      <div class="kodi-import-status__count-item">
+        <span class="kodi-import-status__count-label">{{
+          t('admin.kodiImport.counts.conflicts')
+        }}</span>
+        <span class="kodi-import-status__count-value">{{ run.counts.conflicts }}</span>
+      </div>
+      <div class="kodi-import-status__count-item">
+        <span class="kodi-import-status__count-label">{{
+          t('admin.kodiImport.counts.needsReview')
+        }}</span>
+        <span class="kodi-import-status__count-value">{{ run.counts.needsReview }}</span>
+      </div>
+    </div>
+
+    @if (pollingError()) {
+      <p-message severity="warn" [text]="t('admin.kodiImport.status.pollingError')" />
+    }
+
+    <div class="kodi-import-status__actions">
+      <p-button
+        [label]="t('admin.kodiImport.status.viewReport')"
+        icon="pi pi-arrow-right"
+        severity="secondary"
+        [text]="true"
+        (onClick)="navigateToReport(run.id)"
+      />
+    </div>
+  } @else {
+    <p-message severity="info" [text]="t('admin.kodiImport.status.idle')" />
+  }
+</div>

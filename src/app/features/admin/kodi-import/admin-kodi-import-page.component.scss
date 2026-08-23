@@ -1,0 +1,13 @@
+.admin-kodi-import-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__header {
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    margin: 0;
+  }
+}

@@ -1,0 +1,26 @@
+.kodi-import-items-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  &__filter {
+    min-width: 12rem;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__title-link {
+    text-decoration: underline;
+    margin-right: 0.5rem;
+  }
+}
