@@ -14,6 +14,7 @@ import {
   makeImportRun,
   makeImportRunDetail,
   makeImportItemOutcome,
+  makeFile,
 } from './kodi-import-test-factory';
 import { vi } from 'vitest';
 
@@ -35,13 +36,22 @@ describe('AdminKodiImportService', () => {
     vi.clearAllTimers();
     vi.useRealTimers();
     httpTesting.verify();
+    TestBed.resetTestingModule();
   });
 
   // ── uploadDatabase ───────────────────────────────────────────────────────────
 
-  it('should POST FormData to admin/kodi-import with lowercase mode', () => {
-    const file = new File([''], 'MyVideos121.db', { type: 'application/octet-stream' });
+  it('should POST FormData to admin/kodi-import with lowercase mode', async () => {
+    const file = makeFile('MyVideos121.db');
     service.uploadDatabase(file, KodiImportMode.Preview);
+    await Promise.resolve();
+
+    const rawReq = httpTesting.expectOne((r) => r.url === `${base}/admin/kodi-import/raw`);
+    expect(rawReq.request.method).toBe('POST');
+    expect(rawReq.request.body).toBeInstanceOf(Blob);
+    expect(rawReq.request.params.get('fileName')).toBe(file.name);
+    expect(rawReq.request.params.get('mode')).toBe('preview');
+    rawReq.flush('Unsupported Media Type', { status: 415, statusText: 'Unsupported Media Type' });
 
     const req = httpTesting.expectOne(`${base}/admin/kodi-import`);
     expect(req.request.method).toBe('POST');
@@ -57,9 +67,14 @@ describe('AdminKodiImportService', () => {
     vi.clearAllTimers();
   });
 
-  it('should set activeRun and start polling after upload returns a running run', () => {
-    const file = new File([''], 'MyVideos121.db');
+  it('should set activeRun and start polling after upload returns a running run', async () => {
+    const file = makeFile('MyVideos121.db');
     service.uploadDatabase(file, KodiImportMode.Import);
+    await Promise.resolve();
+
+    httpTesting
+      .expectOne((r) => r.url === `${base}/admin/kodi-import/raw`)
+      .flush('Unsupported Media Type', { status: 415, statusText: 'Unsupported Media Type' });
 
     httpTesting.expectOne(`${base}/admin/kodi-import`).flush({
       data: makeImportRun({ status: ImportRunStatus.Running }),
@@ -79,9 +94,14 @@ describe('AdminKodiImportService', () => {
     vi.clearAllTimers();
   });
 
-  it('should refresh history immediately when upload returns a terminal run', () => {
-    const file = new File([''], 'MyVideos121.db');
+  it('should refresh history immediately when upload returns a terminal run', async () => {
+    const file = makeFile('MyVideos121.db');
     service.uploadDatabase(file, KodiImportMode.Import);
+    await Promise.resolve();
+
+    httpTesting
+      .expectOne((r) => r.url === `${base}/admin/kodi-import/raw`)
+      .flush('Unsupported Media Type', { status: 415, statusText: 'Unsupported Media Type' });
 
     httpTesting.expectOne(`${base}/admin/kodi-import`).flush({
       data: makeImportRun({ status: ImportRunStatus.Completed }),
@@ -98,8 +118,8 @@ describe('AdminKodiImportService', () => {
       });
   });
 
-  it('should map upload rejection codes to uploadErrorCode', () => {
-    const file = new File([''], 'MyVideos121.db');
+  it('should map upload rejection codes to uploadErrorCode', async () => {
+    const file = makeFile('MyVideos121.db');
     const codes = [
       'INVALID_FILE_NAME',
       'UNSUPPORTED_VERSION',
@@ -108,8 +128,14 @@ describe('AdminKodiImportService', () => {
       'VALIDATION_ERROR',
     ];
 
-    codes.forEach((code) => {
+    for (const code of codes) {
       service.uploadDatabase(file, KodiImportMode.Import);
+      await Promise.resolve();
+
+      httpTesting
+        .expectOne((r) => r.url === `${base}/admin/kodi-import/raw`)
+        .flush('Unsupported Media Type', { status: 415, statusText: 'Unsupported Media Type' });
+
       const req = httpTesting.expectOne(`${base}/admin/kodi-import`);
       req.flush(
         { data: null, meta: null, errors: [{ code, message: 'detail' }] },
@@ -120,12 +146,17 @@ describe('AdminKodiImportService', () => {
       expect(service.uploadErrorMessage()).toBe('detail');
       expect(service.uploading()).toBe(false);
       service.clearUploadError();
-    });
+    }
   });
 
-  it('should map 409 to IMPORT_IN_PROGRESS upload error code', () => {
-    const file = new File([''], 'MyVideos121.db');
+  it('should map 409 to IMPORT_IN_PROGRESS upload error code', async () => {
+    const file = makeFile('MyVideos121.db');
     service.uploadDatabase(file, KodiImportMode.Import);
+    await Promise.resolve();
+
+    httpTesting
+      .expectOne((r) => r.url === `${base}/admin/kodi-import/raw`)
+      .flush('Unsupported Media Type', { status: 415, statusText: 'Unsupported Media Type' });
 
     const req = httpTesting.expectOne(`${base}/admin/kodi-import`);
     req.flush(

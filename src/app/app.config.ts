@@ -1,4 +1,4 @@
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, isDevMode } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -196,7 +196,7 @@ export const appConfig: ApplicationConfig = {
       useRefreshTokens: true,
       authorizationParams: authParams,
     }),
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]), withFetch()),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     providePrimeNG({
       theme: {
         preset: CinematicPreset,
